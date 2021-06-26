@@ -8,7 +8,35 @@ class AuthBloc {
 
   Stream<User?> get currentUser => authService.currentUser;
 
-  loginFacebook() {
+  loginFacebook() async {
     print('Starting Facebook login');
+    final res = await fb.logIn(
+      permissions: [
+        FacebookPermission.publicProfile,
+        FacebookPermission.email,
+      ],
+    );
+
+    switch (res.status) {
+      case FacebookLoginStatus.success:
+        //get token
+        final FacebookAccessToken? fbToken = res.accessToken;
+        final AuthCredential credential =
+            FacebookAuthProvider.credential(fbToken!.token);
+        //User credential to sing in with firebase
+        final result = await authService.signInWithCrendetail(credential);
+        print('${result.user!.displayName} is now logged in');
+        break;
+      case FacebookLoginStatus.cancel:
+        print('uzytkownik wycofal login');
+        break;
+      case FacebookLoginStatus.error:
+        print('${res.error}error achtung');
+        break;
+    }
+  }
+
+  logout() {
+    authService.logout();
   }
 }
