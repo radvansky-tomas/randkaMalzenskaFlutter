@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
@@ -6,8 +7,6 @@ import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     Future<void> _logoutFace() async {
@@ -37,9 +36,7 @@ class Home extends StatelessWidget {
             SignInButton(
               Buttons.Facebook,
               text: 'Wyloguj z Facebook',
-              onPressed: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => AuthScreen()),
-              ),
+              onPressed: _logoutFace,
             ),
           ],
         ),

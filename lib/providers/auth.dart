@@ -54,6 +54,8 @@ class Auth with ChangeNotifier {
 
   logout() {
     authService.logout();
+    _userCredential = null;
+    notifyListeners();
   }
 
   // bool get isAuth {
