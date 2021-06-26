@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:provider/provider.dart';
+import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
 
 class Home extends StatelessWidget {
@@ -8,6 +10,10 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _logoutFace() async {
+      await Provider.of<Auth>(context, listen: false).logout();
+    }
+
     return Scaffold(
       body: Center(
         child: Column(

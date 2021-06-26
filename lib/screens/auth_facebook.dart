@@ -11,14 +11,14 @@ class AuthFacebook extends StatelessWidget {
   Widget build(BuildContext context) {
     var authBloc = Provider.of<AuthBloc>(context);
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            SignInButton(Buttons.Facebook,
-                onPressed: () => authBloc.loginFacebook()),
-          ],
-        ),
-      ),
-    );
+        body: Center(
+            //   child: Column(
+            //     children: [
+            //       SignInButton(Buttons.Facebook,
+            //           // onPressed: () => authBloc.loginFacebook()),
+            //     ],
+            //   ),
+            // ),
+            ));
   }
 }

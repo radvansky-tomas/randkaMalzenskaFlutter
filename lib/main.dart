@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/blocs/auth_bloc.dart';
 import 'package:randka_malzenska/providers/auth.dart';
+import 'package:randka_malzenska/screens/home.dart';
 
 import 'dart:convert';
 import 'models/course.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         ],
         child: Consumer<Auth>(
           builder: (context, auth, _) => MaterialApp(
-            home: auth.isAuth ? MyHomePage() : AuthScreen(),
+            home: auth.isAuth ? Home() : AuthScreen(),
             routes: {
               MyHomePage.routeName: (ctx) => MyHomePage(),
             },

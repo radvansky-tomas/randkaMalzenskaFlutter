@@ -1,17 +1,67 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:http/http.dart' as http;
 import 'package:randka_malzenska/models/http_exception.dart';
+import 'package:randka_malzenska/services/auth_firebase_service.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
   DateTime? _expiryDate;
   String? _userId;
+  UserCredential? _userCredential;
+
+  final authService = AuthService();
+  final fb = FacebookLogin();
+
+  Stream<User?> get currentUser => authService.currentUser;
+
+  Future<void> loginFacebook() async {
+    print('Starting Facebook login');
+    final res = await fb.logIn(
+      permissions: [
+        FacebookPermission.publicProfile,
+        FacebookPermission.email,
+      ],
+    );
+
+    switch (res.status) {
+      case FacebookLoginStatus.success:
+        //get token
+        final FacebookAccessToken? fbToken = res.accessToken;
+        final AuthCredential credential =
+            FacebookAuthProvider.credential(fbToken!.token);
+        //User credential to sing in with firebase
+        final result = await authService.signInWithCrendetail(credential);
+        print('${result.user!.displayName} is now logged in');
+        _token = fbToken.token;
+        _userId = fbToken.userId;
+        _expiryDate = fbToken.expires;
+        _userCredential = result;
+        notifyListeners();
+        break;
+      case FacebookLoginStatus.cancel:
+        print('uzytkownik wycofal login');
+        break;
+      case FacebookLoginStatus.error:
+        print('${res.error}error achtung');
+        break;
+    }
+  }
+
+  logout() {
+    authService.logout();
+  }
+
+  // bool get isAuth {
+  //   return token != null;
+  // }
 
   bool get isAuth {
-    return token != null;
+    return user != null;
   }
 
   String? get token {
@@ -19,6 +69,13 @@ class Auth with ChangeNotifier {
         _expiryDate!.isAfter(DateTime.now()) &&
         _token != null) {
       return _token;
+    }
+    return null;
+  }
+
+  UserCredential? get user {
+    if (_userCredential != null) {
+      return _userCredential;
     }
     return null;
   }

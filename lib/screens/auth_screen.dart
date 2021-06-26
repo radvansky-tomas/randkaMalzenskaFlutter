@@ -118,6 +118,10 @@ class _AuthCardState extends State<AuthCard> {
     );
   }
 
+  Future<void> _loginFace() async {
+    await Provider.of<Auth>(context, listen: false).loginFacebook();
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
@@ -176,7 +180,6 @@ class _AuthCardState extends State<AuthCard> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    var authBloc = Provider.of<AuthBloc>(context);
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -258,9 +261,11 @@ class _AuthCardState extends State<AuthCard> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Theme.of(context).primaryColor,
                 ),
-                SignInButton(Buttons.Facebook,
-                    text: 'Zaloguj przez Facebook',
-                    onPressed: () => authBloc.loginFacebook()),
+                SignInButton(
+                  Buttons.Facebook,
+                  text: 'Zaloguj przez Facebook',
+                  onPressed: _loginFace,
+                ),
               ],
             ),
           ),
