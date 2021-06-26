@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
+import 'package:randka_malzenska/blocs/auth_bloc.dart';
 import 'package:randka_malzenska/models/http_exception.dart';
 import 'package:randka_malzenska/providers/auth.dart';
-
-import 'home.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -177,6 +176,7 @@ class _AuthCardState extends State<AuthCard> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    var authBloc = Provider.of<AuthBloc>(context);
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -258,7 +258,9 @@ class _AuthCardState extends State<AuthCard> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Theme.of(context).primaryColor,
                 ),
-                SignInButton(Buttons.Facebook, onPressed: () => null),
+                SignInButton(Buttons.Facebook,
+                    text: 'Zaloguj przez Facebook',
+                    onPressed: () => authBloc.loginFacebook()),
               ],
             ),
           ),

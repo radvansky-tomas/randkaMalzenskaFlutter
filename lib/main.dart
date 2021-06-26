@@ -1,14 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:randka_malzenska/blocs/auth_bloc.dart';
 import 'package:randka_malzenska/providers/auth.dart';
-import 'package:randka_malzenska/screens/auth_facebook.dart';
 
 import 'dart:convert';
 import 'models/course.dart';
 import 'screens/auth_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -16,7 +19,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [ChangeNotifierProvider.value(value: Auth())],
+        providers: [
+          ChangeNotifierProvider.value(value: Auth()),
+          Provider(create: (context) => AuthBloc()),
+        ],
         child: Consumer<Auth>(
           builder: (context, auth, _) => MaterialApp(
             home: auth.isAuth ? MyHomePage() : AuthScreen(),
