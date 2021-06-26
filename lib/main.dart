@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         providers: [ChangeNotifierProvider.value(value: Auth())],
         child: Consumer<Auth>(
           builder: (context, auth, _) => MaterialApp(
-            home: auth.isAuth ? Home(auth.user!) : AuthScreen(),
+            home: auth.isAuth != null ? Home(auth.isAuth!) : AuthScreen(),
             routes: {
               MyHomePage.routeName: (ctx) => MyHomePage(),
             },

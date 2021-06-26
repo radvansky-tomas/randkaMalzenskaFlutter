@@ -16,20 +16,30 @@ class Home extends StatelessWidget {
       await Provider.of<Auth>(context, listen: false).logout();
     }
 
+    var displeyName = userCredential.user!.displayName;
+    if (displeyName == null) {
+      displeyName = userCredential.user!.email;
+    }
+
+    var photoUrl = userCredential.user!.photoURL;
+    if (photoUrl == null) {
+      photoUrl =
+          'https://i.wpimg.pl/730x0/m.fitness.wp.pl/4-ea52435acc6cf488e05e75c209b2bd.jpg';
+    }
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Witaj ${userCredential.user!.displayName}',
+              'Witaj $displeyName',
               style: TextStyle(fontSize: 35.0),
             ),
             SizedBox(
               height: 20.0,
             ),
             CircleAvatar(
-              backgroundImage: NetworkImage(userCredential.user!.photoURL!),
+              backgroundImage: NetworkImage(photoUrl),
               radius: 60.0,
             ),
             SizedBox(

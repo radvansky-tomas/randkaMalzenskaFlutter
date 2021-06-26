@@ -62,8 +62,8 @@ class Auth with ChangeNotifier {
   //   return token != null;
   // }
 
-  bool get isAuth {
-    return user != null;
+  UserCredential? get isAuth {
+    return user;
   }
 
   String? get token {
@@ -113,10 +113,16 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signup(String email, String password) async {
-    return _authenticate(email, password, 'signUp');
+    UserCredential result =
+        await authService.signUpWithEmailAndPassword(email, password);
+    _userCredential = result;
+    notifyListeners();
   }
 
   Future<void> signin(String email, String password) async {
-    return _authenticate(email, password, 'signInWithPassword');
+    UserCredential result =
+        await authService.signInWithEmailAndPassword(email, password);
+    _userCredential = result;
+    notifyListeners();
   }
 }
