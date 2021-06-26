@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/providers/auth.dart';
+import 'package:randka_malzenska/screens/auth_facebook.dart';
 
 import 'dart:convert';
 import 'models/course.dart';

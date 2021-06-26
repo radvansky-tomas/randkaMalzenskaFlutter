@@ -1,9 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/models/http_exception.dart';
 import 'package:randka_malzenska/providers/auth.dart';
+
+import 'home.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -254,6 +258,7 @@ class _AuthCardState extends State<AuthCard> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Theme.of(context).primaryColor,
                 ),
+                SignInButton(Buttons.Facebook, onPressed: () => null),
               ],
             ),
           ),
