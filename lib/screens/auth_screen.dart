@@ -121,6 +121,11 @@ class _AuthCardState extends State<AuthCard> {
     await Provider.of<Auth>(context, listen: false).loginFacebook();
   }
 
+  Future<void> _loginGoogle() async {
+    await Provider.of<Auth>(context, listen: false)
+        .signInWithGoogle(context: context);
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
@@ -264,6 +269,11 @@ class _AuthCardState extends State<AuthCard> {
                   Buttons.Facebook,
                   text: 'Zaloguj przez Facebook',
                   onPressed: _loginFace,
+                ),
+                SignInButton(
+                  Buttons.Google,
+                  text: 'Zaloguj przez Google',
+                  onPressed: _loginGoogle,
                 ),
               ],
             ),

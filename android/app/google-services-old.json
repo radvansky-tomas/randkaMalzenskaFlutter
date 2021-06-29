@@ -14,14 +14,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "888881379595-9lgrq1dios037orduo77btejjti5k54j.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.randka_malzenska",
-            "certificate_hash": "ac7d6f951c735d456417ddda2821fc19bdd8e53b"
-          }
-        },
-        {
           "client_id": "888881379595-qgcsj4rnjkitjc9pc08do65ta7p6i15d.apps.googleusercontent.com",
           "client_type": 3
         }
