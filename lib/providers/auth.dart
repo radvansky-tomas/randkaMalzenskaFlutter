@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -21,8 +22,7 @@ class Auth with ChangeNotifier {
 
   Stream<User?> get currentUser => authService.currentUser;
 
-  Future<void> loginFacebook() async {
-    print('Starting Facebook login');
+  Future<void> loginFacebook({required BuildContext context}) async {
     final res = await fb.logIn(
       permissions: [
         FacebookPermission.publicProfile,
@@ -32,37 +32,44 @@ class Auth with ChangeNotifier {
 
     switch (res.status) {
       case FacebookLoginStatus.success:
-        //get token
         final FacebookAccessToken? fbToken = res.accessToken;
         final AuthCredential credential =
             FacebookAuthProvider.credential(fbToken!.token);
         //User credential to sing in with firebase
         final result = await authService.signInWithCrendetail(credential);
-        print('${result.user!.displayName} is now logged in');
-        _token = fbToken.token;
-        _userId = fbToken.userId;
-        _expiryDate = fbToken.expires;
         _userCredential = result;
         notifyListeners();
         break;
       case FacebookLoginStatus.cancel:
-        print('uzytkownik wycofal login');
+        ScaffoldMessenger.of(context).showSnackBar(
+          Auth.customSnackBar(
+            content: 'Wycofałeś logowanie z Facebook.',
+          ),
+        );
         break;
       case FacebookLoginStatus.error:
-        print('${res.error}error achtung');
+        print('ERROR LOGOWANIE FACEBOOK' +
+            res.error!.developerMessage.toString());
+        ScaffoldMessenger.of(context).showSnackBar(
+          Auth.customSnackBar(
+            content: 'Wstąpił błąd przy logowaniu.',
+          ),
+        );
         break;
     }
   }
 
-  logout() {
+  Future<void> logout({required BuildContext context}) async {
+    if (_userCredential!.credential == null) {
+    } else if (_userCredential!.credential!.providerId.contains('facebook')) {
+      signOutFacebook(context: context);
+    } else if (_userCredential!.credential!.providerId.contains('google')) {
+      signOutGoogle(context: context);
+    }
     authService.logout();
     _userCredential = null;
     notifyListeners();
   }
-
-  // bool get isAuth {
-  //   return token != null;
-  // }
 
   UserCredential? get isAuth {
     return user;
@@ -185,7 +192,19 @@ class Auth with ChangeNotifier {
     );
   }
 
-  static Future<void> signOutGoogle({required BuildContext context}) async {
+  Future<void> signOutFacebook({required BuildContext context}) async {
+    try {
+      await fb.logOut();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        Auth.customSnackBar(
+          content: 'Error signing out. Try again.',
+        ),
+      );
+    }
+  }
+
+  Future<void> signOutGoogle({required BuildContext context}) async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
     try {
       await googleSignIn.signOut();

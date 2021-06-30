@@ -1,8 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/button_list.dart';
-import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/models/http_exception.dart';
 import 'package:randka_malzenska/providers/auth.dart';
@@ -70,25 +66,38 @@ class _AuthCardState extends State<AuthCard> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-          title: Text('Wystąpiła buła!'),
+          title: Text('Wystąpił błąd!'),
           content: Text(message),
           actions: [
             TextButton(
                 onPressed: () {
                   Navigator.of(ctx).pop();
                 },
-                child: Text('jest jak jest'))
+                child: Text('powrót'))
           ]),
     );
   }
 
   Future<void> _loginFace() async {
-    await Provider.of<Auth>(context, listen: false).loginFacebook();
+    setState(() {
+      _isLoading = true;
+    });
+    await Provider.of<Auth>(context, listen: false)
+        .loginFacebook(context: context);
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Future<void> _loginGoogle() async {
+    setState(() {
+      _isLoading = true;
+    });
     await Provider.of<Auth>(context, listen: false)
         .signInWithGoogle(context: context);
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Future<void> _submit() async {
@@ -110,22 +119,17 @@ class _AuthCardState extends State<AuthCard> {
             .signup(_authData['email']!, _authData['password']!);
         // Sign user up
       }
-    } on HttpException catch (error) {
-      var errorMessage = 'Autoryzacja nie powiodła się, lipa : (';
-      if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'Email jest juz zarejestrowany';
-      } else if (error.toString().contains('INVALID_EMAILS')) {
-        errorMessage = 'Nieprawidlowy email';
-      } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage = 'Haslo jest za slabe, uzyj silnego';
-      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-        errorMessage = 'Nie ma użytkownika z takim emailem';
-      } else if (error.toString().contains('INVALID_PASSWORD')) {
-        errorMessage = 'Haslo nieprawidlowe';
-      }
-      _showErrorDialog(errorMessage);
     } catch (error) {
-      const errorMessage = 'Autoryzacja nie powiodła się, lipa : (';
+      var errorMessage = 'Autoryzacja nie powiodła się';
+      if (error.toString().contains('user-not-found')) {
+        errorMessage = 'Nie ma użytkownika z takim emailem';
+      } else if (error.toString().contains('wrong-password')) {
+        errorMessage = 'Niepoprawne hasło';
+      } else if (error.toString().contains('email-already-in-use')) {
+        errorMessage = 'Email jest już wykorzystywany';
+      } else if (error.toString().contains('weak-password')) {
+        errorMessage = 'Hasło jest za słabe';
+      }
       _showErrorDialog(errorMessage);
     }
 
@@ -155,9 +159,9 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 360,
+        height: _authMode == AuthMode.Signup ? 320 : 340,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 360),
+            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 340),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -166,7 +170,7 @@ class _AuthCardState extends State<AuthCard> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'E-Mail'),
+                  decoration: InputDecoration(labelText: 'email'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('@')) {
@@ -179,7 +183,7 @@ class _AuthCardState extends State<AuthCard> {
                   },
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Password'),
+                  decoration: InputDecoration(labelText: 'hasło'),
                   obscureText: true,
                   controller: _passwordController,
                   validator: (value) {
@@ -211,8 +215,9 @@ class _AuthCardState extends State<AuthCard> {
                   CircularProgressIndicator()
                 else
                   RaisedButton(
-                    child:
-                        Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
+                    child: Text(_authMode == AuthMode.Login
+                        ? 'Zaloguj'
+                        : 'Zarejestruj się'),
                     onPressed: _submit,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -224,21 +229,42 @@ class _AuthCardState extends State<AuthCard> {
                   ),
                 FlatButton(
                   child: Text(
-                      '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                      '${_authMode == AuthMode.Login ? 'Zarejestruj się' : 'Zaloguj'}'),
                   onPressed: _switchAuthMode,
                   padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Theme.of(context).primaryColor,
                 ),
-                SignInButton(
-                  Buttons.Facebook,
-                  text: 'Zaloguj przez Facebook',
-                  onPressed: _loginFace,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    buildDivider(),
+                    widthSpacer(5.5),
+                    Text(
+                      "lub użyj",
+                      style: TextStyle(color: Colors.grey, fontSize: 15.00),
+                    ),
+                    widthSpacer(5.5),
+                    buildDivider(),
+                    widthSpacer(5.5),
+                  ],
                 ),
-                SignInButton(
-                  Buttons.Google,
-                  text: 'Zaloguj przez Google',
-                  onPressed: _loginGoogle,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Image.asset('assets/images/FacebookLogo.png'),
+                      iconSize: 50,
+                      onPressed: _loginFace,
+                    ),
+                    IconButton(
+                      icon: Image.asset('assets/images/GoogleLogo.png'),
+                      iconSize: 50,
+                      onPressed: _loginGoogle,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -247,4 +273,13 @@ class _AuthCardState extends State<AuthCard> {
       ),
     );
   }
+
+  Widget buildDivider() => Container(
+        color: Colors.grey,
+        height: 1.5,
+        width: 55,
+      );
+  Widget heightSpacer(double myHeight) => SizedBox(height: myHeight);
+
+  Widget widthSpacer(double myWidth) => SizedBox(width: myWidth);
 }

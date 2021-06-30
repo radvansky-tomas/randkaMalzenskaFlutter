@@ -13,7 +13,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<void> _logoutFace() async {
-      await Provider.of<Auth>(context, listen: false).logout();
+      await Provider.of<Auth>(context, listen: false).logout(context: context);
     }
 
     var displeyName = userCredential.user!.displayName;
@@ -45,9 +45,8 @@ class Home extends StatelessWidget {
             SizedBox(
               height: 100.0,
             ),
-            SignInButton(
-              Buttons.Facebook,
-              text: 'Wyloguj z Facebook',
+            TextButton(
+              child: Text('Wyloguj'),
               onPressed: _logoutFace,
             ),
           ],
