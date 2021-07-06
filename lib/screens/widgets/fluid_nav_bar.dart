@@ -109,7 +109,7 @@ class _FluidNavBarState extends State<FluidNavBar>
       FluidFillIcons.window,
     ];
     FluidNavBarButton button = FluidNavBarButton(
-        icons[0], _selectedIndex == 0, () => _handlePressed(0));
+        icons[1], _selectedIndex == 1, () => _handlePressed(1));
     var buttons = List<FluidNavBarButton>.filled(3, button, growable: false);
     for (var i = 0; i < 3; ++i) {
       buttons[i] = FluidNavBarButton(
