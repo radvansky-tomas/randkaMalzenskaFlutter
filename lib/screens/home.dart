@@ -3,7 +3,7 @@ import 'package:randka_malzenska/screens/widgets/fluid_nav_bar.dart';
 
 import 'account.dart';
 import 'grid.dart';
-import 'home copy.dart';
+import 'home_content.dart';
 
 class Home extends StatefulWidget {
   Home();
