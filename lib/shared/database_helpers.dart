@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
 // database table and column names
-final String tableWords = 'words';
+final String tableName = 'words';
 final String columnId = '_id';
 final String columnTitle = 'title';
 final String columnContent = 'content';
@@ -66,7 +66,7 @@ class DatabaseHelper {
   // SQL string to create the database
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-              CREATE TABLE $tableWords (
+              CREATE TABLE $tableName (
                 $columnId INTEGER PRIMARY KEY,
                 $columnTitle TEXT NOT NULL,
                 $columnContent TEXT NOT NULL
@@ -78,14 +78,14 @@ class DatabaseHelper {
 
   Future<int> insert(Note note) async {
     Database db = await database;
-    int id = await db.insert(tableWords, note.toMap());
+    int id = await db.insert(tableName, note.toMap());
     return id;
   }
 
   Future<List<Note>?> queryNote() async {
     Database db = await database;
     List<Map> maps = await db.query(
-      tableWords,
+      tableName,
       columns: [columnId, columnTitle, columnContent],
     );
     List<Note> notes = [];
@@ -97,5 +97,11 @@ class DatabaseHelper {
       return notes;
     }
     return null;
+  }
+
+  Future<int?> getCount() async {
+    Database db = await database;
+    return Sqflite.firstIntValue(
+        await db.query('SELECT COUNT(*) FROM $tableName'));
   }
 }
