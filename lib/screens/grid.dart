@@ -39,7 +39,33 @@ class _GridContentState extends State<GridContent> {
             // return Container();
           }
           if (projectSnap.data == null) {
-            return Text('Brak notatek');
+            return Scaffold(
+              backgroundColor: Colors.transparent,
+              floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+              floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return NoteView(NoteMode.Adding, refresh, null);
+                      },
+                    ),
+                  );
+                },
+              ),
+              body: Container(
+                alignment: Alignment.center,
+                child: Text(
+                  'Brak notatek, kliknij plusik aby dodać swoją pierwsza notatkę',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            );
           }
           return Scaffold(
             backgroundColor: Colors.transparent,
