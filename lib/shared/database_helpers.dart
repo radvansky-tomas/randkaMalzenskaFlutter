@@ -99,6 +99,17 @@ class DatabaseHelper {
     return null;
   }
 
+  Future updateNote(Map<String, dynamic> note) async {
+    Database db = await database;
+    await db.update(tableName, note,
+        where: '$columnId = ?', whereArgs: [note['$columnId']]);
+  }
+
+  Future deleteNote(int id) async {
+    Database db = await database;
+    await db.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
+  }
+
   Future<int?> getCount() async {
     Database db = await database;
     return Sqflite.firstIntValue(

@@ -51,7 +51,7 @@ class _GridContentState extends State<GridContent> {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return NoteView(NoteMode.Adding, refresh);
+                      return NoteView(NoteMode.Adding, refresh, null);
                     },
                   ),
                 );
@@ -67,7 +67,7 @@ class _GridContentState extends State<GridContent> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return NoteView(NoteMode.Edditing, refresh);
+                          return NoteView(NoteMode.Edditing, refresh, note);
                         },
                       ),
                     )

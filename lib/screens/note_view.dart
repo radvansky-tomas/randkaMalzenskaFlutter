@@ -7,8 +7,9 @@ enum NoteMode { Edditing, Adding }
 class NoteView extends StatefulWidget {
   final NoteMode noteMode;
   final Function() notifyParent;
+  final Note? note;
 
-  NoteView(this.noteMode, this.notifyParent);
+  NoteView(this.noteMode, this.notifyParent, this.note);
 
   @override
   _NoteViewState createState() => _NoteViewState();
@@ -17,6 +18,15 @@ class NoteView extends StatefulWidget {
 class _NoteViewState extends State<NoteView> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    if (widget.noteMode == NoteMode.Edditing) {
+      _titleController.text = widget.note!.title!;
+      _textController.text = widget.note!.content!;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +63,11 @@ class _NoteViewState extends State<NoteView> {
                     _insert(title, text);
                     widget.notifyParent();
                     Navigator.pop(context);
+                  } else if (widget.noteMode == NoteMode.Edditing) {
+                    _update(_titleController.text, _textController.text,
+                        widget.note!.id!);
+                    widget.notifyParent();
+                    Navigator.pop(context);
                   }
                 }),
                 _NoteButton('Cofnij', Colors.grey[600]!, () {
@@ -60,6 +75,8 @@ class _NoteViewState extends State<NoteView> {
                 }),
                 widget.noteMode == NoteMode.Edditing
                     ? _NoteButton('Usuń', Colors.red[300]!, () {
+                        _delete(widget.note!.id!);
+                        widget.notifyParent();
                         Navigator.pop(context);
                       })
                     : Container()
@@ -70,6 +87,20 @@ class _NoteViewState extends State<NoteView> {
       ),
     );
   }
+}
+
+_delete(int id) async {
+  DatabaseHelper helper = DatabaseHelper.instance;
+  await helper.deleteNote(id);
+}
+
+_update(String title, String text, int id) async {
+  Note note = new Note();
+  note.title = title;
+  note.content = text;
+  note.id = id;
+  DatabaseHelper helper = DatabaseHelper.instance;
+  await helper.updateNote(note.toMap());
 }
 
 Future<int> _insert(String title, String text) async {
