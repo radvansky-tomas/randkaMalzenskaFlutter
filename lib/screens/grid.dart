@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:randka_malzenska/screens/note_view.dart';
 import 'package:randka_malzenska/shared/database_helpers.dart';
 
 class GridContent extends StatefulWidget {
@@ -45,18 +46,52 @@ class _GridContentState extends State<GridContent> {
             floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
             floatingActionButton: FloatingActionButton(
               child: Icon(Icons.add),
-              onPressed: () => _insert(note1),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return NoteView(NoteMode.Adding, refresh);
+                    },
+                  ),
+                );
+              },
             ),
             body: ListView.builder(
               itemCount: projectSnap.data!.length,
               itemBuilder: (context, index) {
                 Note note = projectSnap.data![index];
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 30.0, bottom: 30, left: 13.0, right: 22.0),
-                    child: Column(
-                      children: <Widget>[Text(note.content!)],
+                return GestureDetector(
+                  onTap: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return NoteView(NoteMode.Edditing, refresh);
+                        },
+                      ),
+                    )
+                  },
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 30.0, bottom: 30, left: 13.0, right: 22.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            note.title!,
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            note.content!,
+                            style: TextStyle(color: Colors.grey),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -69,21 +104,10 @@ class _GridContentState extends State<GridContent> {
     );
   }
 
-  _save() async {
-    Note note = Note();
-    note.title = 'tytul';
-    note.content = 'moj ulubiony kurs to dzien 4 odcinek 6';
-    DatabaseHelper helper = DatabaseHelper.instance;
-    int id = await helper.insert(note);
-    print('inserted row: $id');
-  }
-
-  Future<int> _insert(Note note) async {
-    DatabaseHelper helper = DatabaseHelper.instance;
+  refresh() {
     setState(() {
       _notes = _read();
     });
-    return await helper.insert(note);
   }
 
   Future<List<Note>?> _read() async {

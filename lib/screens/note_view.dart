@@ -1,0 +1,98 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:randka_malzenska/shared/database_helpers.dart';
+
+enum NoteMode { Edditing, Adding }
+
+class NoteView extends StatefulWidget {
+  final NoteMode noteMode;
+  final Function() notifyParent;
+
+  NoteView(this.noteMode, this.notifyParent);
+
+  @override
+  _NoteViewState createState() => _NoteViewState();
+}
+
+class _NoteViewState extends State<NoteView> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.noteMode == NoteMode.Adding
+            ? 'Dodaj notatke'
+            : 'Edytuj notatke'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(hintText: 'Tytuł notatki'),
+            ),
+            Container(
+              height: 8,
+            ),
+            TextField(
+              controller: _textController,
+              decoration: InputDecoration(hintText: 'Treść notatki'),
+            ),
+            Container(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _NoteButton('Zapisz', Colors.blue, () {
+                  if (widget.noteMode == NoteMode.Adding) {
+                    final title = _titleController.text;
+                    final text = _textController.text;
+                    _insert(title, text);
+                    widget.notifyParent();
+                    Navigator.pop(context);
+                  }
+                }),
+                _NoteButton('Cofnij', Colors.grey[600]!, () {
+                  Navigator.pop(context);
+                }),
+                widget.noteMode == NoteMode.Edditing
+                    ? _NoteButton('Usuń', Colors.red[300]!, () {
+                        Navigator.pop(context);
+                      })
+                    : Container()
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Future<int> _insert(String title, String text) async {
+  Note note = new Note();
+  note.title = title;
+  note.content = text;
+  DatabaseHelper helper = DatabaseHelper.instance;
+  return await helper.insert(note);
+}
+
+class _NoteButton extends StatelessWidget {
+  final String _text;
+  final Color _color;
+  final VoidCallback _onPressed;
+  _NoteButton(this._text, this._color, this._onPressed);
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+        onPressed: _onPressed,
+        child: Text(
+          _text,
+          style: TextStyle(color: Colors.white),
+        ),
+        color: _color);
+  }
+}
