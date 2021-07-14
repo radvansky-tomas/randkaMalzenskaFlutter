@@ -22,14 +22,6 @@
           }
         },
         {
-          "client_id": "888881379595-bka0491a5qvchq67dij2kvprra33h1hh.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.randka_malzenska",
-            "certificate_hash": "451299f0561f7cc31c1a8947cc95a6356ae73bd7"
-          }
-        },
-        {
           "client_id": "888881379595-qgcsj4rnjkitjc9pc08do65ta7p6i15d.apps.googleusercontent.com",
           "client_type": 3
         }
