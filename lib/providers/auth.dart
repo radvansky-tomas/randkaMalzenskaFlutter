@@ -8,13 +8,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:randka_malzenska/services/auth_firebase_service.dart';
 
 class Auth with ChangeNotifier {
-  String? _token;
-  DateTime? _expiryDate;
-  String? _userId;
-  UserCredential? _userCredential;
-
   final authService = AuthService();
   final fb = FacebookLogin();
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   Stream<User?> get currentUser => authService.currentUser;
 
@@ -32,8 +28,7 @@ class Auth with ChangeNotifier {
         final AuthCredential credential =
             FacebookAuthProvider.credential(fbToken!.token);
         //User credential to sing in with firebase
-        final result = await authService.signInWithCrendetail(credential);
-        _userCredential = result;
+        await authService.signInWithCrendetail(credential);
         notifyListeners();
         break;
       case FacebookLoginStatus.cancel:
@@ -56,48 +51,23 @@ class Auth with ChangeNotifier {
   }
 
   logout() {
+    fb.logOut();
+    googleSignIn.signOut();
     authService.logout();
   }
 
-  UserCredential? get isAuth {
-    return user;
-  }
-
-  String? get token {
-    if (_expiryDate != null &&
-        _expiryDate!.isAfter(DateTime.now()) &&
-        _token != null) {
-      return _token;
-    }
-    return null;
-  }
-
-  UserCredential? get user {
-    if (_userCredential != null) {
-      return _userCredential;
-    }
-    return null;
-  }
-
   Future<void> signup(String email, String password) async {
-    UserCredential result =
-        await authService.signUpWithEmailAndPassword(email, password);
-    _userCredential = result;
+    await authService.signUpWithEmailAndPassword(email, password);
     notifyListeners();
   }
 
   Future<void> signin(String email, String password) async {
-    UserCredential result =
-        await authService.signInWithEmailAndPassword(email, password);
-    _userCredential = result;
+    await authService.signInWithEmailAndPassword(email, password);
     notifyListeners();
   }
 
   Future<void> signInWithGoogle({required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-
     final GoogleSignInAccount? googleSignInAccount =
         await googleSignIn.signIn();
 
@@ -111,9 +81,7 @@ class Auth with ChangeNotifier {
       );
 
       try {
-        final UserCredential userCredential =
-            await auth.signInWithCredential(credential);
-        _userCredential = userCredential;
+        await auth.signInWithCredential(credential);
         notifyListeners();
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
@@ -148,30 +116,5 @@ class Auth with ChangeNotifier {
         style: TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
       ),
     );
-  }
-
-  Future<void> signOutFacebook({required BuildContext context}) async {
-    try {
-      await fb.logOut();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        Auth.customSnackBar(
-          content: 'Error signing out. Try again.',
-        ),
-      );
-    }
-  }
-
-  Future<void> signOutGoogle({required BuildContext context}) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    try {
-      await googleSignIn.signOut();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        Auth.customSnackBar(
-          content: 'Error signing out. Try again.',
-        ),
-      );
-    }
   }
 }

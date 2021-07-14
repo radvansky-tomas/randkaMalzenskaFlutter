@@ -35,9 +35,6 @@ class _AccountContentState extends State<AccountContent> {
   @override
   Widget build(BuildContext context) {
     var authBloc = Provider.of<Auth>(context);
-    Future<void> _logout() async {
-      await Provider.of<Auth>(context, listen: false).logout();
-    }
 
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20, top: 20),
@@ -64,7 +61,7 @@ class _AccountContentState extends State<AccountContent> {
                     'Wyloguj',
                     style: TextStyle(fontSize: 35),
                   ),
-                  onPressed: _logout,
+                  onPressed: () => authBloc.logout(),
                 ),
               ],
             ),
