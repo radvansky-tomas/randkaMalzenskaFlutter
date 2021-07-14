@@ -1,6 +1,11 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/providers/auth.dart';
+
+import 'home.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -52,6 +57,26 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
+  late StreamSubscription<User?> loginStateSubscription;
+
+  @override
+  void initState() {
+    var authBloc = Provider.of<Auth>(context, listen: false);
+    loginStateSubscription = authBloc.currentUser.listen((user) {
+      if (user != null) {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    loginStateSubscription.cancel();
+    super.dispose();
+  }
+
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
