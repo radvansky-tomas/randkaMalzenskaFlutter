@@ -55,16 +55,8 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> logout({required BuildContext context}) async {
-    if (_userCredential!.credential == null) {
-    } else if (_userCredential!.credential!.providerId.contains('facebook')) {
-      signOutFacebook(context: context);
-    } else if (_userCredential!.credential!.providerId.contains('google')) {
-      signOutGoogle(context: context);
-    }
+  logout() {
     authService.logout();
-    _userCredential = null;
-    notifyListeners();
   }
 
   UserCredential? get isAuth {
