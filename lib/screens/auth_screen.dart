@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:randka_malzenska/models/http_exception.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 
 enum AuthMode { Signup, Login }
