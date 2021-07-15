@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
+import 'package:randka_malzenska/screens/camera_screen.dart';
 
 class AccountContent extends StatefulWidget {
   @override
@@ -62,6 +63,25 @@ class _AccountContentState extends State<AccountContent> {
                     style: TextStyle(fontSize: 35),
                   ),
                   onPressed: () => authBloc.logout(),
+                ),
+                TextButton(
+                  style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all(Colors.amber[700])),
+                  child: Text(
+                    'Przejdz do aparatu',
+                    style: TextStyle(fontSize: 35),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return CameraScreen();
+                        },
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
