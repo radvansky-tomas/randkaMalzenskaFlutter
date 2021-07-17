@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:randka_malzenska/screens/preview_screen.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -53,11 +52,7 @@ class _CameraScreenState extends State<CameraScreen> {
             color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
       );
     }
-
-    return AspectRatio(
-      aspectRatio: cameraController!.value.aspectRatio,
-      child: CameraPreview(cameraController!),
-    );
+    return CameraPreview(cameraController!);
   }
 
   Widget cameraControl(context) {
@@ -115,18 +110,15 @@ class _CameraScreenState extends State<CameraScreen> {
 
   onCapture(context) async {
     try {
-      final p = await getTemporaryDirectory();
       final name = DateTime.now();
-      final path = "${p.path}/$name.png";
 
       await cameraController!.takePicture().then((value) {
-        print('here');
-        print(path);
+        print('SCIEZKA DO PLIKU STWORZONEGO: ' + value.path);
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => PreviewScreen(
-                      imgPath: path,
+                      imgPath: value.path,
                       fileName: "$name.png",
                     )));
       });
@@ -160,10 +152,6 @@ class _CameraScreenState extends State<CameraScreen> {
       body: Container(
         child: Stack(
           children: <Widget>[
-//            Expanded(
-//              flex: 1,
-//              child: _cameraPreviewWidget(),
-//            ),
             Align(
               alignment: Alignment.center,
               child: cameraPreview(),
