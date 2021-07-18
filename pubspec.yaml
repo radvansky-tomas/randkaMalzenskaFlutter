@@ -33,6 +33,7 @@ dependencies:
   path_provider: ^2.0.0
   camera: ^0.8.1+4
   path: ^1.8.0
+  audioplayers: ^0.19.1
   flutter:
     sdk: flutter
 

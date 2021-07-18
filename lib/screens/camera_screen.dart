@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:randka_malzenska/screens/preview_screen.dart';
+import 'package:randka_malzenska/shared/database_helpers.dart';
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -111,8 +115,19 @@ class _CameraScreenState extends State<CameraScreen> {
   onCapture(context) async {
     try {
       final name = DateTime.now();
+      // using your method of getting an image
+
+      DatabaseHelper helper = DatabaseHelper.instance;
+      final String _appPath =
+          await getApplicationDocumentsDirectory().then((value) => value.path);
 
       await cameraController!.takePicture().then((value) {
+        File tmpFile = File(value.path);
+        final String _fileName = value.name;
+        tmpFile.copy('$_appPath/$_fileName');
+        Photo photo = new Photo();
+        photo.path = '$_appPath/$_fileName';
+        helper.insertPhoto(photo);
         print('SCIEZKA DO PLIKU STWORZONEGO: ' + value.path);
         Navigator.push(
             context,

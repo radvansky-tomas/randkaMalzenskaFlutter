@@ -3,13 +3,19 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
-// database table and column names
-final String tableName = 'words';
+// note table
+final String noteTableName = 'words';
 final String columnId = '_id';
-final String columnTitle = 'title';
-final String columnContent = 'content';
+final String noteColumnTitle = 'title';
+final String noteColumnContent = 'content';
 
-// data model class
+// photo table
+final String photoTableName = 'photos';
+final String photoColumnPath = 'path';
+final String photoPrimaryOrder = 'primaryOrder';
+final String photoSecondaryOrder = 'secondaryOrder';
+
+// note model class
 class Note {
   int? id;
   String? title;
@@ -20,13 +26,47 @@ class Note {
   // convenience constructor to create a Note object
   Note.fromMap(Map<String, dynamic> map) {
     id = map[columnId];
-    title = map[columnTitle];
-    content = map[columnContent];
+    title = map[noteColumnTitle];
+    content = map[noteColumnContent];
   }
 
   // convenience method to create a Map from this Note object
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{columnTitle: title, columnContent: content};
+    var map = <String, dynamic>{
+      noteColumnTitle: title,
+      noteColumnContent: content
+    };
+    if (id != null) {
+      map[columnId] = id;
+    }
+    return map;
+  }
+}
+
+// photo model class
+class Photo {
+  int? id;
+  String? path;
+  int? primaryOrder;
+  int? secondaryOrder;
+
+  Photo();
+
+  // convenience constructor to create a Photo object
+  Photo.fromMap(Map<String, dynamic> map) {
+    id = map[columnId];
+    path = map[photoColumnPath];
+    primaryOrder = map[photoPrimaryOrder];
+    secondaryOrder = map[photoSecondaryOrder];
+  }
+
+  // convenience method to create a Map from this Photo object
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      photoColumnPath: path,
+      photoPrimaryOrder: primaryOrder,
+      photoSecondaryOrder: secondaryOrder,
+    };
     if (id != null) {
       map[columnId] = id;
     }
@@ -37,7 +77,7 @@ class Note {
 // singleton class to manage the database
 class DatabaseHelper {
   // This is the actual database filename that is saved in the docs directory.
-  static final _databaseName = "MyDatabase.db";
+  static final _databaseName = "MyDatabase3.db";
   // Increment this version when you need to change the schema.
   static final _databaseVersion = 1;
 
@@ -66,27 +106,41 @@ class DatabaseHelper {
   // SQL string to create the database
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-              CREATE TABLE $tableName (
+              CREATE TABLE $noteTableName (
                 $columnId INTEGER PRIMARY KEY,
-                $columnTitle TEXT NOT NULL,
-                $columnContent TEXT NOT NULL
+                $noteColumnTitle TEXT NOT NULL,
+                $noteColumnContent TEXT NOT NULL
+              )
+              ''');
+    await db.execute('''
+              CREATE TABLE $photoTableName (
+                $columnId INTEGER PRIMARY KEY,
+                $photoColumnPath TEXT NOT NULL,
+                $photoPrimaryOrder INTEGER,
+                $photoSecondaryOrder INTEGER             
               )
               ''');
   }
 
   // Database helper methods:
 
-  Future<int> insert(Note note) async {
+  Future<int> insertNote(Note note) async {
     Database db = await database;
-    int id = await db.insert(tableName, note.toMap());
+    int id = await db.insert(noteTableName, note.toMap());
+    return id;
+  }
+
+  Future<int> insertPhoto(Photo photo) async {
+    Database db = await database;
+    int id = await db.insert(photoTableName, photo.toMap());
     return id;
   }
 
   Future<List<Note>?> queryNote() async {
     Database db = await database;
     List<Map> maps = await db.query(
-      tableName,
-      columns: [columnId, columnTitle, columnContent],
+      noteTableName,
+      columns: [columnId, noteColumnTitle, noteColumnContent],
     );
     List<Note> notes = [];
     if (maps.length > 0) {
@@ -99,20 +153,37 @@ class DatabaseHelper {
     return null;
   }
 
+  Future<List<Photo>?> queryPhoto() async {
+    Database db = await database;
+    List<Map> maps = await db.query(
+      photoTableName,
+      columns: [columnId, photoColumnPath],
+    );
+    List<Photo> photos = [];
+    if (maps.length > 0) {
+      maps.forEach((result) {
+        Photo photo = Photo.fromMap(result as Map<String, dynamic>);
+        photos.add(photo);
+      });
+      return photos;
+    }
+    return null;
+  }
+
   Future updateNote(Map<String, dynamic> note) async {
     Database db = await database;
-    await db.update(tableName, note,
+    await db.update(noteTableName, note,
         where: '$columnId = ?', whereArgs: [note['$columnId']]);
   }
 
   Future deleteNote(int id) async {
     Database db = await database;
-    await db.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
+    await db.delete(noteTableName, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  Future<int?> getCount() async {
+  Future<int?> getNoteCount() async {
     Database db = await database;
     return Sqflite.firstIntValue(
-        await db.query('SELECT COUNT(*) FROM $tableName'));
+        await db.query('SELECT COUNT(*) FROM $noteTableName'));
   }
 }

@@ -108,7 +108,7 @@ Future<int> _insert(String title, String text) async {
   note.title = title;
   note.content = text;
   DatabaseHelper helper = DatabaseHelper.instance;
-  return await helper.insert(note);
+  return await helper.insertNote(note);
 }
 
 class _NoteButton extends StatelessWidget {
