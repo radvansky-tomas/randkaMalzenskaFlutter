@@ -34,6 +34,12 @@ dependencies:
   camera: ^0.8.1+4
   path: ^1.8.0
   audioplayers: ^0.19.1
+  flutter_local_notifications: ^6.0.0
+  device_info_plus: ^2.1.0
+  flutter_native_timezone: ^2.0.0
+  rxdart: ^0.27.1
+  flutter_datetime_picker: ^1.5.1
+  shared_preferences: ^2.0.6
   flutter:
     sdk: flutter
 

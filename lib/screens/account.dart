@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/camera_screen.dart';
+import 'package:randka_malzenska/screens/notification/notification_screen.dart';
 
 class AccountContent extends StatefulWidget {
   @override
@@ -14,9 +16,33 @@ class AccountContent extends StatefulWidget {
 
 class _AccountContentState extends State<AccountContent> {
   late StreamSubscription<User?> loginStateSubscription;
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  void _initializeNotification() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (String? payload) async {
+      if (payload != null) {
+        debugPrint('notification payload: $payload');
+      }
+    });
+  }
 
   @override
   void initState() {
+    super.initState();
+    _verifyUserIsLogged();
+    _initializeNotification();
+  }
+
+  void _verifyUserIsLogged() {
     var authBloc = Provider.of<Auth>(context, listen: false);
     loginStateSubscription = authBloc.currentUser.listen((user) {
       if (user == null) {
@@ -24,7 +50,6 @@ class _AccountContentState extends State<AccountContent> {
             MaterialPageRoute(builder: (context) => AuthScreen()));
       }
     });
-    super.initState();
   }
 
   @override
@@ -64,20 +89,25 @@ class _AccountContentState extends State<AccountContent> {
                   ),
                   onPressed: () => authBloc.logout(),
                 ),
+                goToCammeraButton(context),
                 TextButton(
                   style: ButtonStyle(
                       foregroundColor:
                           MaterialStateProperty.all(Colors.amber[700])),
                   child: Text(
-                    'Przejdz do aparatu',
-                    style: TextStyle(fontSize: 35),
+                    'Wyslij powiadomienie',
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.green,
+                    ),
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return CameraScreen();
+                          return NotificationScreen(
+                              flutterLocalNotificationsPlugin);
                         },
                       ),
                     );
@@ -90,4 +120,34 @@ class _AccountContentState extends State<AccountContent> {
       ),
     );
   }
+
+  void _showNotification() async {
+    // var androidDetails = new AndroidNotificationDetails(
+    //     "channelId", "Local Notification", "Opis");
+    // var generalNotifiaction = new NotificationDetails(android: androidDetails);
+    // await flutterLocalNotificationsPlugin.show(
+    //     0, "title", "body", generalNotifiaction);
+    // await _scheduleDailyTenAMNotification();
+  }
+}
+
+Widget goToCammeraButton(BuildContext context) {
+  return TextButton(
+    style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all(Colors.amber[700])),
+    child: Text(
+      'Przejdz do aparatu',
+      style: TextStyle(fontSize: 35),
+    ),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return CameraScreen();
+          },
+        ),
+      );
+    },
+  );
 }
