@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/providers/auth.dart';
+import 'package:randka_malzenska/screens/audio/audio_screen.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/camera_screen.dart';
 import 'package:randka_malzenska/screens/notification/notification_screen.dart';
+import 'package:randka_malzenska/screens/video/video_screen.dart';
 
 class AccountContent extends StatefulWidget {
   @override
@@ -90,29 +92,9 @@ class _AccountContentState extends State<AccountContent> {
                   onPressed: () => authBloc.logout(),
                 ),
                 goToCammeraButton(context),
-                TextButton(
-                  style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all(Colors.amber[700])),
-                  child: Text(
-                    'Wyslij powiadomienie',
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.green,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return NotificationScreen(
-                              flutterLocalNotificationsPlugin);
-                        },
-                      ),
-                    );
-                  },
-                ),
+                notificationButton(context, flutterLocalNotificationsPlugin),
+                videoButton(context),
+                audioButton(context),
               ],
             ),
           );
@@ -120,15 +102,73 @@ class _AccountContentState extends State<AccountContent> {
       ),
     );
   }
+}
 
-  void _showNotification() async {
-    // var androidDetails = new AndroidNotificationDetails(
-    //     "channelId", "Local Notification", "Opis");
-    // var generalNotifiaction = new NotificationDetails(android: androidDetails);
-    // await flutterLocalNotificationsPlugin.show(
-    //     0, "title", "body", generalNotifiaction);
-    // await _scheduleDailyTenAMNotification();
-  }
+Widget notificationButton(BuildContext context,
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) {
+  return TextButton(
+    style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all(Colors.amber[700])),
+    child: Text(
+      'Wyslij powiadomienie',
+      style: TextStyle(
+        fontSize: 25,
+        color: Colors.green,
+      ),
+    ),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return NotificationScreen(flutterLocalNotificationsPlugin);
+          },
+        ),
+      );
+    },
+  );
+}
+
+Widget videoButton(BuildContext context) {
+  return TextButton(
+    style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all(Colors.purple[300])),
+    child: Text(
+      'Przejdz do odtwarzacza video',
+      style: TextStyle(fontSize: 17),
+    ),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return VideoScreen();
+          },
+        ),
+      );
+    },
+  );
+}
+
+Widget audioButton(BuildContext context) {
+  return TextButton(
+    style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all(Colors.green[200])),
+    child: Text(
+      'Przejdz do odtwarzacza audio',
+      style: TextStyle(fontSize: 17),
+    ),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return AudioScreen();
+          },
+        ),
+      );
+    },
+  );
 }
 
 Widget goToCammeraButton(BuildContext context) {
