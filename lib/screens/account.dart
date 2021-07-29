@@ -8,6 +8,7 @@ import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/audio/audio_screen.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/camera_screen.dart';
+import 'package:randka_malzenska/screens/html/html_screen.dart';
 import 'package:randka_malzenska/screens/notification/notification_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
 
@@ -91,10 +92,34 @@ class _AccountContentState extends State<AccountContent> {
                   ),
                   onPressed: () => authBloc.logout(),
                 ),
-                goToCammeraButton(context),
-                notificationButton(context, flutterLocalNotificationsPlugin),
-                videoButton(context),
-                audioButton(context),
+                screenButton(
+                  context,
+                  'Przejdz do aparatu',
+                  Colors.amber[700],
+                  CameraScreen(),
+                ),
+                notificationButton(
+                  context,
+                  flutterLocalNotificationsPlugin,
+                ),
+                screenButton(
+                  context,
+                  'Przejdz do odtwarzacza video',
+                  Colors.purple[300],
+                  VideoScreen(),
+                ),
+                screenButton(
+                  context,
+                  'Przejdz do odtwarzacza audio',
+                  Colors.green[200],
+                  AudioScreen(),
+                ),
+                screenButton(
+                  context,
+                  'Przejdz do podglądu html',
+                  Colors.orange[700],
+                  HtmlScreen(),
+                ),
               ],
             ),
           );
@@ -129,62 +154,22 @@ Widget notificationButton(BuildContext context,
   );
 }
 
-Widget videoButton(BuildContext context) {
+Widget screenButton(
+    BuildContext context, String text, Color? color, Widget widget) {
   return TextButton(
     style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all(Colors.purple[300])),
+      foregroundColor: MaterialStateProperty.all(color),
+    ),
     child: Text(
-      'Przejdz do odtwarzacza video',
-      style: TextStyle(fontSize: 17),
+      text,
+      style: TextStyle(fontSize: 18),
     ),
     onPressed: () {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) {
-            return VideoScreen();
-          },
-        ),
-      );
-    },
-  );
-}
-
-Widget audioButton(BuildContext context) {
-  return TextButton(
-    style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all(Colors.green[200])),
-    child: Text(
-      'Przejdz do odtwarzacza audio',
-      style: TextStyle(fontSize: 17),
-    ),
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return AudioScreen();
-          },
-        ),
-      );
-    },
-  );
-}
-
-Widget goToCammeraButton(BuildContext context) {
-  return TextButton(
-    style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all(Colors.amber[700])),
-    child: Text(
-      'Przejdz do aparatu',
-      style: TextStyle(fontSize: 35),
-    ),
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return CameraScreen();
+            return widget;
           },
         ),
       );
