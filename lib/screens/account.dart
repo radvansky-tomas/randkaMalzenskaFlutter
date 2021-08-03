@@ -10,7 +10,9 @@ import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/camera_screen.dart';
 import 'package:randka_malzenska/screens/html/html_screen.dart';
 import 'package:randka_malzenska/screens/notification/notification_screen.dart';
+import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
+import 'package:randka_malzenska/services/rest/connection_service.dart';
 
 class AccountContent extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class AccountContent extends StatefulWidget {
 class _AccountContentState extends State<AccountContent> {
   late StreamSubscription<User?> loginStateSubscription;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  ConnectionService connectionService = new ConnectionService();
 
   void _initializeNotification() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -120,6 +123,12 @@ class _AccountContentState extends State<AccountContent> {
                   Colors.orange[700],
                   HtmlScreen(),
                 ),
+                screenButton(
+                  context,
+                  'Wykonaj strzal',
+                  Colors.blue,
+                  StepScreen(),
+                )
               ],
             ),
           );

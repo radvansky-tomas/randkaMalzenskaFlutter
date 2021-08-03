@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:randka_malzenska/services/auth_firebase_service.dart';
+import 'package:randka_malzenska/services/auth/auth_firebase_service.dart';
 
 class Auth with ChangeNotifier {
   final authService = AuthService();
