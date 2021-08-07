@@ -71,6 +71,9 @@ flutter:
     - assets/images/login_tlo.jpg
     - assets/images/GoogleLogo.png
     - assets/images/FacebookLogo.png
+    - assets/images/dzialac.jpg
+    - assets/images/osadzic.jpg
+    - assets/images/widziec.jpg
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
