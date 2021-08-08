@@ -1,7 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:randka_malzenska/screens/registration/registry_data_screen.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoScreen extends StatefulWidget {
@@ -118,6 +117,11 @@ class _VideoScreenState extends State<VideoScreen> {
           ? Chewie(controller: chewieController)
           : Scaffold(
               backgroundColor: Colors.black,
+              body: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
             ),
     );
   }

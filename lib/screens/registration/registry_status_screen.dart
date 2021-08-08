@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:randka_malzenska/screens/html/html_screen.dart';
-import 'package:randka_malzenska/screens/registration/registry_user_screen.dart';
-import 'package:randka_malzenska/screens/video/video_screen.dart';
+import 'package:randka_malzenska/screens/step/step_screen.dart';
 
-class RegistryUserDataScreen extends StatelessWidget {
+class RegistryStatusScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,11 +13,11 @@ class RegistryUserDataScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'WYBIERZ PŁEĆ',
+              'WYBIERZ STATUS ZWIĄZKU',
               overflow: TextOverflow.clip,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 18,
               ),
             ),
             SizedBox(
@@ -29,12 +27,10 @@ class RegistryUserDataScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: GenderButton(
-                    "MĘŻCZYZNA",
+                    "MAŁŻEŃSTWO",
                     () => {
                       _onPressed(
                         context,
-                        'https://player.vimeo.com/external/488460782.hd.mp4?s=acb30451ae7fcc25aaffd83347158bde864fd52e&profile_id=175',
-                        new RegistryUserScreen(),
                       )
                     },
                   ),
@@ -48,12 +44,10 @@ class RegistryUserDataScreen extends StatelessWidget {
               children: [
                 Expanded(
                     child: GenderButton(
-                  "KOBIETA",
+                  "PRZED MAŁŻEŃSTWEM",
                   () => {
                     _onPressed(
                       context,
-                      'https://player.vimeo.com/external/488452170.hd.mp4?s=c11e831bae18770783db2434ee9775de18579151&profile_id=175',
-                      new RegistryUserScreen(),
                     )
                   },
                 )),
@@ -65,15 +59,12 @@ class RegistryUserDataScreen extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context, String path, Widget widget) {
+  void _onPressed(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
-          return VideoScreen(
-            path,
-            widget,
-          );
+          return StepScreen();
         },
       ),
     );

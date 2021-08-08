@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:randka_malzenska/models/step.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
@@ -21,6 +22,7 @@ class _StepScreenState extends State<StepScreen> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setEnabledSystemUIOverlays([]);
     steps = connectionService.getStepsWithSubSteps();
     _initializePreferences().whenComplete(() {
       setState(() {});

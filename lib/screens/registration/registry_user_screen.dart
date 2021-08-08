@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/screens/html/html_screen.dart';
-import 'package:randka_malzenska/screens/registration/registry_user_screen.dart';
+import 'package:randka_malzenska/screens/registration/registry_status_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
 
-class RegistryUserDataScreen extends StatelessWidget {
+class RegistryUserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,11 +15,11 @@ class RegistryUserDataScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'WYBIERZ PŁEĆ',
+              'Tu będzie rejestracja',
               overflow: TextOverflow.clip,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 18,
               ),
             ),
             SizedBox(
@@ -29,34 +29,16 @@ class RegistryUserDataScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: GenderButton(
-                    "MĘŻCZYZNA",
+                    "Idź dalej",
                     () => {
                       _onPressed(
                         context,
-                        'https://player.vimeo.com/external/488460782.hd.mp4?s=acb30451ae7fcc25aaffd83347158bde864fd52e&profile_id=175',
-                        new RegistryUserScreen(),
+                        'https://player.vimeo.com/external/486833973.hd.mp4?s=b5034e69142ea5b3028f8f9696ec688a30e81c14&profile_id=175',
+                        new RegistryStatusScreen(),
                       )
                     },
                   ),
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Expanded(
-                    child: GenderButton(
-                  "KOBIETA",
-                  () => {
-                    _onPressed(
-                      context,
-                      'https://player.vimeo.com/external/488452170.hd.mp4?s=c11e831bae18770783db2434ee9775de18579151&profile_id=175',
-                      new RegistryUserScreen(),
-                    )
-                  },
-                )),
               ],
             ),
           ],
