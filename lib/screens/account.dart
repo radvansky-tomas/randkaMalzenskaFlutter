@@ -10,6 +10,7 @@ import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/camera_screen.dart';
 import 'package:randka_malzenska/screens/html/html_screen.dart';
 import 'package:randka_malzenska/screens/notification/notification_screen.dart';
+import 'package:randka_malzenska/screens/registration/registry_data_screen.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
@@ -109,7 +110,9 @@ class _AccountContentState extends State<AccountContent> {
                   context,
                   'Przejdz do odtwarzacza video',
                   Colors.purple[300],
-                  VideoScreen(),
+                  VideoScreen(
+                      'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175',
+                      RegistryUserDataScreen()),
                 ),
                 screenButton(
                   context,

@@ -1,8 +1,14 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:randka_malzenska/screens/registration/registry_data_screen.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoScreen extends StatefulWidget {
+  final String _url;
+  final Widget _routeWidget;
+  VideoScreen(this._url, this._routeWidget);
+
   @override
   _VideoScreenState createState() => _VideoScreenState();
 }
@@ -15,18 +21,58 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   void initState() {
     super.initState();
+    initializePlayer();
+  }
 
-    _controller = VideoPlayerController.network(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4')
-      ..initialize().whenComplete(() {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
+  Future<void> initializePlayer() async {
+    _controller = VideoPlayerController.network(widget._url);
+
+    await Future.wait([
+      _controller.initialize(),
+    ]);
+    _createChewieController();
+    setState(() {});
+    // _controller.play();
+  }
+
+  void _onSkipPressed() {
+    chewieController.pause();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    // Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return widget._routeWidget;
+        },
+      ),
+    );
+  }
+
+  void _createChewieController() {
     chewieController = ChewieController(
       videoPlayerController: _controller,
-      looping: false,
-      showOptions: false,
-      autoInitialize: true,
+      allowFullScreen: true,
+      showControls: true,
+      customControls: Container(
+        alignment: Alignment.bottomRight,
+        padding: EdgeInsetsDirectional.all(30),
+        child: IconButton(
+          onPressed: _onSkipPressed,
+          icon: (Icon(
+            Icons.skip_next,
+            color: Colors.white,
+            size: 50,
+          )),
+        ),
+      ),
+      fullScreenByDefault: true,
+      autoPlay: true,
       errorBuilder: (context, errorMessage) {
         return Center(
           child: Text(
@@ -36,39 +82,43 @@ class _VideoScreenState extends State<VideoScreen> {
         );
       },
     );
-    playerWidget = Chewie(
-      controller: chewieController,
-    );
+    chewieController.addListener(() {
+      if (chewieController.isFullScreen) {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeRight,
+          DeviceOrientation.landscapeLeft,
+        ]);
+      } else {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
+      }
+    });
   }
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
     chewieController.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Video Demo',
-      home: Scaffold(
-        backgroundColor: Colors.blue,
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: _controller.value.isInitialized
-                ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: playerWidget,
-                  )
-                : Container(
-                    alignment: Alignment.center,
-                    child: CircularProgressIndicator(),
-                  ),
-          ),
-        ),
-      ),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: _controller.value.isInitialized
+          ? Chewie(controller: chewieController)
+          : Scaffold(
+              backgroundColor: Colors.black,
+            ),
     );
   }
 }
