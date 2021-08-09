@@ -54,6 +54,7 @@ class RegistryUserScreen extends StatelessWidget {
           return VideoScreen(
             path,
             widget,
+            true,
           );
         },
       ),

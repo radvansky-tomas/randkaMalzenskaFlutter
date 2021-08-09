@@ -6,7 +6,8 @@ import 'package:video_player/video_player.dart';
 class VideoScreen extends StatefulWidget {
   final String _url;
   final Widget _routeWidget;
-  VideoScreen(this._url, this._routeWidget);
+  final bool _showControls;
+  VideoScreen(this._url, this._routeWidget, this._showControls);
 
   @override
   _VideoScreenState createState() => _VideoScreenState();
@@ -77,12 +78,27 @@ class _VideoScreenState extends State<VideoScreen> {
     );
   }
 
-  void _createChewieController() {
-    chewieController = ChewieController(
-      videoPlayerController: _controller,
-      allowFullScreen: true,
-      showControls: true,
-      customControls: Container(
+  Widget customControls() {
+    if (widget._showControls) {
+      return Stack(
+        children: [
+          MaterialControls(),
+          Container(
+            alignment: Alignment.bottomRight,
+            padding: EdgeInsetsDirectional.all(30),
+            child: IconButton(
+              onPressed: _onSkipPressed,
+              icon: (Icon(
+                Icons.skip_next,
+                color: Colors.white,
+                size: 50,
+              )),
+            ),
+          )
+        ],
+      );
+    } else {
+      return Container(
         alignment: Alignment.bottomRight,
         padding: EdgeInsetsDirectional.all(30),
         child: IconButton(
@@ -93,7 +109,16 @@ class _VideoScreenState extends State<VideoScreen> {
             size: 50,
           )),
         ),
-      ),
+      );
+    }
+  }
+
+  void _createChewieController() {
+    chewieController = ChewieController(
+      videoPlayerController: _controller,
+      allowFullScreen: false,
+      showControls: true,
+      customControls: customControls(),
       fullScreenByDefault: true,
       autoPlay: true,
       errorBuilder: (context, errorMessage) {

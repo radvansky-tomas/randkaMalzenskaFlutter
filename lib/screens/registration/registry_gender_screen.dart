@@ -70,10 +70,7 @@ class RegistryUserDataScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return VideoScreen(
-            path,
-            widget,
-          );
+          return VideoScreen(path, widget, false);
         },
       ),
     );

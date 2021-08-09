@@ -14,6 +14,7 @@ import 'package:randka_malzenska/screens/notification/notification_screen.dart';
 import 'package:randka_malzenska/screens/registration/registry_gender_screen.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
+import 'package:randka_malzenska/screens/video/video_skipable_screen.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 
 class AccountContent extends StatefulWidget {
@@ -111,9 +112,12 @@ class _AccountContentState extends State<AccountContent> {
                   context,
                   'Przejdz do odtwarzacza video',
                   Colors.purple[300],
+                  // VideoSkipableScreen(
+                  //     'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175')
                   VideoScreen(
                       'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175',
-                      RegistryUserDataScreen()),
+                      RegistryUserDataScreen(),
+                      false),
                 ),
                 screenButton(
                   context,
