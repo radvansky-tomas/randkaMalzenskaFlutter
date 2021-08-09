@@ -27,7 +27,32 @@ class _VideoScreenState extends State<VideoScreen> {
     _controller = VideoPlayerController.network(widget._url);
 
     await Future.wait([
-      _controller.initialize(),
+      _controller.initialize().then((value) => {
+            _controller.addListener(() {
+              setState(() {
+                if (!_controller.value.isPlaying &&
+                    _controller.value.isInitialized &&
+                    (_controller.value.duration ==
+                        _controller.value.position)) {
+                  setState(() {});
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.landscapeRight,
+                    DeviceOrientation.landscapeLeft,
+                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.portraitDown,
+                  ]);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return widget._routeWidget;
+                      },
+                    ),
+                  );
+                }
+              });
+            })
+          }),
     ]);
     _createChewieController();
     setState(() {});
@@ -42,7 +67,6 @@ class _VideoScreenState extends State<VideoScreen> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    // Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(

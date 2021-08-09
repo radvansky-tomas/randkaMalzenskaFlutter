@@ -11,7 +11,7 @@ import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/camera_screen.dart';
 import 'package:randka_malzenska/screens/html/html_screen.dart';
 import 'package:randka_malzenska/screens/notification/notification_screen.dart';
-import 'package:randka_malzenska/screens/registration/registry_data_screen.dart';
+import 'package:randka_malzenska/screens/registration/registry_gender_screen.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';

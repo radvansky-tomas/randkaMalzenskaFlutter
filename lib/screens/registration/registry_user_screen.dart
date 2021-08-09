@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:randka_malzenska/screens/html/html_screen.dart';
-import 'package:randka_malzenska/screens/registration/registry_status_screen.dart';
+import 'package:randka_malzenska/screens/registration/registry_marriage_status_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
 
 class RegistryUserScreen extends StatelessWidget {
