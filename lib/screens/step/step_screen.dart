@@ -88,14 +88,21 @@ class _StepScreenState extends State<StepScreen> {
       children: [
         ...(awaitedSubSteps!).map((subStep) {
           return ImageButtonWithText(
-            _assetName(subStep.name),
-            () => test(subStep),
-            subStep.label,
-            false,
-          );
+              _assetName(subStep.name),
+              () => test(subStep),
+              subStep.label,
+              false,
+              _isAvailable(subStep.name));
         }).toList()
       ],
     );
+  }
+
+  bool _isAvailable(String stepName) {
+    if (stepName == 'WIDZIEĆ') {
+      return true;
+    }
+    return false;
   }
 
   String _assetName(String stepName) {

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:randka_malzenska/screens/video/video_button.dart';
 
 class ImageButtonWithText extends StatelessWidget {
   final String _assetName;
   final String _stepName;
   final bool _isDone;
+  final bool _isAvailable;
   final VoidCallback _onPressed;
   ImageButtonWithText(
     this._assetName,
     this._onPressed,
     this._stepName,
     this._isDone,
+    this._isAvailable,
   );
 
   @override
@@ -26,10 +29,11 @@ class ImageButtonWithText extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomLeft,
             children: [
-              Ink.image(
-                image: AssetImage("assets/images/$_assetName.jpg"),
-                fit: BoxFit.cover,
-              ),
+              (_isAvailable && !_isDone)
+                  ? VideoButton()
+                  : Ink.image(
+                      image: AssetImage("assets/images/$_assetName.jpg"),
+                      fit: BoxFit.cover),
               Container(
                 color: Colors.black54.withOpacity(0.2),
                 child: Row(
