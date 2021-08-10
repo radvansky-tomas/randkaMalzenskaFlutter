@@ -111,6 +111,7 @@ class _VideoScreenState extends State<VideoScreen> {
   void _createChewieController() {
     chewieController = ChewieController(
       videoPlayerController: _controller,
+      allowedScreenSleep: false,
       allowFullScreen: false,
       showControls: true,
       customControls: customControls(),
