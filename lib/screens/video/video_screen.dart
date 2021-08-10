@@ -30,35 +30,29 @@ class _VideoScreenState extends State<VideoScreen> {
     await Future.wait([
       _controller.initialize().then((value) => {
             _controller.addListener(() {
-              setState(() {
-                print('##################### NASTAPILA ZMIANA STANU');
-                if (!_controller.value.isPlaying &&
-                    _controller.value.isInitialized &&
-                    (_controller.value.duration ==
-                        _controller.value.position)) {
-                  // setState(() {});
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeRight,
-                    DeviceOrientation.landscapeLeft,
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.portraitDown,
-                  ]);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return widget._routeWidget;
-                      },
-                    ),
-                  );
-                }
-              });
+              if (!_controller.value.isPlaying &&
+                  _controller.value.isInitialized &&
+                  (_controller.value.duration == _controller.value.position)) {
+                SystemChrome.setPreferredOrientations([
+                  DeviceOrientation.landscapeRight,
+                  DeviceOrientation.landscapeLeft,
+                  DeviceOrientation.portraitUp,
+                  DeviceOrientation.portraitDown,
+                ]);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return widget._routeWidget;
+                    },
+                  ),
+                );
+              }
             })
           }),
     ]);
     _createChewieController();
-    // setState(() {});
-    // _controller.play();
+    setState(() {});
   }
 
   void _onSkipPressed() {
@@ -69,7 +63,7 @@ class _VideoScreenState extends State<VideoScreen> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) {
