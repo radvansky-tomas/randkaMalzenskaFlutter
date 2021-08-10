@@ -31,11 +31,12 @@ class _VideoScreenState extends State<VideoScreen> {
       _controller.initialize().then((value) => {
             _controller.addListener(() {
               setState(() {
+                print('##################### NASTAPILA ZMIANA STANU');
                 if (!_controller.value.isPlaying &&
                     _controller.value.isInitialized &&
                     (_controller.value.duration ==
                         _controller.value.position)) {
-                  setState(() {});
+                  // setState(() {});
                   SystemChrome.setPreferredOrientations([
                     DeviceOrientation.landscapeRight,
                     DeviceOrientation.landscapeLeft,
@@ -56,7 +57,7 @@ class _VideoScreenState extends State<VideoScreen> {
           }),
     ]);
     _createChewieController();
-    setState(() {});
+    // setState(() {});
     // _controller.play();
   }
 
