@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/providers/auth.dart';
+import 'package:randka_malzenska/screens/registration/registry_marriage_status_screen.dart';
 
 import 'home.dart';
 
@@ -64,8 +65,8 @@ class _AuthCardState extends State<AuthCard> {
     var authBloc = Provider.of<Auth>(context, listen: false);
     loginStateSubscription = authBloc.currentUser.listen((user) {
       if (user != null) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => RegistryStatusScreen()));
       }
     });
     super.initState();

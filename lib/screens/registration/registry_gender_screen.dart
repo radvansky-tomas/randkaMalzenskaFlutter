@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:randka_malzenska/screens/html/html_screen.dart';
-import 'package:randka_malzenska/screens/registration/registry_user_screen.dart';
+import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
 
 class RegistryUserDataScreen extends StatelessWidget {
@@ -34,7 +33,7 @@ class RegistryUserDataScreen extends StatelessWidget {
                       _onPressed(
                         context,
                         'https://player.vimeo.com/external/488460782.hd.mp4?s=acb30451ae7fcc25aaffd83347158bde864fd52e&profile_id=175',
-                        new RegistryUserScreen(),
+                        new AuthScreen(),
                       )
                     },
                   ),
@@ -53,7 +52,7 @@ class RegistryUserDataScreen extends StatelessWidget {
                     _onPressed(
                       context,
                       'https://player.vimeo.com/external/488452170.hd.mp4?s=c11e831bae18770783db2434ee9775de18579151&profile_id=175',
-                      new RegistryUserScreen(),
+                      new AuthScreen(),
                     )
                   },
                 )),
