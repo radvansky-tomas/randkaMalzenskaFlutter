@@ -30,8 +30,10 @@ class _SeekBarState extends State<SeekBar> {
     super.didChangeDependencies();
 
     _sliderThemeData = SliderTheme.of(context).copyWith(
-      trackHeight: 0.1,
-    );
+        trackHeight: 0.1,
+        thumbShape: RoundSliderThumbShape(
+          enabledThumbRadius: 6.4,
+        ));
   }
 
   @override
