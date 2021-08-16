@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/registration/registry_gender_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
-import 'screens/auth_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

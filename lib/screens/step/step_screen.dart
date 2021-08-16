@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:randka_malzenska/models/step.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
+import 'package:randka_malzenska/screens/content/content_screen.dart';
 import 'package:randka_malzenska/screens/home.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 
@@ -107,7 +108,7 @@ class _StepScreenState extends State<StepScreen> {
         ...(awaitedSubSteps!).map((subStep) {
           return ImageButtonWithText(
               _assetName(subStep.name),
-              () => test(subStep),
+              () => loadContent(subStep),
               subStep.label,
               false,
               _isAvailable(subStep.name));
@@ -133,15 +134,15 @@ class _StepScreenState extends State<StepScreen> {
     }
   }
 
-  void test(SubStep subStep) {
-    final String krok = subStep.label;
-    final snackBar = SnackBar(
-      content: Text('Kliknięto $krok'),
-      duration: Duration(seconds: 1),
+  void loadContent(SubStep subStep) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return ContentScreen(subStep.id, 'fasga721412');
+        },
+      ),
     );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    // connectionService.getStepsWithSubSteps().then((value) => print(value![0]));
   }
 
   _initializePreferences() async {

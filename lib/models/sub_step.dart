@@ -7,6 +7,7 @@ class SubStep {
   final bool? horizontalOrientation;
   final bool? alwaysEnabled;
   final int position;
+  final int id;
 
   SubStep({
     required this.step,
@@ -17,6 +18,7 @@ class SubStep {
     required this.horizontalOrientation,
     required this.alwaysEnabled,
     required this.position,
+    required this.id,
   });
 
   factory SubStep.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class SubStep {
       horizontalOrientation: json['horizontalOrientation'],
       alwaysEnabled: json['alwaysEnabled'],
       position: json['position'],
+      id: json['id'],
     );
   }
 }
