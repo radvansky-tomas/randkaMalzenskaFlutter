@@ -43,7 +43,7 @@ class _SeekBarState extends State<SeekBar> {
         SliderTheme(
           data: _sliderThemeData.copyWith(
             thumbShape: HiddenThumbComponentShape(),
-            activeTrackColor: Colors.blue[200],
+            activeTrackColor: Colors.blueGrey,
             inactiveTrackColor: Colors.grey.shade300,
           ),
           child: ExcludeSemantics(

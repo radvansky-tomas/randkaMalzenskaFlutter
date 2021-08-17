@@ -33,6 +33,7 @@ class _VideoScreenState extends State<VideoContent> {
       videoPlayerController: _controller,
       allowFullScreen: true,
       fullScreenByDefault: false,
+      startAt: Duration(microseconds: 1),
       autoInitialize: true,
       showOptions: false,
       looping: false,
@@ -58,9 +59,7 @@ class _VideoScreenState extends State<VideoContent> {
   @override
   Widget build(BuildContext context) {
     return _controller.value.isInitialized
-        ? Container(
-            padding: EdgeInsets.all(10.0),
-            child: Chewie(controller: chewieController))
+        ? Container(child: Chewie(controller: chewieController))
         : Center(
             child: CircularProgressIndicator(
               color: Colors.white,

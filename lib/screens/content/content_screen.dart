@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:randka_malzenska/models/content.dart';
 import 'package:randka_malzenska/screens/audio/audio_content.dart';
+import 'package:randka_malzenska/screens/camera_screen.dart';
+import 'package:randka_malzenska/screens/photo/photo_content.dart';
 import 'package:randka_malzenska/screens/video/video_content.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 
 class ContentScreen extends StatefulWidget {
   final int _subStepId;
+  final String _subStepLabel;
   final String _firebaseId;
 
-  ContentScreen(this._subStepId, this._firebaseId);
+  ContentScreen(this._subStepId, this._firebaseId, this._subStepLabel);
 
   @override
   _ContentScreenState createState() => _ContentScreenState();
@@ -47,7 +50,7 @@ class _ContentScreenState extends State<ContentScreen> {
           );
         } else if (snapshot.connectionState == ConnectionState.done) {
           print(snapshot.data);
-          return sampleBody(snapshot.data);
+          return sampleBody(snapshot.data, widget._subStepLabel);
         } else
           return Scaffold(
             backgroundColor: Colors.black,
@@ -62,8 +65,20 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 }
 
-Widget sampleBody(List<Content>? awaitedContents) {
+Widget sampleBody(List<Content>? awaitedContents, String title) {
   return Scaffold(
+    appBar: AppBar(
+      backgroundColor: Colors.grey[900],
+      title: Padding(
+        padding: const EdgeInsets.only(left: 0.0),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+    ),
     backgroundColor: Colors.black,
     body: Container(
       padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
@@ -80,15 +95,20 @@ Widget sampleBody(List<Content>? awaitedContents) {
             } else if (content.type == 'AUDIO') {
               return Container(height: 200, child: AudioContent(content.value));
             } else if (content.type == 'CAMERA') {
-              return TextButton(
-                onPressed: () {},
-                child: Text(
-                  content.value,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                ),
+              return CameraContent(
+                content.value,
+                content.subStep,
+                content.position,
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return CameraScreen(content.subStep, content.position);
+                      },
+                    ),
+                  );
+                },
               );
             } else {
               return Center(

@@ -8,6 +8,9 @@ import 'package:randka_malzenska/screens/preview_screen.dart';
 import 'package:randka_malzenska/shared/database_helpers.dart';
 
 class CameraScreen extends StatefulWidget {
+  final int _primaryOrder;
+  final int _secondaryOrder;
+  CameraScreen(this._primaryOrder, this._secondaryOrder);
   @override
   _CameraScreenState createState() => _CameraScreenState();
 }
@@ -51,7 +54,7 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget cameraPreview() {
     if (cameraController == null || !cameraController!.value.isInitialized) {
       return Text(
-        'Loading',
+        'Ładowanie',
         style: TextStyle(
             color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
       );
@@ -94,7 +97,7 @@ class _CameraScreenState extends State<CameraScreen> {
     return Expanded(
       child: Align(
         alignment: Alignment.centerLeft,
-        child: FlatButton.icon(
+        child: TextButton.icon(
             onPressed: () {
               onSwitchCamera();
             },
@@ -114,28 +117,24 @@ class _CameraScreenState extends State<CameraScreen> {
 
   onCapture(context) async {
     try {
-      final name = DateTime.now();
-      // using your method of getting an image
-
       DatabaseHelper helper = DatabaseHelper.instance;
       final String _appPath =
           await getApplicationDocumentsDirectory().then((value) => value.path);
 
       await cameraController!.takePicture().then((value) {
         File tmpFile = File(value.path);
+        // final String _fileName = widget._primaryOrder.toString() +
+        //     'photo' +
+        //     widget._secondaryOrder.toString();
         final String _fileName = value.name;
         tmpFile.copy('$_appPath/$_fileName');
         Photo photo = new Photo();
         photo.path = '$_appPath/$_fileName';
-        helper.insertPhoto(photo);
+        photo.primaryOrder = widget._primaryOrder;
+        photo.secondaryOrder = widget._secondaryOrder;
+        helper.insertOrUpdatePhoto(photo);
         print('SCIEZKA DO PLIKU STWORZONEGO: ' + value.path);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PreviewScreen(
-                      imgPath: value.path,
-                      fileName: "$name.png",
-                    )));
+        Navigator.pop(context);
       });
     } catch (e) {
       showCameraException(e);

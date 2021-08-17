@@ -96,12 +96,12 @@ class _AccountContentState extends State<AccountContent> {
                   ),
                   onPressed: () => authBloc.logout(),
                 ),
-                screenButton(
-                  context,
-                  'Przejdz do aparatu',
-                  Colors.amber[700],
-                  CameraScreen(),
-                ),
+                // screenButton(
+                //   context,
+                //   'Przejdz do aparatu',
+                //   Colors.amber[700],
+                //   CameraScreen(),
+                // ),
                 notificationButton(
                   context,
                   flutterLocalNotificationsPlugin,

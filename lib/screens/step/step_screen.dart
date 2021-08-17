@@ -139,7 +139,7 @@ class _StepScreenState extends State<StepScreen> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return ContentScreen(subStep.id, 'fasga721412');
+          return ContentScreen(subStep.id, 'fasga721412', subStep.label);
         },
       ),
     );

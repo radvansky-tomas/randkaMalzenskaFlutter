@@ -77,7 +77,7 @@ class Photo {
 // singleton class to manage the database
 class DatabaseHelper {
   // This is the actual database filename that is saved in the docs directory.
-  static final _databaseName = "MyDatabase3.db";
+  static final _databaseName = "MyDatabase6.db";
   // Increment this version when you need to change the schema.
   static final _databaseVersion = 1;
 
@@ -136,6 +136,21 @@ class DatabaseHelper {
     return id;
   }
 
+  Future<int> insertOrUpdatePhoto(Photo photo) async {
+    Database db = await database;
+    int id;
+    Photo? photoDb =
+        await queryPhotoByPosition(photo.primaryOrder!, photo.secondaryOrder!);
+    if (photoDb != null) {
+      id = await db.update(photoTableName, photo.toMap(),
+          where: '$columnId = ?', whereArgs: [photoDb.id]);
+    } else {
+      id = await db.insert(photoTableName, photo.toMap());
+    }
+
+    return id;
+  }
+
   Future<List<Note>?> queryNote() async {
     Database db = await database;
     List<Map> maps = await db.query(
@@ -166,6 +181,31 @@ class DatabaseHelper {
         photos.add(photo);
       });
       return photos;
+    }
+    return null;
+  }
+
+  Future<Photo?> queryPhotoByPosition(
+      int primaryOrder, int secondaryOrder) async {
+    Database db = await database;
+    String whereString = '$photoPrimaryOrder = ? AND $photoSecondaryOrder = ?';
+    List<dynamic> whereArguments = [primaryOrder, secondaryOrder];
+    List<Map> maps = await db.query(photoTableName,
+        columns: [
+          columnId,
+          photoColumnPath,
+          photoPrimaryOrder,
+          photoSecondaryOrder
+        ],
+        where: whereString,
+        whereArgs: whereArguments);
+    List<Photo> photos = [];
+    if (maps.length > 0) {
+      maps.forEach((result) {
+        Photo photo = Photo.fromMap(result as Map<String, dynamic>);
+        photos.add(photo);
+      });
+      return photos[0];
     }
     return null;
   }
