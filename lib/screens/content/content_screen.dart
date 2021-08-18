@@ -122,13 +122,15 @@ Widget sampleBody(List<Content>? awaitedContents, String title,
                     ),
                   );
                 }
-                if (snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData) {
-                  Photo? photo = snapshot.data!.firstWhere(
-                      (element) =>
-                          element.primaryOrder == content.subStep &&
-                          element.secondaryOrder == content.position,
-                      orElse: null);
+                if (snapshot.connectionState == ConnectionState.done) {
+                  Photo? photo;
+                  if (snapshot.hasData) {
+                    photo = snapshot.data!.firstWhere(
+                        (element) =>
+                            element.primaryOrder == content.subStep &&
+                            element.secondaryOrder == content.position,
+                        orElse: null);
+                  }
                   return CameraContent(
                     content.value,
                     photo,
