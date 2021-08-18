@@ -172,7 +172,12 @@ class DatabaseHelper {
     Database db = await database;
     List<Map> maps = await db.query(
       photoTableName,
-      columns: [columnId, photoColumnPath],
+      columns: [
+        columnId,
+        photoColumnPath,
+        photoPrimaryOrder,
+        photoSecondaryOrder
+      ],
     );
     List<Photo> photos = [];
     if (maps.length > 0) {
