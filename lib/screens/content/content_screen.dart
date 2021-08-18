@@ -125,11 +125,14 @@ Widget sampleBody(List<Content>? awaitedContents, String title,
                 if (snapshot.connectionState == ConnectionState.done) {
                   Photo? photo;
                   if (snapshot.hasData) {
-                    photo = snapshot.data!.firstWhere(
+                    photo = snapshot.data?.firstWhere(
                         (element) =>
                             element.primaryOrder == content.subStep &&
                             element.secondaryOrder == content.position,
-                        orElse: null);
+                        orElse: () => new Photo());
+                  }
+                  if (photo!.id == null) {
+                    photo = null;
                   }
                   return CameraContent(
                     content.value,
