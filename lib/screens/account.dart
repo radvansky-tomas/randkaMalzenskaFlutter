@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/providers/auth.dart';
-import 'package:randka_malzenska/screens/audio/audio_screen.dart';
+
 import 'package:randka_malzenska/screens/auth_screen.dart';
-import 'package:randka_malzenska/screens/camera_screen.dart';
+
 import 'package:randka_malzenska/screens/html/html_screen.dart';
 import 'package:randka_malzenska/screens/notification/notification_screen.dart';
-import 'package:randka_malzenska/screens/registration/registry_gender_screen.dart';
+
 import 'package:randka_malzenska/screens/step/step_screen.dart';
-import 'package:randka_malzenska/screens/video/video_screen.dart';
+
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 
 class AccountContent extends StatefulWidget {
@@ -106,23 +106,23 @@ class _AccountContentState extends State<AccountContent> {
                   context,
                   flutterLocalNotificationsPlugin,
                 ),
-                screenButton(
-                  context,
-                  'Przejdz do odtwarzacza video',
-                  Colors.purple[300],
-                  // VideoSkipableScreen(
-                  //     'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175')
-                  VideoScreen(
-                      'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175',
-                      RegistryUserDataScreen(),
-                      false),
-                ),
-                screenButton(
-                  context,
-                  'Przejdz do odtwarzacza audio',
-                  Colors.green[200],
-                  AudioScreen(),
-                ),
+                // screenButton(
+                //   context,
+                //   'Przejdz do odtwarzacza video',
+                //   Colors.purple[300],
+                //   // VideoSkipableScreen(
+                //   //     'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175')
+                //   VideoScreen(
+                //       'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175',
+                //       RegistryUserDataScreen(),
+                //       false),
+                // ),
+                // screenButton(
+                //   context,
+                //   'Przejdz do odtwarzacza audio',
+                //   Colors.green[200],
+                //   AudioScreen(),
+                // ),
                 screenButton(
                   context,
                   'Przejdz do podglądu html',

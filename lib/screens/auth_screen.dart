@@ -3,16 +3,15 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/registration/registry_marriage_status_screen.dart';
-
-import 'home.dart';
+import 'package:randka_malzenska/screens/step/step_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthMode { Signup, Login }
 
 class AuthScreen extends StatelessWidget {
-  static const routeName = '/auth';
-
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -59,17 +58,27 @@ class AuthCard extends StatefulWidget {
 
 class _AuthCardState extends State<AuthCard> {
   late StreamSubscription<User?> loginStateSubscription;
-
+  late SharedPreferences prefs;
   @override
   void initState() {
+    super.initState();
     var authBloc = Provider.of<Auth>(context, listen: false);
+    _initializePreferences().whenComplete(() {
+      setState(() {});
+    });
     loginStateSubscription = authBloc.currentUser.listen((user) {
       if (user != null) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => RegistryStatusScreen()));
+        String userSex =
+            prefs.getString(PreferencesKey.userRelationshipStatus) ?? '';
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) =>
+                userSex == '' ? RegistryStatusScreen() : StepScreen()));
       }
     });
-    super.initState();
+  }
+
+  _initializePreferences() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override

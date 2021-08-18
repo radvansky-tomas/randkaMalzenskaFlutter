@@ -59,10 +59,10 @@ class ConnectionService {
 
   Future<List<Content>?> getUserStepContent(
       int subStepId, String firebaseId) async {
-    // http://162.55.217.235:8081/api/course-content/substeps/?firebase=fasga721412&substep=1
+    // http://162.55.217.235:8081/api/course-content/substeps/?firebase_id=fasga721412&substep=1
     final response = await http.get(
       Uri.parse(
-          '$baseAddress/course-content/substeps/?firebase=$firebaseId&substep=$subStepId'),
+          '$baseAddress/course-content/substeps/?firebase_id=$firebaseId&substep_id=$subStepId'),
       headers: requestHeaders,
     );
 

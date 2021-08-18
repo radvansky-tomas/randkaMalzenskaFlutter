@@ -1,6 +1,8 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:randka_malzenska/models/preferences_key.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoScreen extends StatefulWidget {
@@ -17,11 +19,19 @@ class _VideoScreenState extends State<VideoScreen> {
   late VideoPlayerController _controller;
   late ChewieController chewieController;
   late Chewie playerWidget;
+  late SharedPreferences prefs;
 
   @override
   void initState() {
     super.initState();
     initializePlayer();
+    _initializePrefs().whenComplete(() {
+      setState(() {});
+    });
+  }
+
+  _initializePrefs() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   Future<void> initializePlayer() async {
@@ -39,6 +49,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   DeviceOrientation.portraitUp,
                   DeviceOrientation.portraitDown,
                 ]);
+                prefs.setBool(PreferencesKey.introWatched, true);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -63,6 +74,7 @@ class _VideoScreenState extends State<VideoScreen> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    prefs.setBool(PreferencesKey.introWatched, true);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

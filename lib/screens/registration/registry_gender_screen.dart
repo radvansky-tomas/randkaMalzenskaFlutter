@@ -1,9 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:randka_malzenska/models/preferences_key.dart';
+import 'package:randka_malzenska/models/user_attributes.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistryUserDataScreen extends StatelessWidget {
+  final SharedPreferences prefs;
+  RegistryUserDataScreen(this.prefs);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +40,8 @@ class RegistryUserDataScreen extends StatelessWidget {
                         context,
                         'https://player.vimeo.com/external/488460782.hd.mp4?s=acb30451ae7fcc25aaffd83347158bde864fd52e&profile_id=175',
                         new AuthScreen(),
+                        prefs,
+                        UserAttributes.male,
                       )
                     },
                   ),
@@ -53,6 +61,8 @@ class RegistryUserDataScreen extends StatelessWidget {
                       context,
                       'https://player.vimeo.com/external/488452170.hd.mp4?s=c11e831bae18770783db2434ee9775de18579151&profile_id=175',
                       new AuthScreen(),
+                      prefs,
+                      UserAttributes.female,
                     )
                   },
                 )),
@@ -64,7 +74,9 @@ class RegistryUserDataScreen extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context, String path, Widget widget) {
+  void _onPressed(BuildContext context, String path, Widget widget,
+      SharedPreferences prefs, String text) {
+    prefs.setString(PreferencesKey.userSex, text);
     Navigator.push(
       context,
       MaterialPageRoute(

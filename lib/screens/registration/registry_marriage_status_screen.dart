@@ -1,8 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:randka_malzenska/models/preferences_key.dart';
+import 'package:randka_malzenska/models/user_attributes.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class RegistryStatusScreen extends StatelessWidget {
+class RegistryStatusScreen extends StatefulWidget {
+  @override
+  _RegistryStatusScreenState createState() => _RegistryStatusScreenState();
+}
+
+class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializePreferences().whenComplete(() {
+      setState(() {});
+    });
+  }
+
+  _initializePreferences() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,11 +50,7 @@ class RegistryStatusScreen extends StatelessWidget {
                 Expanded(
                   child: GenderButton(
                     "MAŁŻEŃSTWO",
-                    () => {
-                      _onPressed(
-                        context,
-                      )
-                    },
+                    () => {_onPressed(context, prefs, UserAttributes.marriage)},
                   ),
                 ),
               ],
@@ -48,6 +66,8 @@ class RegistryStatusScreen extends StatelessWidget {
                   () => {
                     _onPressed(
                       context,
+                      prefs,
+                      UserAttributes.beforeMarriage,
                     )
                   },
                 )),
@@ -59,7 +79,8 @@ class RegistryStatusScreen extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context) {
+  void _onPressed(BuildContext context, SharedPreferences prefs, String text) {
+    prefs.setString(PreferencesKey.userRelationshipStatus, text);
     Navigator.push(
       context,
       MaterialPageRoute(
