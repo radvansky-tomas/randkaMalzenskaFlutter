@@ -131,7 +131,7 @@ Widget sampleBody(List<Content>? awaitedContents, String title,
                             element.secondaryOrder == content.position,
                         orElse: () => new Photo());
                   }
-                  if (photo!.id == null) {
+                  if (photo?.id == null) {
                     photo = null;
                   }
                   return CameraContent(
