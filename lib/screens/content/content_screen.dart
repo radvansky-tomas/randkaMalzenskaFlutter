@@ -11,12 +11,14 @@ import 'package:randka_malzenska/shared/database_helpers.dart';
 
 class ContentScreen extends StatefulWidget {
   final int _subStepId;
+  final int _stepPosition;
   final String _subStepLabel;
   final String _firebaseId;
   final bool _isLast;
+  final bool _isDone;
 
-  ContentScreen(
-      this._subStepId, this._firebaseId, this._subStepLabel, this._isLast);
+  ContentScreen(this._subStepId, this._firebaseId, this._subStepLabel,
+      this._isLast, this._stepPosition, this._isDone);
 
   @override
   _ContentScreenState createState() => _ContentScreenState();
@@ -60,8 +62,15 @@ class _ContentScreenState extends State<ContentScreen> {
             ),
           );
         } else if (snapshot.connectionState == ConnectionState.done) {
-          return sampleBody(snapshot.data, widget._subStepLabel, photos,
-              refresh, widget._isLast);
+          return sampleBody(
+              snapshot.data,
+              widget._subStepLabel,
+              photos,
+              refresh,
+              widget._isLast,
+              widget._stepPosition,
+              widget._firebaseId,
+              widget._isDone);
         } else
           return Scaffold(
             backgroundColor: Colors.black,
@@ -76,17 +85,25 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 }
 
-Widget sampleBody(List<Content>? awaitedContents, String title,
-    Future<List<Photo>?>? photos, VoidCallback callback, bool isLast) {
+Widget sampleBody(
+  List<Content>? awaitedContents,
+  String title,
+  Future<List<Photo>?>? photos,
+  VoidCallback callback,
+  bool isLast,
+  int stepPosition,
+  String firebaseId,
+  bool isDone,
+) {
   Content buttonContent = new Content(
       subStep: 0,
       label: 'label',
       title: 'title',
       image: 'image',
       value: 'value',
-      position: 99,
+      position: 997,
       type: 'PROGRESS_BUTTON');
-  if (awaitedContents!.contains(buttonContent)) {
+  if (awaitedContents!.last.position != buttonContent.position) {
     awaitedContents.add(buttonContent);
   }
 
@@ -134,14 +151,30 @@ Widget sampleBody(List<Content>? awaitedContents, String title,
           } else if (content.type == 'PROGRESS_BUTTON') {
             String text = isLast ? 'Przejdź ostatni' : 'Przejdź dalej';
             return TextButton(
-              onPressed: () {},
+              onPressed: () {
+                ConnectionService service = new ConnectionService();
+                if (isDone) {
+                  Navigator.pop(context);
+                } else {
+                  if (!isLast) {
+                    service
+                        .increaseSubStepProgress(stepPosition, firebaseId)
+                        .whenComplete(() => Navigator.pop(context));
+                  } else {
+                    service
+                        .increaseStepProgress(stepPosition, firebaseId)
+                        .whenComplete(() => Navigator.pop(context));
+                  }
+                }
+              },
               child: Text(
                 text,
                 style: TextStyle(color: Colors.white),
               ),
             );
           } else {
-            return Center(
+            return Align(
+              alignment: Alignment.bottomCenter,
               child: Text(
                 content.title,
                 style: TextStyle(

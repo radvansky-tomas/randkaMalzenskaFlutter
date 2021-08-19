@@ -10,10 +10,14 @@ class VideoContent extends StatefulWidget {
   _VideoScreenState createState() => _VideoScreenState();
 }
 
-class _VideoScreenState extends State<VideoContent> {
+class _VideoScreenState extends State<VideoContent>
+    with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _controller;
   late ChewieController chewieController;
   late Chewie playerWidget;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
