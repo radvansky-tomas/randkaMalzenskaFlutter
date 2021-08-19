@@ -27,7 +27,7 @@ class PlaceholderCardShort extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(cornerRadius),
-        color: backgroundColor ?? Colors.white,
+        color: backgroundColor,
       ),
       padding: EdgeInsets.all(26),
       child: Stack(

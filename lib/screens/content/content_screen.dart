@@ -13,8 +13,10 @@ class ContentScreen extends StatefulWidget {
   final int _subStepId;
   final String _subStepLabel;
   final String _firebaseId;
+  final bool _isLast;
 
-  ContentScreen(this._subStepId, this._firebaseId, this._subStepLabel);
+  ContentScreen(
+      this._subStepId, this._firebaseId, this._subStepLabel, this._isLast);
 
   @override
   _ContentScreenState createState() => _ContentScreenState();
@@ -58,8 +60,8 @@ class _ContentScreenState extends State<ContentScreen> {
             ),
           );
         } else if (snapshot.connectionState == ConnectionState.done) {
-          return sampleBody(
-              snapshot.data, widget._subStepLabel, photos, refresh);
+          return sampleBody(snapshot.data, widget._subStepLabel, photos,
+              refresh, widget._isLast);
         } else
           return Scaffold(
             backgroundColor: Colors.black,
@@ -75,7 +77,19 @@ class _ContentScreenState extends State<ContentScreen> {
 }
 
 Widget sampleBody(List<Content>? awaitedContents, String title,
-    Future<List<Photo>?>? photos, VoidCallback callback) {
+    Future<List<Photo>?>? photos, VoidCallback callback, bool isLast) {
+  Content buttonContent = new Content(
+      subStep: 0,
+      label: 'label',
+      title: 'title',
+      image: 'image',
+      value: 'value',
+      position: 99,
+      type: 'PROGRESS_BUTTON');
+  if (awaitedContents!.contains(buttonContent)) {
+    awaitedContents.add(buttonContent);
+  }
+
   return Scaffold(
     appBar: AppBar(
       backgroundColor: Colors.grey[900],
@@ -93,7 +107,8 @@ Widget sampleBody(List<Content>? awaitedContents, String title,
     body: Container(
       padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
       child: ListView.builder(
-        itemCount: awaitedContents!.length,
+        addAutomaticKeepAlives: true,
+        itemCount: awaitedContents.length,
         itemBuilder: (context, index) {
           Content content = awaitedContents[index];
           if (content.type == 'HTML') {
@@ -101,73 +116,99 @@ Widget sampleBody(List<Content>? awaitedContents, String title,
               child: Html(data: content.value),
             );
           } else if (content.type == 'VIDEO') {
-            return Container(height: 300, child: VideoContent(content.value));
+            return Container(
+              height: 300,
+              child: VideoContent(content.value),
+            );
           } else if (content.type == 'AUDIO') {
-            return Container(height: 200, child: AudioContent(content.value));
+            return Container(
+              height: 200,
+              child: AudioContent(content.value),
+            );
           } else if (content.type == 'CAMERA') {
-            return FutureBuilder<List<Photo>?>(
-              future: photos,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Scaffold(
-                    backgroundColor: Colors.black,
-                    body: Center(
-                      child: Text(
-                        'Coś poszło nie tak :(',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                if (snapshot.connectionState == ConnectionState.done) {
-                  Photo? photo;
-                  if (snapshot.hasData) {
-                    photo = snapshot.data?.firstWhere(
-                        (element) =>
-                            element.primaryOrder == content.subStep &&
-                            element.secondaryOrder == content.position,
-                        orElse: () => new Photo());
-                  }
-                  if (photo?.id == null) {
-                    photo = null;
-                  }
-                  return CameraContent(
-                    content.value,
-                    photo,
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return CameraScreen(
-                                content.subStep, content.position, callback);
-                          },
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  );
-                }
-              },
+            return photoPreview(
+              photos,
+              content,
+              callback,
+            );
+          } else if (content.type == 'PROGRESS_BUTTON') {
+            String text = isLast ? 'Przejdź ostatni' : 'Przejdź dalej';
+            return TextButton(
+              onPressed: () {},
+              child: Text(
+                text,
+                style: TextStyle(color: Colors.white),
+              ),
             );
           } else {
             return Center(
-              child: Text(content.title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  )),
+              child: Text(
+                content.title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
             );
           }
         },
       ),
     ),
+  );
+}
+
+Widget photoPreview(
+    Future<List<Photo>?>? photos, Content content, VoidCallback callback) {
+  return FutureBuilder<List<Photo>?>(
+    future: photos,
+    builder: (context, snapshot) {
+      if (snapshot.hasError) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: Center(
+            child: Text(
+              'Coś poszło nie tak :(',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+      if (snapshot.connectionState == ConnectionState.done) {
+        Photo? photo;
+        if (snapshot.hasData) {
+          photo = snapshot.data?.firstWhere(
+              (element) =>
+                  element.primaryOrder == content.subStep &&
+                  element.secondaryOrder == content.position,
+              orElse: () => new Photo());
+        }
+        if (photo?.id == null) {
+          photo = null;
+        }
+        return CameraContent(
+          content.value,
+          photo,
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return CameraScreen(
+                      content.subStep, content.position, callback);
+                },
+              ),
+            );
+          },
+        );
+      } else {
+        return Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        );
+      }
+    },
   );
 }
 

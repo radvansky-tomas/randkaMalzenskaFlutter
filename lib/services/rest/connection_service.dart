@@ -78,4 +78,30 @@ class ConnectionService {
       throw HttpException('Błąd poczas pobierania zawartości kroku');
     }
   }
+
+  Future increaseSubStepProgress(int stepPosition, String firebaseId) async {
+    final response = await http.get(
+      Uri.parse(
+          '$baseAddress/user/progress_substep/?firebase_id=$firebaseId&step_number=$stepPosition'),
+      headers: requestHeaders,
+    );
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw HttpException('Błąd: ' + response.body);
+    }
+  }
+
+  Future increaseStepProgress(int stepPosition, String firebaseId) async {
+    final response = await http.get(
+      Uri.parse(
+          '$baseAddress/user/progress_step/?firebase_id=$firebaseId&step_number=$stepPosition'),
+      headers: requestHeaders,
+    );
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw HttpException('Błąd: ' + response.body);
+    }
+  }
 }

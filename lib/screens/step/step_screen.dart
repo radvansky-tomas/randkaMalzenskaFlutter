@@ -112,6 +112,9 @@ class _StepScreenState extends State<StepScreen> {
   }
 
   Widget sampleBody(List<SubStep>? awaitedSubSteps) {
+    List<int>? positions = awaitedSubSteps?.map((e) => e.position).toList();
+    positions!.sort();
+    int lastPosition = positions.last;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -119,7 +122,7 @@ class _StepScreenState extends State<StepScreen> {
         ...(awaitedSubSteps!).map((subStep) {
           return ImageButtonWithText(
               _assetName(subStep.name),
-              () => loadContent(subStep),
+              () => loadContent(subStep, subStep.position == lastPosition),
               subStep.label,
               false,
               _isAvailable(subStep.name));
@@ -145,12 +148,13 @@ class _StepScreenState extends State<StepScreen> {
     }
   }
 
-  void loadContent(SubStep subStep) {
+  void loadContent(SubStep subStep, bool isLast) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
-          return ContentScreen(subStep.id, 'fasga721412', subStep.label);
+          return ContentScreen(
+              subStep.id, 'fasga721412', subStep.label, isLast);
         },
       ),
     );

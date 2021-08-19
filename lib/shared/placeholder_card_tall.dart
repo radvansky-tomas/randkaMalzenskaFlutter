@@ -28,7 +28,7 @@ class PlaceholderCardTall extends StatelessWidget {
       height: height ?? double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(cornerRadius),
-        color: backgroundColor ?? Colors.white,
+        color: backgroundColor,
       ),
       padding: EdgeInsets.all(20),
       child: Stack(

@@ -8,6 +8,7 @@ class SubStep {
   final bool? alwaysEnabled;
   final int position;
   final int id;
+  bool? isLast;
 
   SubStep({
     required this.step,

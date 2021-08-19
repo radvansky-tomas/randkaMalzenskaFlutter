@@ -12,8 +12,13 @@ class AudioContent extends StatefulWidget {
   _AudioContentState createState() => _AudioContentState();
 }
 
-class _AudioContentState extends State<AudioContent> {
+class _AudioContentState extends State<AudioContent>
+    with AutomaticKeepAliveClientMixin {
   final AudioPlayer _player = AudioPlayer();
+
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();

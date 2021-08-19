@@ -24,7 +24,7 @@ class PlaceholderImageWithText extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(cornerRadius),
-        color: backgroundColor ?? Colors.white,
+        color: backgroundColor,
       ),
       margin: EdgeInsets.all(10),
       child: Column(

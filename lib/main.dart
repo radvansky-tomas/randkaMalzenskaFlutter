@@ -6,7 +6,6 @@ import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/registration/registry_gender_screen.dart';
-import 'package:randka_malzenska/screens/registration/registry_marriage_status_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
