@@ -36,11 +36,12 @@ class _StepScreenState extends State<StepScreen> {
     return FutureBuilder<List<CourseStep>?>(
       future: steps,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.grey[900],
-              title: AppBarStepList(snapshot.data!),
+              title: AppBarStepList(snapshot.data),
               leading: IconButton(
                   onPressed: () {
                     Navigator.push(
@@ -85,6 +86,16 @@ class _StepScreenState extends State<StepScreen> {
             backgroundColor: Colors.black,
             body: Center(
               child: sampleBody(snapshot.data![0].subSteps),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+              child: Text(
+                "Zapraszamy później :)",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
             ),
           );
         } else
@@ -151,7 +162,7 @@ class _StepScreenState extends State<StepScreen> {
 }
 
 class AppBarStepList extends StatelessWidget {
-  final List<CourseStep> steps;
+  final List<CourseStep>? steps;
 
   AppBarStepList(this.steps);
 
@@ -164,32 +175,34 @@ class AppBarStepList extends StatelessWidget {
         data: Theme.of(context).copyWith(
           cardColor: Colors.black,
         ),
-        child: PopupMenuButton(
-            icon: Container(
-              constraints: BoxConstraints.expand(),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                  ),
-                  // color: Colors.black,
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                constraints: BoxConstraints.expand(),
-                child: ExpandStepButton(steps),
-              ),
-            ),
-            itemBuilder: (context) => [
-                  ...steps.map((step) {
-                    return PopupMenuItem(
-                        child: Text(
-                      step.stepName,
-                      style: TextStyle(
+        child: steps != null
+            ? PopupMenuButton(
+                icon: Container(
+                  constraints: BoxConstraints.expand(),
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.white,
                       ),
-                    ));
-                  }).toList()
-                ]),
+                      // color: Colors.black,
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    constraints: BoxConstraints.expand(),
+                    child: ExpandStepButton(steps!),
+                  ),
+                ),
+                itemBuilder: (context) => [
+                      ...steps!.map((step) {
+                        return PopupMenuItem(
+                            child: Text(
+                          step.stepName,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ));
+                      }).toList()
+                    ])
+            : SizedBox(),
       ),
     );
   }
