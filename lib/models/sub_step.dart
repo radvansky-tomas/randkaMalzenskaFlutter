@@ -6,6 +6,7 @@ class SubStep {
   final bool? visibleContainer;
   final bool? horizontalOrientation;
   final bool? alwaysEnabled;
+  final bool? done;
   final int position;
   final int id;
   bool? isLast;
@@ -20,6 +21,7 @@ class SubStep {
     required this.alwaysEnabled,
     required this.position,
     required this.id,
+    required this.done,
   });
 
   factory SubStep.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,7 @@ class SubStep {
       alwaysEnabled: json['alwaysEnabled'],
       position: json['position'],
       id: json['id'],
+      done: json['done'],
     );
   }
 }

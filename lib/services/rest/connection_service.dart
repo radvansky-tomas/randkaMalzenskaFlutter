@@ -17,29 +17,9 @@ class ConnectionService {
     'Accept': 'application/json'
   };
 
-  Future<List<SubStep>?> getSubstepsFromStep(int stepNumber) async {
+  Future<List<CourseStep>?> getUserSteps(String firebaseId) async {
     final response = await http.get(
-      Uri.parse('$baseAddress/course-steps/'),
-      headers: requestHeaders,
-    );
-
-    if (response.statusCode == 200) {
-      List<SubStep> substepList = [];
-      Map<dynamic, dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
-      List<dynamic> subSteps = map['results'][stepNumber]['sub_steps'];
-      subSteps.forEach((subStep) {
-        substepList.add(SubStep.fromJson(subStep));
-      });
-
-      return substepList;
-    } else {
-      throw Exception('Failed to load steps');
-    }
-  }
-
-  Future<List<CourseStep>?> getStepsWithSubSteps() async {
-    final response = await http.get(
-      Uri.parse('$baseAddress/course-steps/'),
+      Uri.parse('$baseAddress/course-steps/step_list/?firebase_id=$firebaseId'),
       headers: requestHeaders,
     );
 
@@ -80,7 +60,7 @@ class ConnectionService {
   }
 
   Future increaseSubStepProgress(int stepPosition, String firebaseId) async {
-    final response = await http.get(
+    final response = await http.put(
       Uri.parse(
           '$baseAddress/user/progress_substep/?firebase_id=$firebaseId&step_number=$stepPosition'),
       headers: requestHeaders,
@@ -92,8 +72,46 @@ class ConnectionService {
     }
   }
 
-  Future increaseStepProgress(int stepPosition, String firebaseId) async {
+  Future registerUser(String name, String email, String firebaseId,
+      List<String> attributes) async {
+    Map data = {
+      "attribute": {"name": "puste", "value": attributes},
+      "user": {"email": email, "name": name, "firebase_id": firebaseId}
+    };
+
+    String body = json.encode(data);
+    final response = await http.post(Uri.parse('$baseAddress/userattribute/'),
+        headers: requestHeaders, body: body);
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw HttpException('Błąd: ' + response.body);
+    }
+  }
+
+  Future<List<SubStep>?> getUserSubSteps(
+      int stepNumber, String firebaseId) async {
     final response = await http.get(
+      Uri.parse(
+          '$baseAddress/course-step/user_substeps/?firebase_id=$firebaseId&step_number=$stepNumber'),
+      headers: requestHeaders,
+    );
+
+    if (response.statusCode == 200) {
+      List<SubStep> stepList = [];
+      Map<dynamic, dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> contents = map['results'];
+      contents.forEach((content) {
+        stepList.add(SubStep.fromJson(content));
+      });
+      return stepList;
+    } else {
+      throw HttpException('Błąd poczas pobierania zawartości');
+    }
+  }
+
+  Future increaseStepProgress(int stepPosition, String firebaseId) async {
+    final response = await http.put(
       Uri.parse(
           '$baseAddress/user/progress_step/?firebase_id=$firebaseId&step_number=$stepPosition'),
       headers: requestHeaders,

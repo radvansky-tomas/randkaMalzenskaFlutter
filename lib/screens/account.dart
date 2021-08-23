@@ -129,12 +129,12 @@ class _AccountContentState extends State<AccountContent> {
                   Colors.orange[700],
                   HtmlScreen(),
                 ),
-                screenButton(
-                  context,
-                  'Wykonaj strzal',
-                  Colors.blue,
-                  StepScreen(),
-                )
+                // screenButton(
+                //   context,
+                //   'Wykonaj strzal',
+                //   Colors.blue,
+                //   StepScreen(),
+                // )
               ],
             ),
           );

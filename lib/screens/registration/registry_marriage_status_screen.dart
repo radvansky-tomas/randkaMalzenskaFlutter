@@ -1,11 +1,17 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/models/user_attributes.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
+import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistryStatusScreen extends StatefulWidget {
+  User user;
+  RegistryStatusScreen(this.user);
   @override
   _RegistryStatusScreenState createState() => _RegistryStatusScreenState();
 }
@@ -50,7 +56,14 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
                 Expanded(
                   child: GenderButton(
                     "MAŁŻEŃSTWO",
-                    () => {_onPressed(context, prefs, UserAttributes.marriage)},
+                    () => {
+                      _onPressed(
+                        context,
+                        prefs,
+                        UserAttributes.marriage,
+                        widget.user,
+                      )
+                    },
                   ),
                 ),
               ],
@@ -64,11 +77,8 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
                     child: GenderButton(
                   "PRZED MAŁŻEŃSTWEM",
                   () => {
-                    _onPressed(
-                      context,
-                      prefs,
-                      UserAttributes.beforeMarriage,
-                    )
+                    _onPressed(context, prefs, UserAttributes.beforeMarriage,
+                        widget.user)
                   },
                 )),
               ],
@@ -79,16 +89,25 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
     );
   }
 
-  void _onPressed(BuildContext context, SharedPreferences prefs, String text) {
+  void _onPressed(BuildContext context, SharedPreferences prefs, String text,
+      User user) async {
     prefs.setString(PreferencesKey.userRelationshipStatus, text);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          return StepScreen();
-        },
-      ),
-    );
+    ConnectionService service = new ConnectionService();
+    List<String> attributes = [];
+    attributes.add(text);
+    String userSex = prefs.getString(PreferencesKey.userSex) ?? '';
+    attributes.add(userSex);
+    service
+        .registerUser(user.displayName!, user.email!, user.uid, attributes)
+        .whenComplete(() => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  //always start on first day after registration
+                  return StepScreen(1, user);
+                },
+              ),
+            ));
   }
 }
 

@@ -16,9 +16,10 @@ class ContentScreen extends StatefulWidget {
   final String _firebaseId;
   final bool _isLast;
   final bool _isDone;
+  final VoidCallback _refreshStep;
 
   ContentScreen(this._subStepId, this._firebaseId, this._subStepLabel,
-      this._isLast, this._stepPosition, this._isDone);
+      this._isLast, this._stepPosition, this._isDone, this._refreshStep);
 
   @override
   _ContentScreenState createState() => _ContentScreenState();
@@ -46,42 +47,55 @@ class _ContentScreenState extends State<ContentScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Content>?>(
-      future: contents,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Scaffold(
-            backgroundColor: Colors.black,
-            body: Center(
-              child: Text(
-                'Coś poszło nie tak :(',
-                style: TextStyle(
-                  fontSize: 20,
+        future: contents,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Scaffold(
+              backgroundColor: Colors.black,
+              body: Center(
+                child: Text(
+                  'Coś poszło nie tak :(',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            );
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            return sampleBody(
+                snapshot.data,
+                widget._subStepLabel,
+                photos,
+                refresh,
+                widget._isLast,
+                widget._stepPosition,
+                widget._firebaseId,
+                widget._isDone,
+                widget._refreshStep);
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              !snapshot.hasData) {
+            return Scaffold(
+              backgroundColor: Colors.black,
+              body: Center(
+                child: Text(
+                  'Zajrzyj później ;)',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+            );
+          } else {
+            return Scaffold(
+              backgroundColor: Colors.black,
+              body: Center(
+                child: CircularProgressIndicator(
                   color: Colors.white,
                 ),
               ),
-            ),
-          );
-        } else if (snapshot.connectionState == ConnectionState.done) {
-          return sampleBody(
-              snapshot.data,
-              widget._subStepLabel,
-              photos,
-              refresh,
-              widget._isLast,
-              widget._stepPosition,
-              widget._firebaseId,
-              widget._isDone);
-        } else
-          return Scaffold(
-            backgroundColor: Colors.black,
-            body: Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
-            ),
-          );
-      },
-    );
+            );
+          }
+        });
   }
 }
 
@@ -89,11 +103,12 @@ Widget sampleBody(
   List<Content>? awaitedContents,
   String title,
   Future<List<Photo>?>? photos,
-  VoidCallback callback,
+  VoidCallback refreshContent,
   bool isLast,
   int stepPosition,
   String firebaseId,
   bool isDone,
+  VoidCallback refreshStep,
 ) {
   Content buttonContent = new Content(
       subStep: 0,
@@ -103,7 +118,9 @@ Widget sampleBody(
       value: 'value',
       position: 997,
       type: 'PROGRESS_BUTTON');
-  if (awaitedContents!.last.position != buttonContent.position) {
+  if (awaitedContents!.length == 0) {
+    awaitedContents.add(buttonContent);
+  } else if (awaitedContents.last.position != buttonContent.position) {
     awaitedContents.add(buttonContent);
   }
 
@@ -146,7 +163,7 @@ Widget sampleBody(
             return photoPreview(
               photos,
               content,
-              callback,
+              refreshContent,
             );
           } else if (content.type == 'PROGRESS_BUTTON') {
             String text = isLast ? 'Przejdź ostatni' : 'Przejdź dalej';
@@ -159,11 +176,17 @@ Widget sampleBody(
                   if (!isLast) {
                     service
                         .increaseSubStepProgress(stepPosition, firebaseId)
-                        .whenComplete(() => Navigator.pop(context));
+                        .whenComplete(() => {
+                              refreshStep(),
+                              Navigator.pop(context),
+                            });
                   } else {
                     service
                         .increaseStepProgress(stepPosition, firebaseId)
-                        .whenComplete(() => Navigator.pop(context));
+                        .whenComplete(() => {
+                              refreshStep(),
+                              Navigator.pop(context),
+                            });
                   }
                 }
               },

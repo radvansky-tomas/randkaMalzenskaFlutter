@@ -70,9 +70,11 @@ class _AuthCardState extends State<AuthCard> {
       if (user != null) {
         String userSex =
             prefs.getString(PreferencesKey.userRelationshipStatus) ?? '';
+        int userStep = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) =>
-                userSex == '' ? RegistryStatusScreen() : StepScreen()));
+            builder: (context) => userSex == ''
+                ? RegistryStatusScreen(user)
+                : StepScreen(userStep, user)));
       }
     });
   }
