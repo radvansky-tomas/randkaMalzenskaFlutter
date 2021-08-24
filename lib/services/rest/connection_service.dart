@@ -72,18 +72,18 @@ class ConnectionService {
     }
   }
 
-  Future registerUser(String name, String email, String firebaseId,
-      List<String> attributes) async {
+  Future<bool> registerUser(
+      String email, String firebaseId, List<String> attributes) async {
     Map data = {
       "attribute": {"name": "puste", "value": attributes},
-      "user": {"email": email, "name": name, "firebase_id": firebaseId}
+      "user": {"email": email, "name": 'puste', "firebase_id": firebaseId}
     };
 
     String body = json.encode(data);
     final response = await http.post(Uri.parse('$baseAddress/userattribute/'),
         headers: requestHeaders, body: body);
     if (response.statusCode == 200) {
-      return response;
+      return true;
     } else {
       throw HttpException('Błąd: ' + response.body);
     }

@@ -12,10 +12,9 @@ import 'package:randka_malzenska/shared/button/image_button_with_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepScreen extends StatefulWidget {
-  final int stepNumber;
   final User user;
 
-  StepScreen(this.stepNumber, this.user);
+  StepScreen(this.user);
 
   @override
   _StepScreenState createState() => _StepScreenState();
@@ -32,10 +31,13 @@ class _StepScreenState extends State<StepScreen> {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([]);
     courseSteps = connectionService.getUserSteps(widget.user.uid);
-    subSteps =
-        connectionService.getUserSubSteps(widget.stepNumber, widget.user.uid);
+
     _initializePreferences().whenComplete(() {
-      setState(() {});
+      setState(() {
+        int stepNumber = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
+        subSteps =
+            connectionService.getUserSubSteps(stepNumber, widget.user.uid);
+      });
     });
   }
 
@@ -49,7 +51,8 @@ class _StepScreenState extends State<StepScreen> {
           return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.grey[900],
-                title: AppBarStepList(snapshot.data, _changeStep, prefs),
+                title: AppBarStepList(snapshot.data, _changeStep, prefs,
+                    prefs.getInt(PreferencesKey.userStepNumber) ?? 1),
                 leading: IconButton(
                     onPressed: () {
                       Navigator.push(
@@ -122,32 +125,42 @@ class _StepScreenState extends State<StepScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            List<SubStep> awaitedSubSteps = snapshot.data!;
-            List<int>? positions =
-                awaitedSubSteps.map((e) => e.position).toList();
-            positions.sort();
-            int lastPosition = positions.last;
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ...(snapshot.data!).map((subStep) {
-                  return ImageButtonWithText(
-                      _assetName(subStep.name),
-                      () => {
-                            _isAvailable(subStep.position, snapshot.data!)
-                                ? loadContent(
-                                    subStep,
-                                    subStep.position == lastPosition,
-                                    firebaseId)
-                                : () {}
-                          },
-                      subStep.label,
-                      subStep.done ?? false,
-                      _isAvailable(subStep.position, snapshot.data!));
-                }).toList()
-              ],
-            );
+            if (snapshot.data!.length == 0) {
+              return Text(
+                'Brak zawartości dla dnia',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              );
+            } else {
+              List<SubStep> awaitedSubSteps = snapshot.data!;
+              List<int>? positions =
+                  awaitedSubSteps.map((e) => e.position).toList();
+              positions.sort();
+              int lastPosition = positions.last;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ...(snapshot.data!).map((subStep) {
+                    return ImageButtonWithText(
+                        _assetName(subStep.name),
+                        () => {
+                              _isAvailable(subStep.position, snapshot.data!)
+                                  ? loadContent(
+                                      subStep,
+                                      subStep.position == lastPosition,
+                                      firebaseId)
+                                  : () {}
+                            },
+                        subStep.label,
+                        subStep.done ?? false,
+                        _isAvailable(subStep.position, snapshot.data!));
+                  }).toList()
+                ],
+              );
+            }
           } else {
             return Text('waiting');
           }
@@ -191,14 +204,14 @@ class _StepScreenState extends State<StepScreen> {
 
   _refresh() async {
     setState(() {
-      subSteps =
-          connectionService.getUserSubSteps(widget.stepNumber, widget.user.uid);
+      subSteps = connectionService.getUserSubSteps(
+          prefs.getInt(PreferencesKey.userStepNumber) ?? 1, widget.user.uid);
     });
   }
 
   _changeStep() async {
-    int stepNumber = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
     setState(() {
+      int stepNumber = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
       subSteps = connectionService.getUserSubSteps(stepNumber, widget.user.uid);
     });
   }
@@ -208,13 +221,19 @@ class _StepScreenState extends State<StepScreen> {
   }
 }
 
-class AppBarStepList extends StatelessWidget {
+class AppBarStepList extends StatefulWidget {
   final List<CourseStep>? steps;
   final VoidCallback _changeStep;
   final SharedPreferences _prefs;
+  final int _stepNumber;
 
-  AppBarStepList(this.steps, this._changeStep, this._prefs);
+  AppBarStepList(this.steps, this._changeStep, this._prefs, this._stepNumber);
 
+  @override
+  _AppBarStepListState createState() => _AppBarStepListState();
+}
+
+class _AppBarStepListState extends State<AppBarStepList> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -224,7 +243,7 @@ class AppBarStepList extends StatelessWidget {
         data: Theme.of(context).copyWith(
           cardColor: Colors.black,
         ),
-        child: steps != null
+        child: widget.steps != null
             ? PopupMenuButton(
                 icon: Container(
                   constraints: BoxConstraints.expand(),
@@ -237,27 +256,31 @@ class AppBarStepList extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     constraints: BoxConstraints.expand(),
-                    child: ExpandStepButton(steps!, _prefs),
+                    child: ExpandStepButton(widget.steps!, widget._prefs),
                   ),
                 ),
                 itemBuilder: (context) => [
-                      ...steps!.map((step) {
-                        return PopupMenuItem(
-                            child: TextButton(
-                                onPressed: () => {
-                                      _prefs.setInt(
-                                          PreferencesKey.userStepNumber,
-                                          step.stepNumber),
-                                      _changeStep()
-                                    },
-                                child: Text(
-                                  step.stepName,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                )));
-                      }).toList()
-                    ])
+                  ...widget.steps!.map((step) {
+                    return PopupMenuItem(
+                      child: Text(
+                        step.stepName,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      value: step,
+                    );
+                  }).toList()
+                ],
+                onSelected: (value) {
+                  CourseStep step = value as CourseStep;
+                  if (widget._stepNumber != step.stepNumber) {
+                    widget._prefs
+                        .setInt(PreferencesKey.userStepNumber, step.stepNumber);
+                    widget._changeStep();
+                  }
+                },
+              )
             : SizedBox(),
       ),
     );

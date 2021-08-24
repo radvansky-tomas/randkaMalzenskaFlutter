@@ -10,7 +10,7 @@ import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistryStatusScreen extends StatefulWidget {
-  User user;
+  final User user;
   RegistryStatusScreen(this.user);
   @override
   _RegistryStatusScreenState createState() => _RegistryStatusScreenState();
@@ -91,23 +91,33 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
 
   void _onPressed(BuildContext context, SharedPreferences prefs, String text,
       User user) async {
-    prefs.setString(PreferencesKey.userRelationshipStatus, text);
     ConnectionService service = new ConnectionService();
     List<String> attributes = [];
     attributes.add(text);
     String userSex = prefs.getString(PreferencesKey.userSex) ?? '';
     attributes.add(userSex);
     service
-        .registerUser(user.displayName!, user.email!, user.uid, attributes)
-        .whenComplete(() => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  //always start on first day after registration
-                  return StepScreen(1, user);
-                },
-              ),
-            ));
+        .registerUser(user.email!, user.uid, attributes)
+        .then((isSuccess) => {
+              if (isSuccess)
+                {
+                  prefs.setString(PreferencesKey.userRelationshipStatus, text),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        //always start on first day after registration
+                        return StepScreen(user);
+                      },
+                    ),
+                  )
+                }
+              else
+                {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Coś poszło nie tak : (')))
+                }
+            });
   }
 }
 
