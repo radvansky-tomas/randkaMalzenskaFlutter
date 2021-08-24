@@ -62,6 +62,7 @@ class _VideoScreenState extends State<VideoContent>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _controller.value.isInitialized
         ? Container(child: Chewie(controller: chewieController))
         : Center(

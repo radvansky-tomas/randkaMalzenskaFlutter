@@ -66,6 +66,7 @@ class _AudioContentState extends State<AudioContent>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

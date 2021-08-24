@@ -215,6 +215,6 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   showCameraException(e) {
-    String errorText = 'Error ${e.code} \nError message: ${e.description}';
+    return 'Error ${e.code} \nError message: ${e.description}';
   }
 }
