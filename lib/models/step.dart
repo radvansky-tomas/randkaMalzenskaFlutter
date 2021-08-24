@@ -18,7 +18,7 @@ class CourseStep {
       subStepList.add(SubStep.fromJson(subStep));
     });
     return CourseStep(
-      stepNumber: json['step_number'],
+      stepNumber: json['position'],
       stepName: json['name'],
       subSteps: subStepList,
     );

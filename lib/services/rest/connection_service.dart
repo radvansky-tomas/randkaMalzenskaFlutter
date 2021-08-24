@@ -19,7 +19,7 @@ class ConnectionService {
 
   Future<List<CourseStep>?> getUserSteps(String firebaseId) async {
     final response = await http.get(
-      Uri.parse('$baseAddress/course-steps/step_list/?firebase_id=$firebaseId'),
+      Uri.parse('$baseAddress/course_steps/step_list/?firebase_id=$firebaseId'),
       headers: requestHeaders,
     );
 
@@ -42,7 +42,7 @@ class ConnectionService {
     // http://162.55.217.235:8081/api/course-content/substeps/?firebase_id=fasga721412&substep=1
     final response = await http.get(
       Uri.parse(
-          '$baseAddress/course-content/substeps/?firebase_id=$firebaseId&substep_id=$subStepId'),
+          '$baseAddress/course_content/substeps/?firebase_id=$firebaseId&substep_id=$subStepId'),
       headers: requestHeaders,
     );
 
@@ -75,12 +75,12 @@ class ConnectionService {
   Future<bool> registerUser(
       String email, String firebaseId, List<String> attributes) async {
     Map data = {
-      "attribute": {"name": "puste", "value": attributes},
-      "user": {"email": email, "name": 'puste', "firebase_id": firebaseId}
+      "attribute": {"value": attributes},
+      "user": {"email": email, "firebase_id": firebaseId}
     };
 
     String body = json.encode(data);
-    final response = await http.post(Uri.parse('$baseAddress/userattribute/'),
+    final response = await http.post(Uri.parse('$baseAddress/user_attribute/'),
         headers: requestHeaders, body: body);
     if (response.statusCode == 200) {
       return true;
@@ -93,7 +93,7 @@ class ConnectionService {
       int stepNumber, String firebaseId) async {
     final response = await http.get(
       Uri.parse(
-          '$baseAddress/course-step/user_substeps/?firebase_id=$firebaseId&step_number=$stepNumber'),
+          '$baseAddress/course_step/user_substeps/?firebase_id=$firebaseId&step_number=$stepNumber'),
       headers: requestHeaders,
     );
 
