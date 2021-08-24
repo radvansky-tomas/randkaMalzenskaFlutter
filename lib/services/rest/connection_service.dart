@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:randka_malzenska/models/content.dart';
 import 'package:randka_malzenska/models/http_exception.dart';
+import 'package:randka_malzenska/models/quiz/quiz_test.dart';
 import 'package:randka_malzenska/models/step.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
 import 'package:http/http.dart' as http;
@@ -120,6 +121,20 @@ class ConnectionService {
       return response;
     } else {
       throw HttpException('Błąd: ' + response.body);
+    }
+  }
+
+  Future<QuizTest?> getQuizTest(int quizId) async {
+    final response = await http.get(
+      Uri.parse('$baseAddress/tests/$quizId/'),
+      headers: requestHeaders,
+    );
+
+    if (response.statusCode == 200) {
+      Map<dynamic, dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
+      return QuizTest.fromJson(map['results']);
+    } else {
+      throw HttpException('Błąd poczas pobierania zawartości');
     }
   }
 }

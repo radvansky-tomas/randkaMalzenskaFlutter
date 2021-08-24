@@ -5,6 +5,7 @@ import 'package:randka_malzenska/models/content.dart';
 import 'package:randka_malzenska/screens/audio/audio_content.dart';
 import 'package:randka_malzenska/screens/camera_screen.dart';
 import 'package:randka_malzenska/screens/photo/photo_content.dart';
+import 'package:randka_malzenska/screens/quiz/quiz_screen.dart';
 import 'package:randka_malzenska/screens/video/video_content.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:randka_malzenska/shared/database_helpers.dart';
@@ -165,6 +166,23 @@ Widget sampleBody(
               content,
               refreshContent,
             );
+          } else if (content.type == 'TEST') {
+            return TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return QuizScreen(1);
+                      },
+                    ),
+                  );
+                },
+                child: Text('Idz do quizu',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    )));
           } else if (content.type == 'PROGRESS_BUTTON') {
             String text = isLast ? 'Przejdź ostatni' : 'Przejdź dalej';
             return TextButton(
