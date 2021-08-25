@@ -5,7 +5,7 @@ class QuizTest {
   final int id;
   final String name;
   final String description;
-  final String image;
+  final String? image;
   final int answersCount;
   final String type;
   final List<QuizQuestion> questions;

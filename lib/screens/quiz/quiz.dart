@@ -21,8 +21,11 @@ class Quiz extends StatelessWidget {
           quizTest.questions[questionIndex].content,
         ),
         ...(quizTest.questions[questionIndex].answers).map((answer) {
-          return Answer(answer.content,
-              () => answerQuestion(answer.weight, quizTest.questions.length));
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Answer(answer.content,
+                () => answerQuestion(answer.weight, quizTest.questions.length)),
+          );
         }).toList()
       ],
     );

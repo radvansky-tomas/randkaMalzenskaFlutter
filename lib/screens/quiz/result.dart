@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:randka_malzenska/models/quiz/quiz_grade.dart';
 
 class Result extends StatelessWidget {
   final List<String> answers;
+  final List<QuizGrade> grades;
   final VoidCallback resetQuiz;
-  Result(this.answers, this.resetQuiz);
+  Result(this.answers, this.resetQuiz, this.grades);
 
   String get resultPhrase {
     return 'Przeszedles kurs i najwiecej odpowiedzi to:' + mostPopularValue;
+  }
+
+  String get gradeDescription {
+    return grades
+        .firstWhere((element) => element.gradeRange == mostPopularValue)
+        .description;
   }
 
   String get mostPopularValue {
@@ -35,11 +44,10 @@ class Result extends StatelessWidget {
     return Center(
       child: Column(
         children: [
+          Html(data: gradeDescription),
           Text(
-            resultPhrase,
-            style: TextStyle(
-                fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white),
-            textAlign: TextAlign.center,
+            gradeDescription,
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           TextButton(
             child: Text('Zrestartuj'),

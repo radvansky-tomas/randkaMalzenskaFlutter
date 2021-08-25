@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/quiz/quiz_test.dart';
 import 'package:randka_malzenska/screens/quiz/quiz.dart';
@@ -48,6 +50,7 @@ class _QuizScreenState extends State<QuizScreen> {
         future: _quizTest,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
+            log(snapshot.error.toString());
             return Scaffold(
               backgroundColor: Colors.black,
               body: Center(
@@ -75,7 +78,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       quizTest: snapshot.data!,
                       answerQuestion: _answerQuestion,
                       questionIndex: _questionIndex)
-                  : Result(_answers, _resetQuiz),
+                  : Result(_answers, _resetQuiz, snapshot.data!.grades),
             );
           } else if (snapshot.connectionState == ConnectionState.done &&
               !snapshot.hasData) {

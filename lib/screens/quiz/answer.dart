@@ -11,15 +11,15 @@ class Answer extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.brown),
-          textStyle: MaterialStateProperty.all(
-            TextStyle(
-              fontSize: 15,
-              decorationColor: Colors.green,
-            ),
+          backgroundColor: MaterialStateProperty.all(Colors.blue),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            answerText,
+            style: TextStyle(color: Colors.white),
           ),
         ),
-        child: Text(answerText),
         onPressed: selectHandler,
       ),
     );

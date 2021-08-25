@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -51,6 +53,7 @@ class _ContentScreenState extends State<ContentScreen> {
         future: contents,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
+            log(snapshot.error.toString());
             return Scaffold(
               backgroundColor: Colors.black,
               body: Center(
@@ -173,7 +176,7 @@ Widget sampleBody(
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return QuizScreen(1);
+                        return QuizScreen(int.parse(content.value));
                       },
                     ),
                   );
@@ -237,6 +240,7 @@ Widget photoPreview(
     future: photos,
     builder: (context, snapshot) {
       if (snapshot.hasError) {
+        log(snapshot.error.toString());
         return Scaffold(
           backgroundColor: Colors.black,
           body: Center(

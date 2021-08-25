@@ -2,7 +2,7 @@ class QuizGrade {
   final int id;
   final String description;
   final String gradeRange;
-  final String url;
+  final String? url;
 
   QuizGrade({
     required this.id,
