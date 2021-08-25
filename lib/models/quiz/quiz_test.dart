@@ -15,7 +15,7 @@ class QuizTest {
     required this.id,
     required this.name,
     required this.description,
-    required this.image,
+    this.image,
     required this.answersCount,
     required this.type,
     required this.questions,

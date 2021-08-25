@@ -8,7 +8,7 @@ class QuizGrade {
     required this.id,
     required this.description,
     required this.gradeRange,
-    required this.url,
+    this.url,
   });
 
   factory QuizGrade.fromJson(Map<String, dynamic> json) {

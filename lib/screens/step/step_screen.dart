@@ -6,6 +6,7 @@ import 'package:randka_malzenska/models/step.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
 import 'package:randka_malzenska/screens/content/content_screen.dart';
 import 'package:randka_malzenska/screens/home.dart';
+import 'package:randka_malzenska/screens/quiz/intro.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 
 import 'package:randka_malzenska/shared/button/image_button_with_text.dart';
@@ -25,6 +26,7 @@ class _StepScreenState extends State<StepScreen> {
   Future<List<CourseStep>?>? courseSteps;
   Future<List<SubStep>?>? subSteps;
   late SharedPreferences prefs;
+  bool _introWatched = false;
 
   @override
   void initState() {
@@ -48,54 +50,61 @@ class _StepScreenState extends State<StepScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
-          return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.grey[900],
-                title: AppBarStepList(snapshot.data, _changeStep, prefs,
-                    prefs.getInt(PreferencesKey.userStepNumber) ?? 1),
-                leading: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return Home();
-                          },
+          List<CourseStep> courseSteps = snapshot.data!;
+          int stepNumber = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
+          String? content = courseSteps
+              .firstWhere((element) => element.stepNumber == stepNumber)
+              .content;
+          return !_introWatched && content != null
+              ? Intro(content, _setIntroWatched, 'Zaczynamy')
+              : Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Colors.grey[900],
+                    title: AppBarStepList(
+                        snapshot.data, _changeStep, prefs, stepNumber),
+                    leading: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return Home();
+                              },
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.list,
+                          size: 35,
+                          color: Colors.white,
+                        )),
+                    actions: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5.0),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.card_giftcard,
+                            size: 35,
+                            color: Colors.white,
+                          ),
                         ),
-                      );
-                    },
-                    icon: Icon(
-                      Icons.list,
-                      size: 35,
-                      color: Colors.white,
-                    )),
-                actions: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5.0),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.card_giftcard,
-                        size: 35,
-                        color: Colors.white,
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 6.0),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.favorite_outline,
-                        size: 35,
-                        color: Colors.white,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6.0),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.favorite_outline,
+                            size: 35,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-              backgroundColor: Colors.black,
-              body: Center(child: stepBody(subSteps, widget.user.uid)));
+                  backgroundColor: Colors.black,
+                  body: Center(child: stepBody(subSteps, widget.user.uid)));
         } else if (snapshot.hasError) {
           return Scaffold(
             backgroundColor: Colors.black,
@@ -209,8 +218,15 @@ class _StepScreenState extends State<StepScreen> {
     });
   }
 
+  _setIntroWatched() {
+    setState(() {
+      _introWatched = true;
+    });
+  }
+
   _changeStep() async {
     setState(() {
+      _introWatched = false;
       int stepNumber = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
       subSteps = connectionService.getUserSubSteps(stepNumber, widget.user.uid);
     });

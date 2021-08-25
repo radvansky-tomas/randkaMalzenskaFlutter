@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/quiz/quiz_test.dart';
+import 'package:randka_malzenska/screens/quiz/intro.dart';
 import 'package:randka_malzenska/screens/quiz/quiz.dart';
 import 'package:randka_malzenska/screens/quiz/result.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
@@ -19,6 +20,7 @@ class _QuizScreenState extends State<QuizScreen> {
   ConnectionService connectionService = new ConnectionService();
   Future<QuizTest?>? _quizTest;
   var _questionIndex = 0;
+  var _introWatched = false;
   // var _totalScore = 0;
   List<String> _answers = [];
 
@@ -41,6 +43,12 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {
       _questionIndex = 0;
       _answers = [];
+    });
+  }
+
+  void _setIntroWatched() {
+    setState(() {
+      _introWatched = true;
     });
   }
 
@@ -73,12 +81,15 @@ class _QuizScreenState extends State<QuizScreen> {
                     style: TextStyle(color: Colors.white),
                   )),
               backgroundColor: Colors.black,
-              body: _questionIndex < snapshot.data!.questions.length
-                  ? Quiz(
-                      quizTest: snapshot.data!,
-                      answerQuestion: _answerQuestion,
-                      questionIndex: _questionIndex)
-                  : Result(_answers, _resetQuiz, snapshot.data!.grades),
+              body: !_introWatched
+                  ? Intro(snapshot.data!.description, _setIntroWatched,
+                      'Rozpocznij quiz')
+                  : _questionIndex < snapshot.data!.questions.length
+                      ? Quiz(
+                          quizTest: snapshot.data!,
+                          answerQuestion: _answerQuestion,
+                          questionIndex: _questionIndex)
+                      : Result(_answers, _resetQuiz, snapshot.data!.grades),
             );
           } else if (snapshot.connectionState == ConnectionState.done &&
               !snapshot.hasData) {

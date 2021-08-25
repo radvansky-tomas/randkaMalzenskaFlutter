@@ -13,13 +13,37 @@ class Result extends StatelessWidget {
   }
 
   String get gradeDescription {
-    return grades
-        .firstWhere((element) => element.gradeRange == mostPopularValue)
-        .description;
+    if (int.tryParse(mostPopularValue) != null) {
+      return grades
+          .firstWhere((element) =>
+              isInRange(element.gradeRange, int.parse(mostPopularValue)))
+          .description;
+    } else {
+      return grades
+          .firstWhere((element) => element.gradeRange == mostPopularValue)
+          .description;
+    }
+  }
+
+  bool isInRange(String gradeRange, int value) {
+    List<String> range = gradeRange.split('-');
+    if (value >= int.parse(range[0]) && value <= int.parse(range[1])) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   String get mostPopularValue {
     var popular = Map();
+
+    if (int.tryParse(answers.first) != null) {
+      int sum = 0;
+      answers.forEach((element) {
+        sum = sum + int.parse(element);
+      });
+      return sum.toString();
+    }
 
     answers.forEach((answer) {
       if (!popular.containsKey(answer)) {
@@ -45,10 +69,6 @@ class Result extends StatelessWidget {
       child: Column(
         children: [
           Html(data: gradeDescription),
-          Text(
-            gradeDescription,
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
           TextButton(
             child: Text('Zrestartuj'),
             onPressed: resetQuiz,
