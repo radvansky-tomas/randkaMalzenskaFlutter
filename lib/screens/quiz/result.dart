@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:randka_malzenska/models/quiz/quiz_grade.dart';
+import 'package:randka_malzenska/shared/html/white_html.dart';
 
 class Result extends StatelessWidget {
   final List<String> answers;
@@ -68,7 +68,7 @@ class Result extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Html(data: gradeDescription),
+          WhiteHtml(gradeDescription),
           TextButton(
             child: Text('Zrestartuj'),
             onPressed: resetQuiz,

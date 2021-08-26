@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+
+import 'package:randka_malzenska/shared/html/white_html.dart';
 
 class Intro extends StatelessWidget {
   final String _text;
   final String _buttonText;
-  VoidCallback _introWatched;
+  final VoidCallback _introWatched;
   Intro(this._text, this._introWatched, this._buttonText);
 
   @override
@@ -13,8 +14,8 @@ class Intro extends StatelessWidget {
     return Column(
       children: [
         Center(
-          child: Html(
-            data: _text,
+          child: WhiteHtml(
+            _text,
           ),
         ),
         ElevatedButton(

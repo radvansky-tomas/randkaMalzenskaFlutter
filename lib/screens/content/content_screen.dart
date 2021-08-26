@@ -11,6 +11,7 @@ import 'package:randka_malzenska/screens/quiz/quiz_screen.dart';
 import 'package:randka_malzenska/screens/video/video_content.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:randka_malzenska/shared/database_helpers.dart';
+import 'package:randka_malzenska/shared/html/white_html.dart';
 
 class ContentScreen extends StatefulWidget {
   final int _subStepId;
@@ -151,7 +152,7 @@ Widget sampleBody(
           Content content = awaitedContents[index];
           if (content.type == 'HTML') {
             return Container(
-              child: Html(data: content.value),
+              child: WhiteHtml(content.value),
             );
           } else if (content.type == 'VIDEO') {
             return Container(
