@@ -11,7 +11,7 @@ class Intro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: [
         Center(
           child: WhiteHtml(
