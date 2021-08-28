@@ -1,11 +1,17 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/blog/blog_screen.dart';
 import 'package:randka_malzenska/screens/info/info_screen.dart';
 import 'package:randka_malzenska/screens/settings/settings_screen.dart';
 import 'package:randka_malzenska/screens/step/drawer/drawer_element.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
+
+import '../../auth_screen.dart';
 
 class StepDrawer extends StatefulWidget {
   final int _index;
@@ -16,10 +22,11 @@ class StepDrawer extends StatefulWidget {
 }
 
 class _StepDrawerState extends State<StepDrawer> {
-  List<String> buttons = ['Start', 'Blogasdas', 'Ustawienia', 'O aplikacji'];
+  List<String> buttons = ['Start', 'Blog', 'Ustawienia', 'O aplikacji'];
   List<bool> highlited = [false, false, false, false];
   List<IconData> icons = [Icons.home, Icons.aod, Icons.settings, Icons.info];
   List<Widget> widgets = [];
+  late StreamSubscription<User?> loginStateSubscription;
 
   @override
   void initState() {
@@ -31,6 +38,23 @@ class _StepDrawerState extends State<StepDrawer> {
       SettingsScreen(widget._user),
       InfoScreen(widget._user)
     ];
+    _verifyUserIsLogged();
+  }
+
+  @override
+  void dispose() {
+    loginStateSubscription.cancel();
+    super.dispose();
+  }
+
+  void _verifyUserIsLogged() {
+    var authBloc = Provider.of<Auth>(context, listen: false);
+    loginStateSubscription = authBloc.currentUser.listen((user) {
+      if (user == null) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => AuthScreen()));
+      }
+    });
   }
 
   @override
@@ -60,6 +84,17 @@ class _StepDrawerState extends State<StepDrawer> {
                     }, highlited[index]),
                   );
                 }),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.logout,
+              color: Colors.white,
+            ),
+            title: Text(
+              'Wyloguj',
+              style: TextStyle(color: Colors.white),
+            ),
+            onTap: () => Provider.of<Auth>(context, listen: false).logout(),
           ),
         ],
       ),

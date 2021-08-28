@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/models/step.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
+import 'package:randka_malzenska/providers/auth.dart';
+import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/content/content_screen.dart';
 import 'package:randka_malzenska/screens/quiz/intro.dart';
 import 'package:randka_malzenska/screens/step/drawer/step_drawer.dart';
