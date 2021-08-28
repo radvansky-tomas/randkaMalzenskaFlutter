@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:randka_malzenska/models/blog.dart';
 import 'package:randka_malzenska/models/content.dart';
 import 'package:randka_malzenska/models/http_exception.dart';
 import 'package:randka_malzenska/models/quiz/quiz_test.dart';
@@ -135,6 +136,24 @@ class ConnectionService {
       return QuizTest.fromJson(map['results']);
     } else {
       throw HttpException('Błąd poczas pobierania zawartości');
+    }
+  }
+
+  Future<List<Blog>?> getBlogs() async {
+    final response = await http.get(
+      Uri.parse('$baseAddress/blogs'),
+      headers: requestHeaders,
+    );
+    if (response.statusCode == 200) {
+      List<Blog> blogList = [];
+      Map<dynamic, dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> blogs = map['results'];
+      blogs.forEach((blog) {
+        blogList.add(Blog.fromJson(blog));
+      });
+      return blogList;
+    } else {
+      throw HttpException('Failed to load blogs');
     }
   }
 }
