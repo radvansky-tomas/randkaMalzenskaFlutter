@@ -107,11 +107,3 @@ Future<List<Photo>?> _read() async {
   DatabaseHelper helper = DatabaseHelper.instance;
   return await helper.queryPhoto();
 }
-
-// ListView.builder(
-//                 itemCount: projectSnap.data!.length,
-//                 itemBuilder: (context, index) {
-//                   Photo photo = projectSnap.data![index];
-//                   return Image.file(File(photo.path!));
-//                 },
-//               ),

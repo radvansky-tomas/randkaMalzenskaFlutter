@@ -3,12 +3,9 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/models/step.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
-import 'package:randka_malzenska/providers/auth.dart';
-import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/content/content_screen.dart';
 import 'package:randka_malzenska/screens/quiz/intro.dart';
 import 'package:randka_malzenska/screens/step/drawer/step_drawer.dart';
@@ -98,7 +95,8 @@ class _StepScreenState extends State<StepScreen> {
                     ],
                   ),
                   backgroundColor: Colors.black,
-                  body: Center(child: stepBody(subSteps, widget.user.uid)));
+                  body: Center(
+                      child: stepBody(subSteps, widget.user.uid, stepNumber)));
         } else if (snapshot.hasError) {
           return Scaffold(
             backgroundColor: Colors.black,
@@ -122,7 +120,8 @@ class _StepScreenState extends State<StepScreen> {
     );
   }
 
-  Widget stepBody(Future<List<SubStep>?>? futureSubSteps, String firebaseId) {
+  Widget stepBody(Future<List<SubStep>?>? futureSubSteps, String firebaseId,
+      int stepPosition) {
     return FutureBuilder<List<SubStep>?>(
         future: futureSubSteps,
         builder: (context, snapshot) {
@@ -147,6 +146,7 @@ class _StepScreenState extends State<StepScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ...(snapshot.data!).map((subStep) {
+                    //TODO subsStep.step ustawic na position zamiast na id
                     return ImageButtonWithText(
                         _assetName(subStep.name),
                         () => {
@@ -154,7 +154,9 @@ class _StepScreenState extends State<StepScreen> {
                                   ? loadContent(
                                       subStep,
                                       subStep.position == lastPosition,
-                                      firebaseId)
+                                      firebaseId,
+                                      stepPosition,
+                                    )
                                   : () {}
                             },
                         subStep.label,
@@ -193,13 +195,14 @@ class _StepScreenState extends State<StepScreen> {
     }
   }
 
-  void loadContent(SubStep subStep, bool isLast, String firebaseId) {
+  void loadContent(
+      SubStep subStep, bool isLast, String firebaseId, int stepPosition) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
-          return ContentScreen(subStep.id, firebaseId, subStep.label, isLast,
-              subStep.step, subStep.done!, _refresh);
+          return ContentScreen(
+              subStep, firebaseId, isLast, _refresh, stepPosition);
         },
       ),
     );

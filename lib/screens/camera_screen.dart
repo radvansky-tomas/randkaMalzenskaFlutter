@@ -7,10 +7,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:randka_malzenska/shared/database_helpers.dart';
 
 class CameraScreen extends StatefulWidget {
-  final int _primaryOrder;
-  final int _secondaryOrder;
+  final int _position;
   final VoidCallback _callback;
-  CameraScreen(this._primaryOrder, this._secondaryOrder, this._callback);
+  CameraScreen(this._position, this._callback);
   @override
   _CameraScreenState createState() => _CameraScreenState();
 }
@@ -130,8 +129,7 @@ class _CameraScreenState extends State<CameraScreen> {
         tmpFile.copy('$_appPath/$_fileName');
         Photo photo = new Photo();
         photo.path = '$_appPath/$_fileName';
-        photo.primaryOrder = widget._primaryOrder;
-        photo.secondaryOrder = widget._secondaryOrder;
+        photo.position = widget._position;
         helper
             .insertOrUpdatePhoto(photo)
             .whenComplete(() => {widget._callback(), Navigator.pop(context)});

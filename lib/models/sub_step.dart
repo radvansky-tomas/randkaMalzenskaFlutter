@@ -1,4 +1,5 @@
 class SubStep {
+  //id dnia, oczekiwanie na pozycje
   final int step;
   final String name;
   final String label;

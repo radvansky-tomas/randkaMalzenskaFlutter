@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:randka_malzenska/screens/photo/photo_presentation.dart';
 import 'package:randka_malzenska/screens/step/drawer/step_drawer.dart';
 
 class InfoScreen extends StatefulWidget {
@@ -28,9 +29,19 @@ class _InfoScreenState extends State<InfoScreen> {
         ),
       ),
       body: Center(
-        child: Text(
-          'O aplikacji pojawi nie niebawem',
-          style: TextStyle(color: Colors.white),
+        child: TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return PhotoPresentation();
+                },
+              ),
+            );
+          },
+          child: Text('Przejdz do prezentacji',
+              style: TextStyle(color: Colors.white)),
         ),
       ),
     );

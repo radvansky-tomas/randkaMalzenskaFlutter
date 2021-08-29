@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:randka_malzenska/models/content.dart';
+import 'package:randka_malzenska/models/sub_step.dart';
 import 'package:randka_malzenska/screens/audio/audio_content.dart';
 import 'package:randka_malzenska/screens/camera_screen.dart';
 import 'package:randka_malzenska/screens/photo/photo_content.dart';
@@ -14,16 +14,14 @@ import 'package:randka_malzenska/shared/database_helpers.dart';
 import 'package:randka_malzenska/shared/html/white_html.dart';
 
 class ContentScreen extends StatefulWidget {
-  final int _subStepId;
-  final int _stepPosition;
-  final String _subStepLabel;
+  final SubStep _subStep;
   final String _firebaseId;
   final bool _isLast;
-  final bool _isDone;
   final VoidCallback _refreshStep;
+  final int _stepPosition;
 
-  ContentScreen(this._subStepId, this._firebaseId, this._subStepLabel,
-      this._isLast, this._stepPosition, this._isDone, this._refreshStep);
+  ContentScreen(this._subStep, this._firebaseId, this._isLast,
+      this._refreshStep, this._stepPosition);
 
   @override
   _ContentScreenState createState() => _ContentScreenState();
@@ -38,7 +36,7 @@ class _ContentScreenState extends State<ContentScreen> {
   void initState() {
     super.initState();
     contents = connectionService.getUserStepContent(
-        widget._subStepId, widget._firebaseId);
+        widget._subStep.id, widget._firebaseId);
     photos = _readPhotos();
   }
 
@@ -71,13 +69,14 @@ class _ContentScreenState extends State<ContentScreen> {
               snapshot.hasData) {
             return sampleBody(
                 snapshot.data,
-                widget._subStepLabel,
+                widget._subStep.label,
                 photos,
                 refresh,
                 widget._isLast,
                 widget._stepPosition,
+                widget._subStep.position,
                 widget._firebaseId,
-                widget._isDone,
+                widget._subStep.done!,
                 widget._refreshStep);
           } else if (snapshot.connectionState == ConnectionState.done &&
               !snapshot.hasData) {
@@ -111,6 +110,7 @@ Widget sampleBody(
   VoidCallback refreshContent,
   bool isLast,
   int stepPosition,
+  int subStepPosition,
   String firebaseId,
   bool isDone,
   VoidCallback refreshStep,
@@ -168,6 +168,8 @@ Widget sampleBody(
             return photoPreview(
               photos,
               content,
+              stepPosition,
+              subStepPosition,
               refreshContent,
             );
           } else if (content.type == 'TEST') {
@@ -197,14 +199,14 @@ Widget sampleBody(
                 } else {
                   if (!isLast) {
                     service
-                        .increaseSubStepProgress(stepPosition, firebaseId)
+                        .increaseSubStepProgress(subStepPosition, firebaseId)
                         .whenComplete(() => {
                               refreshStep(),
                               Navigator.pop(context),
                             });
                   } else {
                     service
-                        .increaseStepProgress(stepPosition, firebaseId)
+                        .increaseStepProgress(subStepPosition, firebaseId)
                         .whenComplete(() => {
                               refreshStep(),
                               Navigator.pop(context),
@@ -235,8 +237,8 @@ Widget sampleBody(
   );
 }
 
-Widget photoPreview(
-    Future<List<Photo>?>? photos, Content content, VoidCallback callback) {
+Widget photoPreview(Future<List<Photo>?>? photos, Content content,
+    int stepPosition, int subStepPosition, VoidCallback callback) {
   return FutureBuilder<List<Photo>?>(
     future: photos,
     builder: (context, snapshot) {
@@ -257,12 +259,15 @@ Widget photoPreview(
       }
       if (snapshot.connectionState == ConnectionState.done) {
         Photo? photo;
+        String concatedPos = stepPosition.toString() +
+            subStepPosition.toString() +
+            content.position.toString();
         if (snapshot.hasData) {
           photo = snapshot.data?.firstWhere(
-              (element) =>
-                  element.primaryOrder == content.subStep &&
-                  element.secondaryOrder == content.position,
-              orElse: () => new Photo());
+              (element) => element.position == int.parse(concatedPos),
+              orElse: () {
+            return new Photo();
+          });
         }
         if (photo?.id == null) {
           photo = null;
@@ -275,8 +280,7 @@ Widget photoPreview(
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return CameraScreen(
-                      content.subStep, content.position, callback);
+                  return CameraScreen(int.parse(concatedPos), callback);
                 },
               ),
             );

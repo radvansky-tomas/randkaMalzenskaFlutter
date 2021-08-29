@@ -1,19 +1,13 @@
 class Camera {
-  final int stepPosition;
-  final int contentPosition;
+  final int position;
   final String? value;
   final String? localPath;
 
-  Camera(
-      {required this.stepPosition,
-      required this.contentPosition,
-      this.value,
-      this.localPath});
+  Camera({required this.position, this.value, this.localPath});
 
   factory Camera.fromJson(Map<String, dynamic> json) {
     return Camera(
-      stepPosition: json['step_position'],
-      contentPosition: json['content_position'],
+      position: json['position'],
       value: json['value'],
     );
   }
