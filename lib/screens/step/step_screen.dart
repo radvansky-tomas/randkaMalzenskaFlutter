@@ -146,7 +146,6 @@ class _StepScreenState extends State<StepScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ...(snapshot.data!).map((subStep) {
-                    //TODO subsStep.step ustawic na position zamiast na id
                     return ImageButtonWithText(
                         _assetName(subStep.name),
                         () => {

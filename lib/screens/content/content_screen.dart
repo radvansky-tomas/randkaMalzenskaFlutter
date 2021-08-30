@@ -73,6 +73,7 @@ class _ContentScreenState extends State<ContentScreen> {
                 photos,
                 refresh,
                 widget._isLast,
+                widget._subStep.step,
                 widget._stepPosition,
                 widget._subStep.position,
                 widget._firebaseId,
@@ -109,6 +110,7 @@ Widget sampleBody(
   Future<List<Photo>?>? photos,
   VoidCallback refreshContent,
   bool isLast,
+  int stepId,
   int stepPosition,
   int subStepPosition,
   String firebaseId,
@@ -164,6 +166,8 @@ Widget sampleBody(
               height: 200,
               child: AudioContent(content.value),
             );
+          } else if (content.type == 'CAMERA2') {
+            return SizedBox();
           } else if (content.type == 'CAMERA') {
             return photoPreview(
               photos,
@@ -199,14 +203,14 @@ Widget sampleBody(
                 } else {
                   if (!isLast) {
                     service
-                        .increaseSubStepProgress(subStepPosition, firebaseId)
+                        .increaseSubStepProgress(stepId, firebaseId)
                         .whenComplete(() => {
                               refreshStep(),
                               Navigator.pop(context),
                             });
                   } else {
                     service
-                        .increaseStepProgress(subStepPosition, firebaseId)
+                        .increaseStepProgress(stepId, firebaseId)
                         .whenComplete(() => {
                               refreshStep(),
                               Navigator.pop(context),
