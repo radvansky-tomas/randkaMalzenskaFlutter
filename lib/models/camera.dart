@@ -7,7 +7,7 @@ class Camera {
 
   factory Camera.fromJson(Map<String, dynamic> json) {
     return Camera(
-      position: json['position'],
+      position: json['camera_position'],
       value: json['value'],
     );
   }

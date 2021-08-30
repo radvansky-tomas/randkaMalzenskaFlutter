@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:randka_malzenska/screens/photo/photo_presentation.dart';
+import 'package:randka_malzenska/screens/photo/photo_presentation_screen.dart';
 import 'package:randka_malzenska/screens/step/drawer/step_drawer.dart';
 
 class InfoScreen extends StatefulWidget {
@@ -35,7 +35,7 @@ class _InfoScreenState extends State<InfoScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return PhotoPresentation();
+                  return PhotoPresentationScreen(widget._user);
                 },
               ),
             );

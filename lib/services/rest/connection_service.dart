@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:randka_malzenska/models/blog.dart';
+import 'package:randka_malzenska/models/camera.dart';
 import 'package:randka_malzenska/models/content.dart';
 import 'package:randka_malzenska/models/http_exception.dart';
 import 'package:randka_malzenska/models/quiz/quiz_test.dart';
@@ -154,6 +155,24 @@ class ConnectionService {
       return blogList;
     } else {
       throw HttpException('Failed to load blogs');
+    }
+  }
+
+  Future<List<Camera>?> getCameras(String firebaseId) async {
+    final response = await http.get(
+      Uri.parse('$baseAddress/course_content/camera/?firebase_id=$firebaseId'),
+      headers: requestHeaders,
+    );
+    if (response.statusCode == 200) {
+      List<Camera> cameraList = [];
+      Map<dynamic, dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> cameras = map['results'];
+      cameras.forEach((camera) {
+        cameraList.add(Camera.fromJson(camera));
+      });
+      return cameraList;
+    } else {
+      throw HttpException('Failed to load cameras');
     }
   }
 }
