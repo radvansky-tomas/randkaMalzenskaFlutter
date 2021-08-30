@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -51,12 +52,24 @@ class _StepScreenState extends State<StepScreen> {
       future: courseSteps,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData && snapshot.data!.length==0) {
+          return Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+              child: Text(
+                "Coś poszło nie tak :(",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
+          );
+        }
+        else if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
           List<CourseStep> courseSteps = snapshot.data!;
           int stepNumber = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
-          String? content = courseSteps
-              .firstWhere((element) => element.stepNumber == stepNumber)
-              .content;
+          String? content = courseSteps.firstWhere(
+              (element) => element.stepNumber == stepNumber,
+              orElse:(){return courseSteps.first} ).content;
           return !_introWatched && content != null
               ? Intro(content, _setIntroWatched, 'Zaczynamy')
               : Scaffold(
@@ -165,8 +178,12 @@ class _StepScreenState extends State<StepScreen> {
                 ],
               );
             }
+          } else if (snapshot.hasError) {
+            log('error ${snapshot.error.toString()}');
+            return Text('wystąpił błąd : (',
+                style: TextStyle(color: Colors.white));
           } else {
-            return Text('waiting');
+            return Text('ładowanie', style: TextStyle(color: Colors.white));
           }
         });
   }
