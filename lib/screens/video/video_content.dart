@@ -11,10 +11,12 @@ class VideoContent extends StatefulWidget {
 }
 
 class _VideoScreenState extends State<VideoContent>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   late VideoPlayerController _controller;
   late ChewieController chewieController;
   late Chewie playerWidget;
+  late Animation<Offset> animation;
+  late AnimationController animationController;
 
   @override
   bool get wantKeepAlive => true;
@@ -23,6 +25,21 @@ class _VideoScreenState extends State<VideoContent>
   void initState() {
     super.initState();
     initializePlayer();
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
+    animation = Tween<Offset>(
+      begin: Offset(-1.0, 0.0),
+      end: Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: animationController,
+      curve: Curves.fastLinearToSlowEaseIn,
+    ));
+
+    Future<void>.delayed(Duration(seconds: 1), () {
+      animationController.forward();
+    });
   }
 
   Future<void> initializePlayer() async {
@@ -56,6 +73,7 @@ class _VideoScreenState extends State<VideoContent>
   @override
   void dispose() {
     _controller.dispose();
+    animationController.dispose();
     chewieController.dispose();
     super.dispose();
   }
@@ -64,7 +82,9 @@ class _VideoScreenState extends State<VideoContent>
   Widget build(BuildContext context) {
     super.build(context);
     return _controller.value.isInitialized
-        ? Container(child: Chewie(controller: chewieController))
+        ? SlideTransition(
+            position: animation,
+            child: Container(child: Chewie(controller: chewieController)))
         : Center(
             child: CircularProgressIndicator(
               color: Colors.white,
