@@ -4,7 +4,7 @@ class CourseStep {
   final int stepNumber;
   final String stepName;
   final String? content;
-  final List<SubStep> subSteps;
+  final List<SubStep>? subSteps;
 
   CourseStep(
       {required this.stepNumber,
@@ -13,9 +13,9 @@ class CourseStep {
       this.content});
 
   factory CourseStep.fromJson(Map<String, dynamic> json) {
-    List<dynamic> subSteps = json['sub_steps'];
+    List<dynamic>? subSteps = json['sub_steps'];
     List<SubStep> subStepList = [];
-    subSteps.forEach((subStep) {
+    subSteps?.forEach((subStep) {
       subStepList.add(SubStep.fromJson(subStep));
     });
     return CourseStep(
