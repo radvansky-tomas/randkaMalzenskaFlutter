@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:888881379595:android:9d19f6833e868c18f14a0e",
         "android_client_info": {
-          "package_name": "com.example.randka_malzenska"
+          "package_name": "com.dk.randka_malzenska2"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "888881379595-9lgrq1dios037orduo77btejjti5k54j.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.randka_malzenska",
+            "package_name": "com.dk.randka_malzenska2",
             "certificate_hash": "ac7d6f951c735d456417ddda2821fc19bdd8e53b"
           }
         },
@@ -25,7 +25,7 @@
           "client_id": "888881379595-bka0491a5qvchq67dij2kvprra33h1hh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.randka_malzenska",
+            "package_name": "com.dk.randka_malzenska2",
             "certificate_hash": "451299f0561f7cc31c1a8947cc95a6356ae73bd7"
           }
         },
