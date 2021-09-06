@@ -48,12 +48,14 @@ class _AuthCardState extends State<AuthCard> {
     });
     loginStateSubscription = authBloc.currentUser.listen((user) {
       if (user != null) {
-        String userSex =
-            prefs.getString(PreferencesKey.userRelationshipStatus) ?? '';
+        String userRelationshipStatus =
+            prefs.getString(user.uid + PreferencesKey.userRelationshipStatus) ??
+                '';
 
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) =>
-                userSex == '' ? RegistryStatusScreen(user) : StepScreen(user)));
+            builder: (context) => userRelationshipStatus == ''
+                ? RegistryStatusScreen(user)
+                : StepScreen(user)));
       }
     });
   }

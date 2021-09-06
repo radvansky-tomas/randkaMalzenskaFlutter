@@ -115,7 +115,8 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
         .then((isSuccess) => {
               if (isSuccess)
                 {
-                  prefs.setString(PreferencesKey.userRelationshipStatus, text),
+                  prefs.setString(
+                      user.uid + PreferencesKey.userRelationshipStatus, text),
                   Navigator.push(
                     context,
                     MaterialPageRoute(

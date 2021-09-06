@@ -55,6 +55,14 @@ class _StepScreenState extends State<StepScreen> {
             snapshot.hasData && snapshot.data!.length==0) {
           return Scaffold(
             backgroundColor: Colors.black,
+               drawer: Theme(
+                      data: Theme.of(context).copyWith(
+                        canvasColor: Colors.black,
+                      ),
+                      child: StepDrawer(0, widget.user)),
+             appBar: AppBar(
+               title: Text("Randka małżeńska", style: TextStyle(color: Colors.white),),
+                    backgroundColor: Colors.grey[900],),
             body: Center(
               child: Text(
                 "Brak danych dla dni kursu :(",
