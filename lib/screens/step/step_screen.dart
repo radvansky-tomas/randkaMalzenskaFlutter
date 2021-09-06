@@ -57,7 +57,7 @@ class _StepScreenState extends State<StepScreen> {
             backgroundColor: Colors.black,
             body: Center(
               child: Text(
-                "Coś poszło nie tak :(",
+                "Brak danych dla dni kursu :(",
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
@@ -111,6 +111,7 @@ class _StepScreenState extends State<StepScreen> {
                   body: Center(
                       child: stepBody(subSteps, widget.user.uid, stepNumber)));
         } else if (snapshot.hasError) {
+          log(snapshot.error.toString());
           return Scaffold(
             backgroundColor: Colors.black,
             body: Center(

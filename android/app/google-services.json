@@ -7,17 +7,61 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:888881379595:android:9d19f6833e868c18f14a0e",
+        "mobilesdk_app_id": "1:888881379595:android:bdf19357807424bbf14a0e",
         "android_client_info": {
           "package_name": "com.dk.randka_malzenska2"
         }
       },
       "oauth_client": [
         {
+          "client_id": "888881379595-qgcsj4rnjkitjc9pc08do65ta7p6i15d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh07tyQLDE3JVlYS2KN0tV6RwRWz_Mq8M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888881379595-qgcsj4rnjkitjc9pc08do65ta7p6i15d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "888881379595-rmge0udvf9ru44tl4vqlanc9dm7e55is.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.randkaMalzenska"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888881379595:android:9d19f6833e868c18f14a0e",
+        "android_client_info": {
+          "package_name": "com.example.randka_malzenska"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888881379595-6c03gsp01grncq5g46cb9gs62dek1lcf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.randka_malzenska",
+            "certificate_hash": "7403b4011259e5a933147ca1f62baacef2afd629"
+          }
+        },
+        {
           "client_id": "888881379595-9lgrq1dios037orduo77btejjti5k54j.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.dk.randka_malzenska2",
+            "package_name": "com.example.randka_malzenska",
             "certificate_hash": "ac7d6f951c735d456417ddda2821fc19bdd8e53b"
           }
         },
@@ -25,7 +69,7 @@
           "client_id": "888881379595-bka0491a5qvchq67dij2kvprra33h1hh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.dk.randka_malzenska2",
+            "package_name": "com.example.randka_malzenska",
             "certificate_hash": "451299f0561f7cc31c1a8947cc95a6356ae73bd7"
           }
         },
@@ -45,6 +89,13 @@
             {
               "client_id": "888881379595-qgcsj4rnjkitjc9pc08do65ta7p6i15d.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "888881379595-rmge0udvf9ru44tl4vqlanc9dm7e55is.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.randkaMalzenska"
+              }
             }
           ]
         }

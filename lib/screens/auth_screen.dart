@@ -14,40 +14,20 @@ enum AuthMode { Signup, Login }
 class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
-    // final transformConfig = Matrix4.rotationZ(-8 * pi / 180);
-    // transformConfig.translate(-10.0);
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/login_tlo.jpg"),
-                fit: BoxFit.cover,
-              ),
+        backgroundColor: Colors.black,
+        body: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: MediaQuery.of(context).size.width,
+              minHeight: MediaQuery.of(context).size.height,
+            ),
+            child: IntrinsicHeight(
+              child: AuthCard(),
             ),
           ),
-          SingleChildScrollView(
-            child: Container(
-              height: deviceSize.height,
-              width: deviceSize.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Flexible(
-                    flex: deviceSize.width > 600 ? 2 : 1,
-                    child: AuthCard(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
@@ -187,126 +167,253 @@ class _AuthCardState extends State<AuthCard> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      elevation: 8.0,
-      child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 340,
-        constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 340),
-        width: deviceSize.width * 0.75,
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'email'),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value!.isEmpty || !value.contains('@')) {
-                      return 'Invalid email!';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _authData['email'] = value!;
-                  },
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Randka małżeńska',
+              style: TextStyle(color: Colors.white, fontSize: 19),
+            ),
+            SizedBox(
+              height: 50.0,
+            ),
+            TextFormField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'email',
+                labelStyle: TextStyle(color: Colors.white),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white)),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white54)),
+                focusColor: Colors.white,
+              ),
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value!.isEmpty || !value.contains('@')) {
+                  return 'Nieprawidłowy email!';
+                }
+                return null;
+              },
+              onSaved: (value) {
+                _authData['email'] = value!;
+              },
+            ),
+            TextFormField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'hasło',
+                labelStyle: TextStyle(color: Colors.white),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white)),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white54)),
+                focusColor: Colors.white,
+              ),
+              obscureText: true,
+              controller: _passwordController,
+              validator: (value) {
+                if (value!.isEmpty || value.length < 5) {
+                  return 'Hasło jest za krótkie!';
+                }
+              },
+              onSaved: (value) {
+                _authData['password'] = value!;
+              },
+            ),
+            if (_authMode == AuthMode.Signup)
+              TextFormField(
+                style: TextStyle(color: Colors.white),
+                enabled: _authMode == AuthMode.Signup,
+                decoration: InputDecoration(
+                  labelText: 'potwierdź hasło',
+                  labelStyle: TextStyle(color: Colors.white),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white)),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white54)),
+                  focusColor: Colors.white,
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'hasło'),
-                  obscureText: true,
-                  controller: _passwordController,
-                  validator: (value) {
-                    if (value!.isEmpty || value.length < 5) {
-                      return 'Password is too short!';
-                    }
-                  },
-                  onSaved: (value) {
-                    _authData['password'] = value!;
-                  },
-                ),
-                if (_authMode == AuthMode.Signup)
-                  TextFormField(
-                    enabled: _authMode == AuthMode.Signup,
-                    decoration: InputDecoration(labelText: 'Confirm Password'),
-                    obscureText: true,
-                    validator: _authMode == AuthMode.Signup
-                        ? (value) {
-                            if (value != _passwordController.text) {
-                              return 'Passwords do not match!';
-                            }
-                          }
-                        : null,
+                obscureText: true,
+                validator: _authMode == AuthMode.Signup
+                    ? (value) {
+                        if (value != _passwordController.text) {
+                          return 'Hasła nie są jednakowe!';
+                        }
+                      }
+                    : null,
+              ),
+            SizedBox(
+              height: 20.0,
+            ),
+            OutlinedButton(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  _authMode == AuthMode.Login ? 'Zaloguj' : 'Zarejestruj się',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
                   ),
-                SizedBox(
-                  height: 20,
                 ),
-                if (_isLoading)
-                  CircularProgressIndicator()
-                else
-                  RaisedButton(
-                    child: Text(_authMode == AuthMode.Login
-                        ? 'Zaloguj'
-                        : 'Zarejestruj się'),
-                    onPressed: _submit,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                    color: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryTextTheme.button!.color,
-                  ),
-                FlatButton(
-                  child: Text(
-                      '${_authMode == AuthMode.Login ? 'Zarejestruj się' : 'Zaloguj'}'),
-                  onPressed: _switchAuthMode,
-                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textColor: Theme.of(context).primaryColor,
+              ),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(width: 2, color: Colors.white),
+              ),
+              onPressed: _submit,
+            ),
+            TextButton(
+              child: Text(
+                '${_authMode == AuthMode.Login ? 'Zarejestruj się' : 'Zaloguj'}',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: _switchAuthMode,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Image.asset('assets/images/FacebookLogo.png'),
+                  iconSize: 50,
+                  onPressed: _loginFace,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    buildDivider(),
-                    widthSpacer(5.5),
-                    Text(
-                      "lub użyj",
-                      style: TextStyle(color: Colors.grey, fontSize: 15.00),
-                    ),
-                    widthSpacer(5.5),
-                    buildDivider(),
-                    widthSpacer(5.5),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Image.asset('assets/images/FacebookLogo.png'),
-                      iconSize: 50,
-                      onPressed: _loginFace,
-                    ),
-                    IconButton(
-                      icon: Image.asset('assets/images/GoogleLogo.png'),
-                      iconSize: 50,
-                      onPressed: _loginGoogle,
-                    ),
-                  ],
+                IconButton(
+                  icon: Image.asset('assets/images/GoogleLogo.png'),
+                  iconSize: 50,
+                  onPressed: _loginGoogle,
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );
+    // return Card(
+    //   shape: RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.circular(10.0),
+    //   ),
+    //   elevation: 8.0,
+    //   child: Container(
+    //     height: _authMode == AuthMode.Signup ? 320 : 340,
+    //     constraints:
+    //         BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 340),
+    //     width: deviceSize.width * 0.75,
+    //     padding: EdgeInsets.all(16.0),
+    //     child: Form(
+    //       key: _formKey,
+    //       child: SingleChildScrollView(
+    //         child: Column(
+    //           children: <Widget>[
+    //             TextFormField(
+    //               decoration: InputDecoration(labelText: 'email'),
+    //               keyboardType: TextInputType.emailAddress,
+    //               validator: (value) {
+    //                 if (value!.isEmpty || !value.contains('@')) {
+    //                   return 'Invalid email!';
+    //                 }
+    //                 return null;
+    //               },
+    //               onSaved: (value) {
+    //                 _authData['email'] = value!;
+    //               },
+    //             ),
+    //             TextFormField(
+    //               decoration: InputDecoration(labelText: 'hasło'),
+    //               obscureText: true,
+    //               controller: _passwordController,
+    //               validator: (value) {
+    //                 if (value!.isEmpty || value.length < 5) {
+    //                   return 'Password is too short!';
+    //                 }
+    //               },
+    //               onSaved: (value) {
+    //                 _authData['password'] = value!;
+    //               },
+    //             ),
+    //             if (_authMode == AuthMode.Signup)
+    //               TextFormField(
+    //                 enabled: _authMode == AuthMode.Signup,
+    //                 decoration: InputDecoration(labelText: 'Confirm Password'),
+    //                 obscureText: true,
+    //                 validator: _authMode == AuthMode.Signup
+    //                     ? (value) {
+    //                         if (value != _passwordController.text) {
+    //                           return 'Passwords do not match!';
+    //                         }
+    //                       }
+    //                     : null,
+    //               ),
+    //             SizedBox(
+    //               height: 20,
+    //             ),
+    //             if (_isLoading)
+    //               CircularProgressIndicator()
+    //             else
+    //               RaisedButton(
+    //                 child: Text(_authMode == AuthMode.Login
+    //                     ? 'Zaloguj'
+    //                     : 'Zarejestruj się'),
+    //                 onPressed: _submit,
+    //                 shape: RoundedRectangleBorder(
+    //                   borderRadius: BorderRadius.circular(30),
+    //                 ),
+    //                 padding:
+    //                     EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+    //                 color: Theme.of(context).primaryColor,
+    //                 textColor: Theme.of(context).primaryTextTheme.button!.color,
+    //               ),
+    //             FlatButton(
+    //               child: Text(
+    //                   '${_authMode == AuthMode.Login ? 'Zarejestruj się' : 'Zaloguj'}'),
+    //               onPressed: _switchAuthMode,
+    //               padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+    //               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    //               textColor: Theme.of(context).primaryColor,
+    //             ),
+    //             Row(
+    //               mainAxisAlignment: MainAxisAlignment.center,
+    //               crossAxisAlignment: CrossAxisAlignment.center,
+    //               children: [
+    //                 buildDivider(),
+    //                 widthSpacer(5.5),
+    //                 Text(
+    //                   "lub użyj",
+    //                   style: TextStyle(color: Colors.grey, fontSize: 15.00),
+    //                 ),
+    //                 widthSpacer(5.5),
+    //                 buildDivider(),
+    //                 widthSpacer(5.5),
+    //               ],
+    //             ),
+    //             Row(
+    //               mainAxisAlignment: MainAxisAlignment.end,
+    //               crossAxisAlignment: CrossAxisAlignment.end,
+    //               children: [
+    //                 IconButton(
+    //                   icon: Image.asset('assets/images/FacebookLogo.png'),
+    //                   iconSize: 50,
+    //                   onPressed: _loginFace,
+    //                 ),
+    //                 IconButton(
+    //                   icon: Image.asset('assets/images/GoogleLogo.png'),
+    //                   iconSize: 50,
+    //                   onPressed: _loginGoogle,
+    //                 ),
+    //               ],
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   Widget buildDivider() => Container(
