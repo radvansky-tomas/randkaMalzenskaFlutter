@@ -4,12 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/blog/blog_screen.dart';
 import 'package:randka_malzenska/screens/info/info_screen.dart';
 import 'package:randka_malzenska/screens/settings/settings_screen.dart';
 import 'package:randka_malzenska/screens/step/drawer/drawer_element.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../auth_screen.dart';
 
@@ -27,6 +29,7 @@ class _StepDrawerState extends State<StepDrawer> {
   List<IconData> icons = [Icons.home, Icons.aod, Icons.settings, Icons.info];
   List<Widget> widgets = [];
   late StreamSubscription<User?> loginStateSubscription;
+  late SharedPreferences prefs;
 
   @override
   void initState() {
@@ -38,7 +41,14 @@ class _StepDrawerState extends State<StepDrawer> {
       SettingsScreen(widget._user),
       InfoScreen(widget._user)
     ];
+    _initializePreferences().whenComplete(() {
+      setState(() {});
+    });
     _verifyUserIsLogged();
+  }
+
+  _initializePreferences() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override
@@ -94,7 +104,10 @@ class _StepDrawerState extends State<StepDrawer> {
               'Wyloguj',
               style: TextStyle(color: Colors.white),
             ),
-            onTap: () => Provider.of<Auth>(context, listen: false).logout(),
+            onTap: () => {
+              prefs.setBool(PreferencesKey.introWatched, false),
+              Provider.of<Auth>(context, listen: false).logout()
+            },
           ),
         ],
       ),

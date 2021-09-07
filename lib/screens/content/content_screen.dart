@@ -31,6 +31,7 @@ class _ContentScreenState extends State<ContentScreen> {
   ConnectionService connectionService = new ConnectionService();
   Future<List<Content>?>? contents;
   Future<List<Photo>?>? photos;
+  bool _showContent = false;
 
   @override
   void initState() {
@@ -38,6 +39,12 @@ class _ContentScreenState extends State<ContentScreen> {
     contents = connectionService.getUserStepContent(
         widget._subStep.id, widget._firebaseId);
     photos = _readPhotos();
+  }
+
+  htmlReady() {
+    setState(() {
+      _showContent = true;
+    });
   }
 
   refresh() {
@@ -67,11 +74,12 @@ class _ContentScreenState extends State<ContentScreen> {
             );
           } else if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            return sampleBody(
+            return contentBody(
                 snapshot.data,
                 widget._subStep.label,
                 photos,
                 refresh,
+                htmlReady,
                 widget._isLast,
                 widget._subStep.step,
                 widget._stepPosition,
@@ -80,7 +88,8 @@ class _ContentScreenState extends State<ContentScreen> {
                 widget._subStep.done!,
                 widget._refreshStep);
           } else if (snapshot.connectionState == ConnectionState.done &&
-              !snapshot.hasData) {
+              !snapshot.hasData &&
+              _showContent) {
             return Scaffold(
               backgroundColor: Colors.black,
               body: Center(
@@ -104,11 +113,12 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 }
 
-Widget sampleBody(
+Widget contentBody(
   List<Content>? awaitedContents,
   String title,
   Future<List<Photo>?>? photos,
   VoidCallback refreshContent,
+  VoidCallback htmlReady,
   bool isLast,
   int stepId,
   int stepPosition,

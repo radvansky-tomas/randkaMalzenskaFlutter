@@ -2,25 +2,67 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-class WhiteHtml extends StatelessWidget {
+class WhiteHtml extends StatefulWidget {
   final String _data;
   WhiteHtml(this._data);
 
   @override
+  _WhiteHtmlState createState() => _WhiteHtmlState();
+}
+
+class _WhiteHtmlState extends State<WhiteHtml>
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
+  late Animation<Offset> animation;
+  late AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
+    animation = Tween<Offset>(
+      begin: Offset(-1.0, 0.0),
+      end: Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: animationController,
+      curve: Curves.fastLinearToSlowEaseIn,
+    ));
+
+    Future<void>.delayed(Duration(seconds: 1), () {
+      animationController.forward();
+    });
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Html(
-      data: _data,
-      style: {
-        'div': Style(color: Colors.white),
-        'h1': Style(color: Colors.white),
-        'h2': Style(color: Colors.white),
-        'h3': Style(color: Colors.white),
-        'h4': Style(color: Colors.white),
-        'h5': Style(color: Colors.white),
-        'p': Style(color: Colors.white),
-        'ul': Style(color: Colors.white),
-        'li': Style(color: Colors.white),
-      },
+    super.build(context);
+    return SlideTransition(
+      position: animation,
+      child: Html(
+        data: widget._data,
+        style: {
+          'div': Style(color: Colors.white),
+          'h1': Style(color: Colors.white),
+          'h2': Style(color: Colors.white),
+          'h3': Style(color: Colors.white),
+          'h4': Style(color: Colors.white),
+          'h5': Style(color: Colors.white),
+          'p': Style(color: Colors.white),
+          'ul': Style(color: Colors.white),
+          'li': Style(color: Colors.white),
+        },
+      ),
     );
   }
 }

@@ -85,10 +85,6 @@ class _VideoScreenState extends State<VideoContent>
         ? SlideTransition(
             position: animation,
             child: Container(child: Chewie(controller: chewieController)))
-        : Center(
-            child: CircularProgressIndicator(
-              color: Colors.white,
-            ),
-          );
+        : Container();
   }
 }

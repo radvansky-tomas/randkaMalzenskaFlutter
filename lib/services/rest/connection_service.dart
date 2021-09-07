@@ -36,7 +36,7 @@ class ConnectionService {
 
       return stepList;
     } else {
-      throw Exception('Failed to load steps');
+      throw Exception('Failed to load steps: ' + response.body);
     }
   }
 

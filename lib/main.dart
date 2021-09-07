@@ -6,7 +6,6 @@ import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/registration/registry_gender_screen.dart';
-import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,17 +28,18 @@ class MyApp extends StatelessWidget {
   MyApp(this.prefs);
   @override
   Widget build(BuildContext context) {
-    // bool introWatched = prefs.getBool(PreferencesKey.introWatched) ?? false;
-
+    bool introWatched = prefs.getBool(PreferencesKey.introWatched) ?? false;
     return MultiProvider(
         providers: [ChangeNotifierProvider.value(value: Auth())],
         child: Consumer<Auth>(
           builder: (context, auth, _) => MaterialApp(
-              home: VideoScreen(
-            'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175',
-            RegistryUserDataScreen(prefs),
-            false,
-          )),
+              home: introWatched
+                  ? AuthScreen()
+                  : VideoScreen(
+                      'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175',
+                      RegistryUserDataScreen(prefs),
+                      false,
+                    )),
         ));
   }
 }
