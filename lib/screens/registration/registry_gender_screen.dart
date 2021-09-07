@@ -77,7 +77,7 @@ class RegistryUserDataScreen extends StatelessWidget {
   void _onPressed(BuildContext context, String path, Widget widget,
       SharedPreferences prefs, String text) {
     prefs.setString(PreferencesKey.userSex, text);
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) {

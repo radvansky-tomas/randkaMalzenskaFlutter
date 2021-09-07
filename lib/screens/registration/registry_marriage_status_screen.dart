@@ -17,6 +17,7 @@ class RegistryStatusScreen extends StatefulWidget {
 class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
   late SharedPreferences prefs;
   ConnectionService service = new ConnectionService();
+  bool _showContent = false;
 
   @override
   void initState() {
@@ -34,7 +35,11 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
               )
             }
           else
-            {}
+            {
+              setState(() {
+                _showContent = true;
+              })
+            }
         });
     _initializePreferences().whenComplete(() {
       setState(() {});
@@ -49,57 +54,59 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'WYBIERZ STATUS ZWIĄZKU',
-              overflow: TextOverflow.clip,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
+      body: !_showContent
+          ? Container()
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'WYBIERZ STATUS ZWIĄZKU',
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GenderButton(
+                          "MAŁŻEŃSTWO",
+                          () => {
+                            _onPressed(
+                              context,
+                              prefs,
+                              UserAttributes.marriage,
+                              widget.user,
+                            )
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: GenderButton(
+                        "PRZED MAŁŻEŃSTWEM",
+                        () => {
+                          _onPressed(context, prefs,
+                              UserAttributes.beforeMarriage, widget.user)
+                        },
+                      )),
+                    ],
+                  ),
+                ],
               ),
             ),
-            SizedBox(
-              height: 50,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: GenderButton(
-                    "MAŁŻEŃSTWO",
-                    () => {
-                      _onPressed(
-                        context,
-                        prefs,
-                        UserAttributes.marriage,
-                        widget.user,
-                      )
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Expanded(
-                    child: GenderButton(
-                  "PRZED MAŁŻEŃSTWEM",
-                  () => {
-                    _onPressed(context, prefs, UserAttributes.beforeMarriage,
-                        widget.user)
-                  },
-                )),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -117,7 +124,7 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
                 {
                   prefs.setString(
                       user.uid + PreferencesKey.userRelationshipStatus, text),
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) {
