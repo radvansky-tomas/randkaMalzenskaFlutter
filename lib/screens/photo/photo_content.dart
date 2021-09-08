@@ -14,31 +14,67 @@ class CameraContent extends StatefulWidget {
   _CameraContentState createState() => _CameraContentState();
 }
 
-class _CameraContentState extends State<CameraContent> {
+class _CameraContentState extends State<CameraContent>
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
+  late Animation<Offset> animation;
+  late AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
+    animation = Tween<Offset>(
+      begin: Offset(-1.0, 0.0),
+      end: Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: animationController,
+      curve: Curves.fastLinearToSlowEaseIn,
+    ));
+
+    Future<void>.delayed(Duration(seconds: 1), () {
+      animationController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          widget._label,
-          style: TextStyle(color: Colors.white),
-        ),
-        widget._photo != null
-            ? Container(
-                height: 300, child: Image.file(File(widget._photo!.path!)))
-            : SizedBox(),
-        TextButton.icon(
-            onPressed: widget._callback,
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.white)),
-            icon: Icon(Icons.camera),
-            label: Text(
-              "Zrób sobie zdjęcie",
-              style: TextStyle(color: Colors.black),
-            ))
-      ],
-    );
+    super.build(context);
+    return SlideTransition(
+        position: animation,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              widget._label,
+              style: TextStyle(color: Colors.white),
+            ),
+            widget._photo != null
+                ? Container(
+                    height: 300, child: Image.file(File(widget._photo!.path!)))
+                : SizedBox(),
+            TextButton.icon(
+                onPressed: widget._callback,
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.white)),
+                icon: Icon(Icons.camera),
+                label: Text(
+                  "Zrób sobie zdjęcie",
+                  style: TextStyle(color: Colors.black),
+                ))
+          ],
+        ));
   }
 }

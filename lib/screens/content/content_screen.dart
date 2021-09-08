@@ -10,6 +10,8 @@ import 'package:randka_malzenska/screens/photo/photo_content.dart';
 import 'package:randka_malzenska/screens/quiz/quiz_screen.dart';
 import 'package:randka_malzenska/screens/video/video_content.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
+import 'package:randka_malzenska/shared/button/slide_progress_button.dart';
+import 'package:randka_malzenska/shared/button/slide_quiz_button.dart';
 import 'package:randka_malzenska/shared/database_helpers.dart';
 import 'package:randka_malzenska/shared/html/white_html.dart';
 
@@ -187,52 +189,11 @@ Widget contentBody(
               refreshContent,
             );
           } else if (content.type == 'TEST') {
-            return TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return QuizScreen(int.parse(content.value));
-                      },
-                    ),
-                  );
-                },
-                child: Text('Idz do quizu',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                    )));
+            return SlideQuizButton(int.parse(content.value));
           } else if (content.type == 'PROGRESS_BUTTON') {
             String text = isLast ? 'Przejdź ostatni' : 'Przejdź dalej';
-            return TextButton(
-              onPressed: () {
-                ConnectionService service = new ConnectionService();
-                if (isDone) {
-                  Navigator.pop(context);
-                } else {
-                  if (!isLast) {
-                    service
-                        .increaseSubStepProgress(stepId, firebaseId)
-                        .whenComplete(() => {
-                              refreshStep(),
-                              Navigator.pop(context),
-                            });
-                  } else {
-                    service
-                        .increaseStepProgress(stepId, firebaseId)
-                        .whenComplete(() => {
-                              refreshStep(),
-                              Navigator.pop(context),
-                            });
-                  }
-                }
-              },
-              child: Text(
-                text,
-                style: TextStyle(color: Colors.white),
-              ),
-            );
+            return SlideProgressButton(
+                isDone, isLast, text, refreshStep, firebaseId, stepId);
           } else {
             return Align(
               alignment: Alignment.bottomCenter,

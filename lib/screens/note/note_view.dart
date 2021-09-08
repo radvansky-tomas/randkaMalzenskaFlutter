@@ -32,9 +32,13 @@ class _NoteViewState extends State<NoteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.noteMode == NoteMode.Adding
-            ? 'Dodaj notatke'
-            : 'Edytuj notatke'),
+        backgroundColor: Colors.grey[900],
+        title: Text(
+          widget.noteMode == NoteMode.Adding
+              ? 'Dodaj notatke'
+              : 'Edytuj notatke',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(40.0),

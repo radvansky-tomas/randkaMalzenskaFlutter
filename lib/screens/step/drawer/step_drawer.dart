@@ -8,6 +8,7 @@ import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/blog/blog_screen.dart';
 import 'package:randka_malzenska/screens/info/info_screen.dart';
+import 'package:randka_malzenska/screens/note/note_screen.dart';
 import 'package:randka_malzenska/screens/settings/settings_screen.dart';
 import 'package:randka_malzenska/screens/step/drawer/drawer_element.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
@@ -24,9 +25,21 @@ class StepDrawer extends StatefulWidget {
 }
 
 class _StepDrawerState extends State<StepDrawer> {
-  List<String> buttons = ['Start', 'Blog', 'Ustawienia', 'O aplikacji'];
-  List<bool> highlited = [false, false, false, false];
-  List<IconData> icons = [Icons.home, Icons.aod, Icons.settings, Icons.info];
+  List<String> buttons = [
+    'Start',
+    'Blog',
+    'Ustawienia',
+    'O aplikacji',
+    'Notatki'
+  ];
+  List<bool> highlited = [false, false, false, false, false];
+  List<IconData> icons = [
+    Icons.home,
+    Icons.aod,
+    Icons.settings,
+    Icons.info,
+    Icons.note
+  ];
   List<Widget> widgets = [];
   late StreamSubscription<User?> loginStateSubscription;
   late SharedPreferences prefs;
@@ -39,7 +52,8 @@ class _StepDrawerState extends State<StepDrawer> {
       StepScreen(widget._user),
       BlogScreen(widget._user),
       SettingsScreen(widget._user),
-      InfoScreen(widget._user)
+      InfoScreen(widget._user),
+      NoteScreen(widget._user)
     ];
     _initializePreferences().whenComplete(() {
       setState(() {});

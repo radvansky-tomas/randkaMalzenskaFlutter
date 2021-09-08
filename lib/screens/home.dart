@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:randka_malzenska/screens/note/note_screen.dart';
 import 'package:randka_malzenska/screens/widgets/fluid_nav_bar.dart';
 
 import 'account.dart';
-import 'grid.dart';
 import 'home_content.dart';
 
 class Home extends StatefulWidget {
@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
           _child = AccountContent();
           break;
         case 2:
-          _child = GridContent();
+          _child = AccountContent();
           break;
       }
       _child = AnimatedSwitcher(

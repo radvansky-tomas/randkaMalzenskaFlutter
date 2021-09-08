@@ -8,7 +8,6 @@ import 'package:randka_malzenska/providers/auth.dart';
 
 import 'package:randka_malzenska/screens/auth_screen.dart';
 
-import 'package:randka_malzenska/screens/html/html_screen.dart';
 import 'package:randka_malzenska/screens/notification/notification_screen.dart';
 
 import 'package:randka_malzenska/services/rest/connection_service.dart';
@@ -121,12 +120,12 @@ class _AccountContentState extends State<AccountContent> {
                 //   Colors.green[200],
                 //   AudioScreen(),
                 // ),
-                screenButton(
-                  context,
-                  'Przejdz do podglądu html',
-                  Colors.orange[700],
-                  HtmlScreen(),
-                ),
+                // screenButton(
+                //   context,
+                //   'Przejdz do podglądu html',
+                //   Colors.orange[700],
+                //   HtmlScreen(),
+                // ),
                 // screenButton(
                 //   context,
                 //   'Wykonaj strzal',

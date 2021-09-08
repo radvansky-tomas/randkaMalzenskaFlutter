@@ -13,8 +13,10 @@ class AudioContent extends StatefulWidget {
 }
 
 class _AudioContentState extends State<AudioContent>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   final AudioPlayer _player = AudioPlayer();
+  late Animation<Offset> animation;
+  late AnimationController animationController;
 
   @override
   bool get wantKeepAlive => true;
@@ -26,6 +28,21 @@ class _AudioContentState extends State<AudioContent>
       statusBarColor: Colors.black,
     ));
     _init();
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
+    animation = Tween<Offset>(
+      begin: Offset(-1.0, 0.0),
+      end: Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: animationController,
+      curve: Curves.fastLinearToSlowEaseIn,
+    ));
+
+    Future<void>.delayed(Duration(seconds: 1), () {
+      animationController.forward();
+    });
   }
 
   Future<void> _init() async {
@@ -50,6 +67,7 @@ class _AudioContentState extends State<AudioContent>
   void dispose() {
     // Release decoders and buffers back to the operating system making them
     // available for other apps to use.
+    animationController.dispose();
     _player.dispose();
     super.dispose();
   }
@@ -67,57 +85,59 @@ class _AudioContentState extends State<AudioContent>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Display play/pause button and volume/speed sliders.
-          ControlButtons(_player),
-          // Display seek bar. Using StreamBuilder, this widget rebuilds
-          // each time the position, buffered position or duration changes.
-          StreamBuilder<PositionData>(
-            stream: _positionDataStream,
-            builder: (context, snapshot) {
-              final positionData = snapshot.data;
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          Text(
-                            _printDuration(positionData?.position),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+    return SlideTransition(
+        position: animation,
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Display play/pause button and volume/speed sliders.
+              ControlButtons(_player),
+              // Display seek bar. Using StreamBuilder, this widget rebuilds
+              // each time the position, buffered position or duration changes.
+              StreamBuilder<PositionData>(
+                stream: _positionDataStream,
+                builder: (context, snapshot) {
+                  final positionData = snapshot.data;
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              Text(
+                                _printDuration(positionData?.position),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "/ " + _printDuration(positionData?.duration),
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "/ " + _printDuration(positionData?.duration),
-                            style: TextStyle(
-                              color: Colors.white70,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  SeekBar(
-                    duration: positionData?.duration ?? Duration.zero,
-                    position: positionData?.position ?? Duration.zero,
-                    bufferedPosition:
-                        positionData?.bufferedPosition ?? Duration.zero,
-                    onChangeEnd: _player.seek,
-                  ),
-                ],
-              );
-            },
+                      SeekBar(
+                        duration: positionData?.duration ?? Duration.zero,
+                        position: positionData?.position ?? Duration.zero,
+                        bufferedPosition:
+                            positionData?.bufferedPosition ?? Duration.zero,
+                        onChangeEnd: _player.seek,
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
