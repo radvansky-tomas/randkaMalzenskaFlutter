@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,30 +19,30 @@ class RegistryStatusScreen extends StatefulWidget {
 class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
   late SharedPreferences prefs;
   ConnectionService service = new ConnectionService();
-  bool _showContent = false;
+  bool _showContent = true;
 
   @override
   void initState() {
     super.initState();
-    // service.getUserSteps(widget.user.uid).then((value) => {
-    //       if (value != null && value.length > 0)
-    //         {
-    //           Navigator.pushReplacement(
-    //             context,
-    //             MaterialPageRoute(
-    //               builder: (context) {
-    //                 return StepScreen(widget.user);
-    //               },
-    //             ),
-    //           )
-    //         }
-    //       else
-    //         {
-    //           setState(() {
-    //             _showContent = true;
-    //           })
-    //         }
-    //     });
+    service.getUserSteps(widget.user.uid).then((value) => {
+          if (value != null && value.length > 0)
+            {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return StepScreen(widget.user);
+                  },
+                ),
+              )
+            }
+          else
+            {
+              setState(() {
+                _showContent = true;
+              })
+            }
+        }).onError((error, stackTrace) => {});
     _initializePreferences().whenComplete(() {
       setState(() {});
     });
