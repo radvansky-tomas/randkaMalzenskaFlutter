@@ -22,25 +22,25 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
   @override
   void initState() {
     super.initState();
-    service.getUserSteps(widget.user.uid).then((value) => {
-          if (value != null && value.length > 0)
-            {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return StepScreen(widget.user);
-                  },
-                ),
-              )
-            }
-          else
-            {
-              setState(() {
-                _showContent = true;
-              })
-            }
-        });
+    // service.getUserSteps(widget.user.uid).then((value) => {
+    //       if (value != null && value.length > 0)
+    //         {
+    //           Navigator.pushReplacement(
+    //             context,
+    //             MaterialPageRoute(
+    //               builder: (context) {
+    //                 return StepScreen(widget.user);
+    //               },
+    //             ),
+    //           )
+    //         }
+    //       else
+    //         {
+    //           setState(() {
+    //             _showContent = true;
+    //           })
+    //         }
+    //     });
     _initializePreferences().whenComplete(() {
       setState(() {});
     });
