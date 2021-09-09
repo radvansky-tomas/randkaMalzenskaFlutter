@@ -144,7 +144,7 @@ class _VideoScreenState extends State<VideoScreen> {
       allowedScreenSleep: false,
       allowFullScreen: false,
       showControls: true,
-      startAt: Duration(milliseconds: 1),
+      // startAt: Duration(seconds: 2),
       customControls: customControls(),
       // fullScreenByDefault: true,
       autoPlay: true,

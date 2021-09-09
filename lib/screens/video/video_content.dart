@@ -54,7 +54,7 @@ class _VideoScreenState extends State<VideoContent>
       videoPlayerController: _controller,
       allowFullScreen: true,
       fullScreenByDefault: false,
-      startAt: Duration(microseconds: 1),
+      startAt: Duration(milliseconds: 5),
       autoInitialize: true,
       showOptions: false,
       looping: false,
