@@ -19,30 +19,35 @@ class RegistryStatusScreen extends StatefulWidget {
 class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
   late SharedPreferences prefs;
   ConnectionService service = new ConnectionService();
-  bool _showContent = true;
+  bool _showContent = false;
 
   @override
   void initState() {
     super.initState();
-    service.getUserSteps(widget.user.uid).then((value) => {
-          if (value != null && value.length > 0)
-            {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return StepScreen(widget.user);
-                  },
-                ),
-              )
-            }
-          else
-            {
-              setState(() {
-                _showContent = true;
-              })
-            }
-        }).onError((error, stackTrace) => {});
+    service
+        .getUserSteps(widget.user.uid)
+        .then((value) => {
+              if (value != null && value.length > 0)
+                {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return StepScreen(widget.user);
+                      },
+                    ),
+                  )
+                }
+              else
+                {
+                  setState(() {
+                    _showContent = true;
+                  })
+                }
+            })
+        .onError((error, stackTrace) => {
+              // moze powrot do ekranu logowania z informacja
+            });
     _initializePreferences().whenComplete(() {
       setState(() {});
     });
@@ -138,8 +143,11 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
                 }
               else
                 {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Coś poszło nie tak : (')))
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                    'Coś poszło nie tak : (',
+                    style: TextStyle(color: Colors.white),
+                  )))
                 }
             });
   }

@@ -35,6 +35,10 @@ class ConnectionService {
       });
 
       return stepList;
+    } else if (response.statusCode == 500 &&
+        response.body.contains('User matching query does not exist')) {
+      //user does not exists, should be created
+      return [];
     } else {
       throw Exception('Failed to load steps: ' + response.body);
     }
