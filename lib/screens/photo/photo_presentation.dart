@@ -47,8 +47,10 @@ class _PhotoPresentationState extends State<PhotoPresentation> {
 
   @override
   Widget build(BuildContext context) {
-    audioPlayer
+    if(audioPlayer.state!=PlayerState.PLAYING){
+      audioPlayer
         .play('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+    }
     return images[_pos];
   }
 
