@@ -157,7 +157,10 @@ class _StepScreenState extends State<StepScreen> {
                   fontSize: 20,
                 ),
               );
-            } else {
+            } else  if (snapshot.data!.length == 1) {
+              return ContentScreen(
+              snapshot.data![0], firebaseId, true, _refresh, stepPosition);
+            }else {
               List<SubStep> awaitedSubSteps = snapshot.data!;
               List<int>? positions =
                   awaitedSubSteps.map((e) => e.position).toList();

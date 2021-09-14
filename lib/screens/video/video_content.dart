@@ -5,7 +5,8 @@ import 'package:video_player/video_player.dart';
 
 class VideoContent extends StatefulWidget {
   final String _url;
-  VideoContent(this._url);
+  final String? _image;
+  VideoContent(this._url, this._image);
   @override
   _VideoScreenState createState() => _VideoScreenState();
 }
@@ -84,7 +85,42 @@ class _VideoScreenState extends State<VideoContent>
     return _controller.value.isInitialized
         ? SlideTransition(
             position: animation,
-            child: Container(child: Chewie(controller: chewieController)))
+            child: widget._image == null
+                ? Chewie(controller: chewieController)
+                : chewieController.isPlaying
+                    ? Chewie(controller: chewieController)
+                    : Stack(children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: Image.network(widget._image!),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: ClipOval(
+                            child: Material(
+                              color: Colors.black.withOpacity(0.65),
+                              child: InkWell(
+                                splashColor: Colors.white, // Splash color
+                                onTap: () {
+                                  chewieController.play();
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  child: SizedBox(
+                                      width: 65,
+                                      height: 65,
+                                      child: Icon(
+                                        Icons.play_arrow,
+                                        size: 34.0,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ]),
+          )
         : Container();
   }
 }

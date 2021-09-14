@@ -113,7 +113,7 @@ class ConnectionService {
       });
       return stepList;
     } else {
-      throw HttpException('Błąd poczas pobierania zawartości');
+      throw HttpException('Błąd poczas pobierania zawartości substepow');
     }
   }
 
@@ -140,7 +140,7 @@ class ConnectionService {
       Map<dynamic, dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
       return QuizTest.fromJson(map['results']);
     } else {
-      throw HttpException('Błąd poczas pobierania zawartości');
+      throw HttpException('Błąd poczas pobierania zawartości quizu');
     }
   }
 

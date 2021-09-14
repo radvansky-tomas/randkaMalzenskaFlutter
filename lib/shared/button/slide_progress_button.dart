@@ -5,12 +5,13 @@ import 'package:randka_malzenska/services/rest/connection_service.dart';
 class SlideProgressButton extends StatefulWidget {
   final bool _isDone;
   final bool _isLast;
+  final bool _isOnlySubStep;
   final String _text;
   final int _stepId;
   final String _firebaseId;
   final VoidCallback _refreshStep;
   SlideProgressButton(this._isDone, this._isLast, this._text, this._refreshStep,
-      this._firebaseId, this._stepId);
+      this._firebaseId, this._stepId, this._isOnlySubStep);
   @override
   _SlideProgressButtonState createState() => _SlideProgressButtonState();
 }
@@ -68,12 +69,18 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
                           Navigator.pop(context),
                         });
               } else {
-                service
-                    .increaseStepProgress(widget._stepId, widget._firebaseId)
-                    .whenComplete(() => {
-                          widget._refreshStep(),
-                          Navigator.pop(context),
-                        });
+                if (widget._isOnlySubStep) {
+                  //if there is one substep content is directly loaded in step screen, pop context not needed
+                  service.increaseStepProgress(
+                      widget._stepId, widget._firebaseId);
+                } else {
+                  service
+                      .increaseStepProgress(widget._stepId, widget._firebaseId)
+                      .whenComplete(() => {
+                            widget._refreshStep(),
+                            Navigator.pop(context),
+                          });
+                }
               }
             }
           },

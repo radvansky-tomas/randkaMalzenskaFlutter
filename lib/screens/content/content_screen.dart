@@ -7,7 +7,6 @@ import 'package:randka_malzenska/models/sub_step.dart';
 import 'package:randka_malzenska/screens/audio/audio_content.dart';
 import 'package:randka_malzenska/screens/camera_screen.dart';
 import 'package:randka_malzenska/screens/photo/photo_content.dart';
-import 'package:randka_malzenska/screens/quiz/quiz_screen.dart';
 import 'package:randka_malzenska/screens/video/video_content.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:randka_malzenska/shared/button/slide_progress_button.dart';
@@ -78,16 +77,13 @@ class _ContentScreenState extends State<ContentScreen> {
               snapshot.hasData) {
             return contentBody(
                 snapshot.data,
-                widget._subStep.label,
+                widget._subStep,
                 photos,
                 refresh,
                 htmlReady,
                 widget._isLast,
-                widget._subStep.step,
                 widget._stepPosition,
-                widget._subStep.position,
                 widget._firebaseId,
-                widget._subStep.done!,
                 widget._refreshStep);
           } else if (snapshot.connectionState == ConnectionState.done &&
               !snapshot.hasData &&
@@ -117,16 +113,13 @@ class _ContentScreenState extends State<ContentScreen> {
 
 Widget contentBody(
   List<Content>? awaitedContents,
-  String title,
+  SubStep subStep,
   Future<List<Photo>?>? photos,
   VoidCallback refreshContent,
   VoidCallback htmlReady,
   bool isLast,
-  int stepId,
   int stepPosition,
-  int subStepPosition,
   String firebaseId,
-  bool isDone,
   VoidCallback refreshStep,
 ) {
   Content buttonContent = new Content(
@@ -144,18 +137,22 @@ Widget contentBody(
   }
 
   return Scaffold(
-    appBar: AppBar(
-      backgroundColor: Colors.grey[900],
-      title: Padding(
-        padding: const EdgeInsets.only(left: 0.0),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
-    ),
+    // subStep.visibleContainer == 0 means content is loaded directly in step screen, then appbar from content,
+    // shouldnt be visible
+    appBar: subStep.visibleContainer != 0
+        ? AppBar(
+            backgroundColor: Colors.grey[900],
+            title: Padding(
+              padding: const EdgeInsets.only(left: 0.0),
+              child: Text(
+                subStep.label,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          )
+        : null,
     backgroundColor: Colors.black,
     body: Container(
       padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
@@ -171,7 +168,7 @@ Widget contentBody(
           } else if (content.type == 'VIDEO') {
             return Container(
               height: 300,
-              child: VideoContent(content.value),
+              child: VideoContent(content.value, content.image),
             );
           } else if (content.type == 'AUDIO') {
             return Container(
@@ -185,15 +182,16 @@ Widget contentBody(
               photos,
               content,
               stepPosition,
-              subStepPosition,
+              subStep.position,
               refreshContent,
             );
           } else if (content.type == 'TEST') {
             return SlideQuizButton(int.parse(content.value));
           } else if (content.type == 'PROGRESS_BUTTON') {
             String text = isLast ? 'Przejdź ostatni' : 'Przejdź dalej';
-            return SlideProgressButton(
-                isDone, isLast, text, refreshStep, firebaseId, stepId);
+            //subStep.visibleContainer==0 means it is only substep in step
+            return SlideProgressButton(subStep.done!, isLast, text, refreshStep,
+                firebaseId, subStep.step, subStep.visibleContainer == 0);
           } else {
             return Align(
               alignment: Alignment.bottomCenter,

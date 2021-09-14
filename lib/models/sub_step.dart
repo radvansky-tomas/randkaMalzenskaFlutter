@@ -4,9 +4,9 @@ class SubStep {
   final String name;
   final String label;
   final String photo;
-  final bool? visibleContainer;
-  final bool? horizontalOrientation;
-  final bool? alwaysEnabled;
+  final int? visibleContainer;
+  final int? horizontalOrientation;
+  final int? alwaysEnabled;
   final bool? done;
   final int position;
   final int id;
@@ -31,9 +31,9 @@ class SubStep {
       name: json['name'],
       label: json['label'],
       photo: json['photo'],
-      visibleContainer: json['visibleContainer'],
-      horizontalOrientation: json['horizontalOrientation'],
-      alwaysEnabled: json['alwaysEnabled'],
+      visibleContainer: json['visible_container'],
+      horizontalOrientation: json['horizontal_orientation'],
+      alwaysEnabled: json['always_enabled'],
       position: json['position'],
       id: json['id'],
       done: json['done'],
