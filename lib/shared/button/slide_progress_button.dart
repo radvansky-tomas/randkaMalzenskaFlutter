@@ -74,11 +74,16 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
                   service.increaseStepProgress(
                       widget._stepId, widget._firebaseId);
                 } else {
+                  final snackBar = SnackBar(
+                      content: Text(
+                          'Gratulacje, ukończyłeś dzień! Zapraszamy jutro na następny :)'));
+
                   service
                       .increaseStepProgress(widget._stepId, widget._firebaseId)
                       .whenComplete(() => {
                             widget._refreshStep(),
                             Navigator.pop(context),
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar)
                           });
                 }
               }

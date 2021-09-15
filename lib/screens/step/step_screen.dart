@@ -89,7 +89,7 @@ class _StepScreenState extends State<StepScreen> {
                   appBar: AppBar(
                     backgroundColor: Colors.grey[900],
                     title: AppBarStepList(
-                        snapshot.data, _changeStep, prefs, stepNumber),
+                        courseSteps.reversed.toList(), _changeStep, prefs, stepNumber),
                     actions: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(right: 5.0),
@@ -263,7 +263,7 @@ class _StepScreenState extends State<StepScreen> {
 }
 
 class AppBarStepList extends StatefulWidget {
-  final List<CourseStep>? steps;
+  final List<CourseStep> steps;
   final VoidCallback _changeStep;
   final SharedPreferences _prefs;
   final int _stepNumber;
@@ -284,8 +284,7 @@ class _AppBarStepListState extends State<AppBarStepList> {
         data: Theme.of(context).copyWith(
           cardColor: Colors.black,
         ),
-        child: widget.steps != null
-            ? PopupMenuButton(
+        child:  PopupMenuButton(
                 icon: Container(
                   constraints: BoxConstraints.expand(),
                   decoration: BoxDecoration(
@@ -297,11 +296,11 @@ class _AppBarStepListState extends State<AppBarStepList> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     constraints: BoxConstraints.expand(),
-                    child: ExpandStepButton(widget.steps!, widget._prefs),
+                    child: ExpandStepButton(widget.steps, widget._prefs),
                   ),
                 ),
                 itemBuilder: (context) => [
-                  ...widget.steps!.map((step) {
+                  ...widget.steps.map((step) {
                     return PopupMenuItem(
                       child: Text(
                         step.stepName,
@@ -322,7 +321,6 @@ class _AppBarStepListState extends State<AppBarStepList> {
                   }
                 },
               )
-            : SizedBox(),
       ),
     );
   }
