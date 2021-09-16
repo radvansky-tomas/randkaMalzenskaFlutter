@@ -30,18 +30,22 @@ class _StepScreenState extends State<StepScreen> {
   Future<List<SubStep>?>? subSteps;
   late SharedPreferences prefs;
   bool _introWatched = false;
+  late int stepNumber;
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([]);
     courseSteps = connectionService.getUserSteps(widget.user.uid);
+    courseSteps?.then((awaitedCourseSteps) => {
+      stepNumber=awaitedCourseSteps?.last.stepNumber??1,
+      subSteps =
+            connectionService.getUserSubSteps(awaitedCourseSteps?.last.stepNumber??1, widget.user.uid)
+      
+      });
 
     _initializePreferences().whenComplete(() {
       setState(() {
-        int stepNumber = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
-        subSteps =
-            connectionService.getUserSubSteps(stepNumber, widget.user.uid);
       });
     });
   }
@@ -74,7 +78,6 @@ class _StepScreenState extends State<StepScreen> {
         else if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
           List<CourseStep> courseSteps = snapshot.data!;
-          int stepNumber = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
           String? content = courseSteps.firstWhere(
               (element) => element.stepNumber == stepNumber,
               orElse:(){return courseSteps.first} ).content;
@@ -89,7 +92,7 @@ class _StepScreenState extends State<StepScreen> {
                   appBar: AppBar(
                     backgroundColor: Colors.grey[900],
                     title: AppBarStepList(
-                        courseSteps.reversed.toList(), _changeStep, prefs, stepNumber),
+                        courseSteps.reversed.toList(), _changeStep, stepNumber),
                     actions: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(right: 5.0),
@@ -239,7 +242,7 @@ class _StepScreenState extends State<StepScreen> {
   _refresh() async {
     setState(() {
       subSteps = connectionService.getUserSubSteps(
-          prefs.getInt(PreferencesKey.userStepNumber) ?? 1, widget.user.uid);
+          stepNumber, widget.user.uid);
     });
   }
 
@@ -249,11 +252,11 @@ class _StepScreenState extends State<StepScreen> {
     });
   }
 
-  _changeStep() async {
+  _changeStep(int changedStepNumber) async {
     setState(() {
       _introWatched = false;
-      int stepNumber = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
-      subSteps = connectionService.getUserSubSteps(stepNumber, widget.user.uid);
+      stepNumber=changedStepNumber;
+      subSteps = connectionService.getUserSubSteps(changedStepNumber, widget.user.uid);
     });
   }
 
@@ -264,19 +267,24 @@ class _StepScreenState extends State<StepScreen> {
 
 class AppBarStepList extends StatefulWidget {
   final List<CourseStep> steps;
-  final VoidCallback _changeStep;
-  final SharedPreferences _prefs;
+  final Function _changeStep;
   final int _stepNumber;
 
-  AppBarStepList(this.steps, this._changeStep, this._prefs, this._stepNumber);
+  AppBarStepList(this.steps, this._changeStep, this._stepNumber);
 
   @override
   _AppBarStepListState createState() => _AppBarStepListState();
 }
 
 class _AppBarStepListState extends State<AppBarStepList> {
+   
   @override
   Widget build(BuildContext context) {
+    final String stepTitle= widget.steps
+    .firstWhere((element) => element.stepNumber == widget._stepNumber, 
+    orElse:(){
+      return CourseStep(stepNumber: 0, stepName: 'Dzień', subSteps: []);}
+      ).stepName;
     return Container(
       width: 120,
       height: 52,
@@ -296,7 +304,7 @@ class _AppBarStepListState extends State<AppBarStepList> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     constraints: BoxConstraints.expand(),
-                    child: ExpandStepButton(widget.steps, widget._prefs),
+                    child: ExpandStepButton(stepTitle),
                   ),
                 ),
                 itemBuilder: (context) => [
@@ -315,9 +323,7 @@ class _AppBarStepListState extends State<AppBarStepList> {
                 onSelected: (value) {
                   CourseStep step = value as CourseStep;
                   if (widget._stepNumber != step.stepNumber) {
-                    widget._prefs
-                        .setInt(PreferencesKey.userStepNumber, step.stepNumber);
-                    widget._changeStep();
+                    widget._changeStep(step.stepNumber);
                   }
                 },
               )
@@ -327,15 +333,12 @@ class _AppBarStepListState extends State<AppBarStepList> {
 }
 
 class ExpandStepButton extends StatelessWidget {
-  final List<CourseStep> steps;
-  final SharedPreferences prefs;
-  ExpandStepButton(this.steps, this.prefs);
+  final String stepName;
+  ExpandStepButton(this.stepName);
 
   @override
   Widget build(BuildContext context) {
-    int stepNumber = prefs.getInt(PreferencesKey.userStepNumber) ?? 1;
-    CourseStep currentStep =
-        steps.firstWhere((element) => element.stepNumber == stepNumber);
+  
     return RichText(
       overflow: TextOverflow.ellipsis,
       text: TextSpan(
@@ -351,7 +354,7 @@ class ExpandStepButton extends StatelessWidget {
             ),
           ),
           TextSpan(
-            text: currentStep.stepName,
+            text: stepName,
             style: TextStyle(fontSize: 15),
           ),
         ],
