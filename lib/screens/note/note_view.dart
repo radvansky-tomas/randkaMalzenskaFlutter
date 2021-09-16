@@ -30,7 +30,10 @@ class _NoteViewState extends State<NoteView> {
 
   @override
   Widget build(BuildContext context) {
+    final maxLines = 5;
     return Scaffold(
+      backgroundColor: Colors.black,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
         title: Text(
@@ -42,51 +45,79 @@ class _NoteViewState extends State<NoteView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(hintText: 'Tytuł notatki'),
-            ),
-            Container(
-              height: 8,
-            ),
-            TextField(
-              controller: _textController,
-              decoration: InputDecoration(hintText: 'Treść notatki'),
-            ),
-            Container(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _NoteButton('Zapisz', Colors.blue, () {
-                  if (widget.noteMode == NoteMode.Adding) {
-                    final title = _titleController.text;
-                    final text = _textController.text;
-                    _insert(title, text);
-                    widget.notifyParent();
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextField(
+                style: TextStyle(color: Colors.white),
+                maxLength: 50,
+                controller: _titleController,
+                decoration: InputDecoration(
+                  counterText: '',
+                  labelText: 'Tytuł notatki',
+                  labelStyle: TextStyle(color: Colors.white),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white)),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white54)),
+                  focusColor: Colors.white,
+                ),
+              ),
+              Container(
+                height: 8,
+              ),
+              Container(
+                height: maxLines * 24,
+                child: TextField(
+                  style: TextStyle(color: Colors.white),
+                  maxLength: 255,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 5,
+                  controller: _textController,
+                  decoration: InputDecoration(
+                    labelText: 'Treść notatki',
+                    labelStyle: TextStyle(color: Colors.white),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white54)),
+                    focusColor: Colors.white,
+                  ),
+                ),
+              ),
+              Container(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _NoteButton('Zapisz', Colors.blue, () {
+                    if (widget.noteMode == NoteMode.Adding) {
+                      final title = _titleController.text;
+                      final text = _textController.text;
+                      _insert(title, text);
+                      widget.notifyParent();
+                      Navigator.pop(context);
+                    } else if (widget.noteMode == NoteMode.Edditing) {
+                      _update(_titleController.text, _textController.text,
+                          widget.note!.id!);
+                      widget.notifyParent();
+                      Navigator.pop(context);
+                    }
+                  }),
+                  _NoteButton('Cofnij', Colors.grey[600]!, () {
                     Navigator.pop(context);
-                  } else if (widget.noteMode == NoteMode.Edditing) {
-                    _update(_titleController.text, _textController.text,
-                        widget.note!.id!);
-                    widget.notifyParent();
-                    Navigator.pop(context);
-                  }
-                }),
-                _NoteButton('Cofnij', Colors.grey[600]!, () {
-                  Navigator.pop(context);
-                }),
-                widget.noteMode == NoteMode.Edditing
-                    ? _NoteButton('Usuń', Colors.red[300]!, () {
-                        _delete(widget.note!.id!);
-                        widget.notifyParent();
-                        Navigator.pop(context);
-                      })
-                    : Container()
-              ],
-            )
-          ],
+                  }),
+                  widget.noteMode == NoteMode.Edditing
+                      ? _NoteButton('Usuń', Colors.red[300]!, () {
+                          _delete(widget.note!.id!);
+                          widget.notifyParent();
+                          Navigator.pop(context);
+                        })
+                      : Container()
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

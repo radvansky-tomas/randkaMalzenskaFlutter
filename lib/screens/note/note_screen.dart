@@ -57,7 +57,8 @@ class _NoteScreenState extends State<NoteScreen> {
                   ),
                   child: StepDrawer(4, widget._user)),
               backgroundColor: Colors.transparent,
-              floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endFloat,
               floatingActionButton: FloatingActionButton(
                 child: Icon(Icons.add),
                 onPressed: () {

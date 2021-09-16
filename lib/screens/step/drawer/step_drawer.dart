@@ -83,16 +83,17 @@ class _StepDrawerState extends State<StepDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final String email = widget._user.email ?? 'anonim';
     return Drawer(
       child: Column(
         children: [
-          const DrawerHeader(
+          DrawerHeader(
             decoration: BoxDecoration(
               color: Colors.black,
             ),
             child: Center(
               child: Text(
-                'Witaj w menu bocznym',
+                'Witaj w menu bocznym\n' + email,
                 style: TextStyle(color: Colors.white),
               ),
             ),
