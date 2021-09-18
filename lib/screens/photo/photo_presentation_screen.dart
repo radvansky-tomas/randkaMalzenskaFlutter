@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chewie/chewie.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/camera.dart';
@@ -52,20 +53,28 @@ class _PhotoPresentationScreenState extends State<PhotoPresentationScreen> {
                     List<Camera> remotePhotoList = remotePhotos.data!;
                     List<Camera> joinedPhtos =
                         joinPhotos(remotePhotoList, localPhotoList);
-                    return Stack(children: [
-                      Center(child: PhotoPresentation(joinedPhtos)),
-                      // Container(
-                      //     alignment: Alignment.bottomRight,
-                      //     padding: EdgeInsetsDirectional.all(30),
-                      //     child: IconButton(
-                      //       onPressed: _onSkipPressed,
-                      //       icon: (Icon(
-                      //         Icons.skip_next,
-                      //         color: Colors.white,
-                      //         size: 50,
-                      //       )),
-                      //     )),
-                    ]);
+                    return Scaffold(
+                      backgroundColor: Colors.black,
+                      body: Stack(
+                        children: [
+                          Center(
+                            child: PhotoPresentation(joinedPhtos),
+                          ),
+                          Container(
+                            alignment: Alignment.bottomRight,
+                            padding: EdgeInsetsDirectional.all(30),
+                            child: IconButton(
+                              onPressed: _onSkipPressed,
+                              icon: (Icon(
+                                Icons.skip_next,
+                                color: Colors.white,
+                                size: 50,
+                              )),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
                   } else {
                     return Container();
                   }
