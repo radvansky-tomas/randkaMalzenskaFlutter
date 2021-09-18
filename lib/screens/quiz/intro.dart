@@ -25,12 +25,13 @@ class Intro extends StatelessWidget {
           flex: 1,
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(
+                primary: Color.fromARGB(255, 21, 74, 118),
                 minimumSize: Size(double.infinity,
                     30), // double.infinity is the width and 30 is the height
               ),
               onPressed: _introWatched,
               child: Text(
-                _buttonText,
+                _buttonText.toUpperCase(),
                 style: TextStyle(color: Colors.white),
               )),
         )

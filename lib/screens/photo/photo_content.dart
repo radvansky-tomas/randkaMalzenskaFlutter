@@ -27,7 +27,7 @@ class _CameraContentState extends State<CameraContent>
       duration: Duration(seconds: 2),
     );
     animation = Tween<Offset>(
-      begin: Offset(-1.0, 0.0),
+      begin: Offset(-1.5, 0.0),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
       parent: animationController,

@@ -100,7 +100,7 @@ packages:
     source: hosted
     version: "1.2.2"
   chewie_audio:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: chewie_audio
       url: "https://pub.dartlang.org"

@@ -30,7 +30,7 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
       duration: Duration(seconds: 2),
     );
     animation = Tween<Offset>(
-      begin: Offset(-1.0, 0.0),
+      begin: Offset(-1.5, 0.0),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
       parent: animationController,
@@ -57,59 +57,59 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
     super.build(context);
     return SlideTransition(
         position: animation,
-        child: Container(
-          color: Color.fromARGB(255, 21, 74, 118),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  ConnectionService service = new ConnectionService();
-                  if (widget._isDone) {
-                    Navigator.pop(context);
-                  } else {
-                    if (!widget._isLast) {
-                      service
-                          .increaseSubStepProgress(
-                              widget._stepId, widget._firebaseId)
-                          .whenComplete(() => {
-                                widget._refreshStep(),
-                                Navigator.pop(context),
-                              });
-                    } else {
-                      if (widget._isOnlySubStep) {
-                        //if there is one substep content is directly loaded in step screen, pop context not needed
-                        service.increaseStepProgress(
-                            widget._stepId, widget._firebaseId);
-                      } else {
-                        final snackBar = SnackBar(
-                            content: Text(
-                                'Gratulacje, ukończyłeś dzień! Zapraszamy jutro na następny :)'));
+        child: GestureDetector(
+          onTap: () {
+            ConnectionService service = new ConnectionService();
+            if (widget._isDone) {
+              Navigator.pop(context);
+            } else {
+              if (!widget._isLast) {
+                service
+                    .increaseSubStepProgress(widget._stepId, widget._firebaseId)
+                    .whenComplete(() => {
+                          widget._refreshStep(),
+                          Navigator.pop(context),
+                        });
+              } else {
+                if (widget._isOnlySubStep) {
+                  //if there is one substep content is directly loaded in step screen, pop context not needed
+                  service.increaseStepProgress(
+                      widget._stepId, widget._firebaseId);
+                } else {
+                  final snackBar = SnackBar(
+                      content: Text(
+                          'Gratulacje, ukończyłeś dzień! Zapraszamy jutro na następny :)'));
 
-                        service
-                            .increaseStepProgress(
-                                widget._stepId, widget._firebaseId)
-                            .whenComplete(() => {
-                                  widget._refreshStep(),
-                                  Navigator.pop(context),
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar)
-                                });
-                      }
-                    }
-                  }
-                },
-                child: Text(
-                  widget._text,
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
+                  service
+                      .increaseStepProgress(widget._stepId, widget._firebaseId)
+                      .whenComplete(() => {
+                            widget._refreshStep(),
+                            Navigator.pop(context),
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar)
+                          });
+                }
+              }
+            }
+          },
+          child: Container(
+            color: Color.fromARGB(255, 21, 74, 118),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    widget._text,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white,
+                  ),
+                ],
               ),
-              Icon(
-                Icons.arrow_forward,
-                color: Colors.white,
-              ),
-            ],
+            ),
           ),
         ));
   }

@@ -42,7 +42,6 @@ dependencies:
   shared_preferences: ^2.0.6
   video_player: ^2.2.0
   chewie: ^1.2.2
-  chewie_audio: ^1.2.0
   just_audio: ^0.9.3
   audio_session: ^0.1.5
   flutter_html: ^2.1.1
