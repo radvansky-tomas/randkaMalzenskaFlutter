@@ -213,6 +213,6 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   showCameraException(e) {
-    return 'Error ${e.code} \nError message: ${e.description}';
+    return 'Error ${e.code} \nError message: ${e.contentDescription}';
   }
 }

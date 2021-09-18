@@ -83,14 +83,32 @@ class _AuthCardState extends State<AuthCard> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-          title: Text('Wystąpił błąd!'),
-          content: Text(message),
+          backgroundColor: Colors.grey[100],
+          title: Text('Wystąpił błąd!',
+              style: TextStyle(
+                color: Colors.black,
+              )),
+          content: Text(
+            message,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
           actions: [
-            TextButton(
+            Center(
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Color.fromARGB(255, 21, 74, 118))),
                 onPressed: () {
                   Navigator.of(ctx).pop();
                 },
-                child: Text('powrót'))
+                child: Text('OK',
+                    style: TextStyle(
+                      color: Colors.white,
+                    )),
+              ),
+            )
           ]),
     );
   }

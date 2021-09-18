@@ -52,18 +52,20 @@ class _PhotoPresentationScreenState extends State<PhotoPresentationScreen> {
                     List<Camera> remotePhotoList = remotePhotos.data!;
                     List<Camera> joinedPhtos =
                         joinPhotos(remotePhotoList, localPhotoList);
-                    return PhotoPresentation(joinedPhtos);
-                    // return joinedPhtos[_pos].localPath != null
-                    //     ? Image.file(File(joinedPhtos[_pos].localPath!))
-                    //     : CachedNetworkImage(
-                    //         imageUrl: joinedPhtos[_pos].value!,
-                    //         placeholder: (context, url) =>
-                    //             new CircularProgressIndicator(),
-                    //         errorWidget: (context, url, error) => new Icon(
-                    //           Icons.error,
-                    //           color: Colors.white,
-                    //         ),
-                    //       );
+                    return Stack(children: [
+                      Center(child: PhotoPresentation(joinedPhtos)),
+                      // Container(
+                      //     alignment: Alignment.bottomRight,
+                      //     padding: EdgeInsetsDirectional.all(30),
+                      //     child: IconButton(
+                      //       onPressed: _onSkipPressed,
+                      //       icon: (Icon(
+                      //         Icons.skip_next,
+                      //         color: Colors.white,
+                      //         size: 50,
+                      //       )),
+                      //     )),
+                    ]);
                   } else {
                     return Container();
                   }
@@ -72,6 +74,10 @@ class _PhotoPresentationScreenState extends State<PhotoPresentationScreen> {
             return Container();
           }
         });
+  }
+
+  void _onSkipPressed() {
+    Navigator.pop(context);
   }
 
   @override

@@ -2,18 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/course.dart';
-import 'package:randka_malzenska/screens/step/drawer/step_drawer.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:randka_malzenska/shared/html/white_html.dart';
 
-class InfoScreen extends StatefulWidget {
-  final User _user;
-  InfoScreen(this._user);
+class CourseDescriptionScreen extends StatefulWidget {
   @override
-  _InfoScreenState createState() => _InfoScreenState();
+  _CourseDescriptionScreenState createState() =>
+      _CourseDescriptionScreenState();
 }
 
-class _InfoScreenState extends State<InfoScreen> {
+class _CourseDescriptionScreenState extends State<CourseDescriptionScreen> {
   ConnectionService connectionService = new ConnectionService();
 
   @override
@@ -34,31 +32,21 @@ class _InfoScreenState extends State<InfoScreen> {
               snapshot.hasData) {
             return Scaffold(
                 backgroundColor: Colors.black,
-                drawer: Theme(
-                    data: Theme.of(context).copyWith(
-                      canvasColor: Colors.black,
-                    ),
-                    child: StepDrawer(3, widget._user)),
                 appBar: AppBar(
                   backgroundColor: Colors.grey[900],
                   title: Text(
-                    'O aplikacji',
+                    'Prezentacja warsztatu',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                body: WhiteHtml(snapshot.data!.intro));
+                body: WhiteHtml(snapshot.data!.contentDescription));
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
                 backgroundColor: Colors.black,
-                drawer: Theme(
-                    data: Theme.of(context).copyWith(
-                      canvasColor: Colors.black,
-                    ),
-                    child: StepDrawer(3, widget._user)),
                 appBar: AppBar(
                   backgroundColor: Colors.grey[900],
                   title: Text(
-                    'O aplikacji',
+                    'Prezentacja warsztatu',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

@@ -76,16 +76,12 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
                   service.increaseStepProgress(
                       widget._stepId, widget._firebaseId);
                 } else {
-                  final snackBar = SnackBar(
-                      content: Text(
-                          'Gratulacje, ukończyłeś dzień! Zapraszamy jutro na następny :)'));
-
                   service
                       .increaseStepProgress(widget._stepId, widget._firebaseId)
                       .whenComplete(() => {
                             widget._refreshStep(),
                             Navigator.pop(context),
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar)
+                            _showDialog('Ukończyłeś dzień', context)
                           });
                 }
               }
@@ -112,5 +108,39 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
             ),
           ),
         ));
+  }
+
+  void _showDialog(String message, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+          backgroundColor: Colors.grey[100],
+          title: Text('Zapraszamy jutro!',
+              style: TextStyle(
+                color: Colors.black,
+              )),
+          content: Text(
+            message,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Color.fromARGB(255, 21, 74, 118))),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Text('OK',
+                    style: TextStyle(
+                      color: Colors.white,
+                    )),
+              ),
+            )
+          ]),
+    );
   }
 }

@@ -1,28 +1,24 @@
 class Course {
   final String name;
-  final int id;
-  final String description;
+  final String contentDescription;
+  final String intro;
   final String photo;
   final int totalSteps;
-  final List conditions;
 
   Course({
     required this.name,
-    required this.id,
-    required this.description,
+    required this.contentDescription,
     required this.photo,
     required this.totalSteps,
-    required this.conditions,
+    required this.intro,
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
-      name: json['name'],
-      id: json['id'],
-      description: json['description'],
-      photo: json['photo'],
-      totalSteps: json['totalSteps'],
-      conditions: json['conditions'],
-    );
+        name: json['name'],
+        contentDescription: json['content_description'],
+        photo: json['photo'],
+        totalSteps: json['total_steps'],
+        intro: json['intro']);
   }
 }

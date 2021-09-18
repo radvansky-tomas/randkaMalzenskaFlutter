@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:randka_malzenska/models/blog.dart';
 import 'package:randka_malzenska/models/camera.dart';
 import 'package:randka_malzenska/models/content.dart';
+import 'package:randka_malzenska/models/course.dart';
 import 'package:randka_malzenska/models/http_exception.dart';
 import 'package:randka_malzenska/models/quiz/quiz_test.dart';
 import 'package:randka_malzenska/models/step.dart';
@@ -177,6 +178,19 @@ class ConnectionService {
       return cameraList;
     } else {
       throw HttpException('Failed to load cameras');
+    }
+  }
+
+  Future<Course?> getCourse() async {
+    final response = await http.get(
+      Uri.parse('$baseAddress/course/'),
+      headers: requestHeaders,
+    );
+    if (response.statusCode == 200) {
+      Map<dynamic, dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
+      return Course.fromJson(map['results'][0]);
+    } else {
+      throw HttpException('Failed to load course');
     }
   }
 }

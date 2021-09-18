@@ -4,11 +4,11 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/models/step.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
 import 'package:randka_malzenska/screens/content/content_screen.dart';
+import 'package:randka_malzenska/screens/info/course_description.dart';
+import 'package:randka_malzenska/screens/photo/photo_presentation_screen.dart';
 import 'package:randka_malzenska/screens/quiz/intro.dart';
 import 'package:randka_malzenska/screens/step/drawer/step_drawer.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
@@ -99,7 +99,16 @@ class _StepScreenState extends State<StepScreen> {
                       Padding(
                         padding: const EdgeInsets.only(right: 5.0),
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return PhotoPresentationScreen(widget.user);
+                },
+              ),
+            );
+          },
                           icon: Icon(
                             Icons.card_giftcard,
                             size: 35,
@@ -110,7 +119,16 @@ class _StepScreenState extends State<StepScreen> {
                       Padding(
                         padding: const EdgeInsets.only(right: 6.0),
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return CourseDescriptionScreen();
+                },
+              ),
+            );
+          },
                           icon: Icon(
                             Icons.favorite_outline,
                             size: 35,
