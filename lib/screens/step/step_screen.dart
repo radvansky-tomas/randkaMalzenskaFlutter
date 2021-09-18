@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:randka_malzenska/models/course.dart';
 import 'package:randka_malzenska/models/step.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
 import 'package:randka_malzenska/screens/content/content_screen.dart';
@@ -49,6 +50,10 @@ class _StepScreenState extends State<StepScreen> {
       setState(() {
       });
     });
+  }
+
+  Future<Course?> getCourse(){
+    return connectionService.getCourse();
   }
 
   @override

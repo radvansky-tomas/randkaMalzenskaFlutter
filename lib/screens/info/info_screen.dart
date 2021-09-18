@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/course.dart';
 import 'package:randka_malzenska/screens/step/drawer/step_drawer.dart';
+import 'package:randka_malzenska/screens/video/video_content.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:randka_malzenska/shared/html/white_html.dart';
 
@@ -33,20 +34,31 @@ class _InfoScreenState extends State<InfoScreen> {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
             return Scaffold(
-                backgroundColor: Colors.black,
-                drawer: Theme(
-                    data: Theme.of(context).copyWith(
-                      canvasColor: Colors.black,
-                    ),
-                    child: StepDrawer(3, widget._user)),
-                appBar: AppBar(
-                  backgroundColor: Colors.grey[900],
-                  title: Text(
-                    'O aplikacji',
-                    style: TextStyle(color: Colors.white),
+              backgroundColor: Colors.black,
+              drawer: Theme(
+                  data: Theme.of(context).copyWith(
+                    canvasColor: Colors.black,
                   ),
+                  child: StepDrawer(3, widget._user)),
+              appBar: AppBar(
+                backgroundColor: Colors.grey[900],
+                title: Text(
+                  'O aplikacji',
+                  style: TextStyle(color: Colors.white),
                 ),
-                body: WhiteHtml(snapshot.data!.intro));
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    WhiteHtml(snapshot.data!.intro),
+                    Container(
+                      height: 300,
+                      child: VideoContent(snapshot.data!.videoIntro, null),
+                    )
+                  ],
+                ),
+              ),
+            );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
                 backgroundColor: Colors.black,

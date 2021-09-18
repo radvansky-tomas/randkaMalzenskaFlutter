@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/course.dart';
+import 'package:randka_malzenska/screens/video/video_content.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:randka_malzenska/shared/html/white_html.dart';
 
@@ -31,15 +31,26 @@ class _CourseDescriptionScreenState extends State<CourseDescriptionScreen> {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
             return Scaffold(
-                backgroundColor: Colors.black,
-                appBar: AppBar(
-                  backgroundColor: Colors.grey[900],
-                  title: Text(
-                    'Prezentacja warsztatu',
-                    style: TextStyle(color: Colors.white),
-                  ),
+              backgroundColor: Colors.black,
+              appBar: AppBar(
+                backgroundColor: Colors.grey[900],
+                title: Text(
+                  'Prezentacja warsztatu',
+                  style: TextStyle(color: Colors.white),
                 ),
-                body: WhiteHtml(snapshot.data!.contentDescription));
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    WhiteHtml(snapshot.data!.intro),
+                    Container(
+                      height: 300,
+                      child: VideoContent(snapshot.data!.videoCourse, null),
+                    )
+                  ],
+                ),
+              ),
+            );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
                 backgroundColor: Colors.black,
