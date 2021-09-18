@@ -65,15 +65,28 @@ class _CameraContentState extends State<CameraContent>
                 ? Container(
                     height: 300, child: Image.file(File(widget._photo!.path!)))
                 : SizedBox(),
-            TextButton.icon(
-                onPressed: widget._callback,
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.white)),
-                icon: Icon(Icons.camera),
-                label: Text(
-                  "Zrób sobie zdjęcie",
-                  style: TextStyle(color: Colors.black),
-                ))
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40, top: 20),
+              child: Container(
+                color: Color.fromARGB(255, 255, 0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                        onPressed: widget._callback,
+                        child: Text(
+                          "Zrób zdjęcie",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        )),
+                    Icon(
+                      Icons.camera,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+              ),
+            )
           ],
         ));
   }

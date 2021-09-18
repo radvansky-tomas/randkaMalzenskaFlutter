@@ -35,7 +35,7 @@ class ImageButtonWithText extends StatelessWidget {
               alignment: Alignment.bottomLeft,
               children: [
                 (_isAvailable && !_isDone)
-                    ? VideoButton()
+                    ? VideoButton(_assetName)
                     : Ink.image(
                         image: AssetImage("assets/images/$_assetName.jpg"),
                         fit: BoxFit.cover),

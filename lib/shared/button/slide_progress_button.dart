@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 
 class SlideProgressButton extends StatefulWidget {
@@ -50,48 +51,65 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
   @override
   bool get wantKeepAlive => true;
 
+  // icon:
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return SlideTransition(
         position: animation,
-        child: TextButton(
-          onPressed: () {
-            ConnectionService service = new ConnectionService();
-            if (widget._isDone) {
-              Navigator.pop(context);
-            } else {
-              if (!widget._isLast) {
-                service
-                    .increaseSubStepProgress(widget._stepId, widget._firebaseId)
-                    .whenComplete(() => {
-                          widget._refreshStep(),
-                          Navigator.pop(context),
-                        });
-              } else {
-                if (widget._isOnlySubStep) {
-                  //if there is one substep content is directly loaded in step screen, pop context not needed
-                  service.increaseStepProgress(
-                      widget._stepId, widget._firebaseId);
-                } else {
-                  final snackBar = SnackBar(
-                      content: Text(
-                          'Gratulacje, ukończyłeś dzień! Zapraszamy jutro na następny :)'));
+        child: Container(
+          color: Color.fromARGB(255, 21, 74, 118),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  ConnectionService service = new ConnectionService();
+                  if (widget._isDone) {
+                    Navigator.pop(context);
+                  } else {
+                    if (!widget._isLast) {
+                      service
+                          .increaseSubStepProgress(
+                              widget._stepId, widget._firebaseId)
+                          .whenComplete(() => {
+                                widget._refreshStep(),
+                                Navigator.pop(context),
+                              });
+                    } else {
+                      if (widget._isOnlySubStep) {
+                        //if there is one substep content is directly loaded in step screen, pop context not needed
+                        service.increaseStepProgress(
+                            widget._stepId, widget._firebaseId);
+                      } else {
+                        final snackBar = SnackBar(
+                            content: Text(
+                                'Gratulacje, ukończyłeś dzień! Zapraszamy jutro na następny :)'));
 
-                  service
-                      .increaseStepProgress(widget._stepId, widget._firebaseId)
-                      .whenComplete(() => {
-                            widget._refreshStep(),
-                            Navigator.pop(context),
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar)
-                          });
-                }
-              }
-            }
-          },
-          child: Text(
-            widget._text,
-            style: TextStyle(color: Colors.white),
+                        service
+                            .increaseStepProgress(
+                                widget._stepId, widget._firebaseId)
+                            .whenComplete(() => {
+                                  widget._refreshStep(),
+                                  Navigator.pop(context),
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar)
+                                });
+                      }
+                    }
+                  }
+                },
+                child: Text(
+                  widget._text,
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward,
+                color: Colors.white,
+              ),
+            ],
           ),
         ));
   }

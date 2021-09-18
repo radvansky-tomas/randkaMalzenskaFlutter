@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/providers/auth.dart';
@@ -91,11 +92,17 @@ class _StepDrawerState extends State<StepDrawer> {
             decoration: BoxDecoration(
               color: Colors.black,
             ),
-            child: Center(
-              child: Text(
-                'Witaj w menu bocznym\n' + email,
-                style: TextStyle(color: Colors.white),
-              ),
+            child: Column(
+              children: [
+                Expanded(child: Image.asset('assets/images/serce-menu.png')),
+                Center(
+                  child: Text(
+                    email,
+                    style: GoogleFonts.montserrat(
+                        textStyle: TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -103,7 +110,7 @@ class _StepDrawerState extends State<StepDrawer> {
                 itemCount: buttons.length,
                 itemBuilder: (_, index) {
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(0.0),
                     child: DrawerElement(buttons[index], icons[index], () {
                       onClick(index, highlited, widgets);
                     }, highlited[index]),
@@ -117,7 +124,8 @@ class _StepDrawerState extends State<StepDrawer> {
             ),
             title: Text(
               'Wyloguj',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.montserrat(
+                  textStyle: TextStyle(color: Colors.white)),
             ),
             onTap: () => {
               prefs.setBool(PreferencesKey.introWatched, false),

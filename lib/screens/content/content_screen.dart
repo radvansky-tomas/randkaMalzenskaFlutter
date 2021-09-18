@@ -163,7 +163,10 @@ Widget contentBody(
           Content content = awaitedContents[index];
           if (content.type == 'HTML') {
             return Container(
-              child: WhiteHtml(content.value),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: WhiteHtml(content.value),
+              ),
             );
           } else if (content.type == 'VIDEO') {
             return Container(
@@ -188,7 +191,7 @@ Widget contentBody(
           } else if (content.type == 'TEST') {
             return SlideQuizButton(int.parse(content.value));
           } else if (content.type == 'PROGRESS_BUTTON') {
-            String text = isLast ? 'Przejdź ostatni' : 'Przejdź dalej';
+            String text = isLast ? 'ZAKOŃCZ DZIEŃ' : 'DALEJ';
             //subStep.visibleContainer==0 means it is only substep in step
             return SlideProgressButton(subStep.done!, isLast, text, refreshStep,
                 firebaseId, subStep.step, subStep.visibleContainer == 0);

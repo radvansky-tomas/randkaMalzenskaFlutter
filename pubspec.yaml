@@ -47,6 +47,8 @@ dependencies:
   audio_session: ^0.1.5
   flutter_html: ^2.1.1
   cached_network_image: ^3.1.0
+  flutter_native_splash: ^1.2.3
+  google_fonts: ^2.1.0
   flutter:
     sdk: flutter
 
@@ -73,10 +75,13 @@ flutter:
     - assets/images/login_tlo.jpg
     - assets/images/GoogleLogo.png
     - assets/images/FacebookLogo.png
+    - assets/images/serce-menu.png
     - assets/images/dzialac.jpg
     - assets/images/osadzic.jpg
     - assets/images/widziec.jpg
-    - assets/videos/file_example.mp4
+    - assets/videos/dzialac.mp4
+    - assets/videos/osadzic.mp4
+    - assets/videos/widziec.mp4
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -93,17 +98,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: MontserratNasze
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+          weight: 400
+       
+   
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

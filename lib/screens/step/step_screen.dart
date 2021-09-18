@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/models/step.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
@@ -58,9 +59,10 @@ class _StepScreenState extends State<StepScreen> {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData && snapshot.data!.length==0) {
           return Scaffold(
+            
             backgroundColor: Colors.black,
                drawer: Theme(
-                      data: Theme.of(context).copyWith(
+                        data: Theme.of(context).copyWith(
                         canvasColor: Colors.black,
                       ),
                       child: StepDrawer(0, widget.user)),

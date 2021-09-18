@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DrawerElement extends StatelessWidget {
   final String _text;
@@ -10,7 +11,7 @@ class DrawerElement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: _isHighlited ? Colors.blue : Colors.black,
+      color: _isHighlited ? Color.fromARGB(255, 21, 74, 118) : Colors.black,
       child: ListTile(
           leading: Icon(
             _icon,
@@ -18,7 +19,11 @@ class DrawerElement extends StatelessWidget {
           ),
           title: Text(
             _text,
-            style: TextStyle(color: Colors.white),
+            style: GoogleFonts.montserrat(
+                textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold)),
           ),
           onTap: _function),
     );

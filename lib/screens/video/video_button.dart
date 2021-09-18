@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoButton extends StatefulWidget {
+  final String _assetName;
+  VideoButton(this._assetName);
   @override
   _VideoScreenState createState() => _VideoScreenState();
 }
@@ -20,7 +22,8 @@ class _VideoScreenState extends State<VideoButton> {
   }
 
   Future<void> initializePlayer() async {
-    _controller = VideoPlayerController.asset('assets/videos/file_example.mp4');
+    String assetName = widget._assetName;
+    _controller = VideoPlayerController.asset('assets/videos/$assetName.mp4');
     await Future.wait([_controller.initialize()]);
     _createChewieController();
     setState(() {});
