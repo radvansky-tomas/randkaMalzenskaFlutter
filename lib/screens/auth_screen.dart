@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/registration/registry_marriage_status_screen.dart';
+import 'package:randka_malzenska/screens/step/step_course_screen.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,7 +56,7 @@ class _AuthCardState extends State<AuthCard> {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => userRelationshipStatus == ''
                 ? RegistryStatusScreen(user)
-                : StepScreen(user)));
+                : StepCourseScreen(user)));
       }
     });
   }

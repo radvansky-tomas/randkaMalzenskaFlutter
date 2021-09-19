@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/models/user_attributes.dart';
+import 'package:randka_malzenska/screens/step/step_course_screen.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +32,7 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return StepScreen(widget.user);
+                        return StepCourseScreen(widget.user);
                       },
                     ),
                   )
@@ -136,7 +135,7 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
                     MaterialPageRoute(
                       builder: (context) {
                         //always start on first day after registration
-                        return StepScreen(user);
+                        return StepCourseScreen(user);
                       },
                     ),
                   )

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/providers/auth.dart';
+import 'package:randka_malzenska/screens/step/step_course_screen.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
@@ -43,7 +44,7 @@ class _VideoScreenState extends State<VideoScreen> {
     loginStateSubscription = authBloc.currentUser.listen((user) {
       if (user != null) {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => StepScreen(user)));
+            MaterialPageRoute(builder: (context) => StepCourseScreen(user)));
       }
     });
   }

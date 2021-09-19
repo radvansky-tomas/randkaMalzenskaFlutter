@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 
 class SlideProgressButton extends StatefulWidget {

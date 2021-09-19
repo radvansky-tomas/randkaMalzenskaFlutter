@@ -40,20 +40,25 @@ class _StepScreenState extends State<StepScreen> {
     SystemChrome.setEnabledSystemUIOverlays([]);
     courseSteps = connectionService.getUserSteps(widget.user.uid);
     courseSteps?.then((awaitedCourseSteps) => {
-      stepNumber=awaitedCourseSteps?.last.stepNumber??1,
-      subSteps =
-            connectionService.getUserSubSteps(awaitedCourseSteps?.last.stepNumber??1, widget.user.uid)
-      
-      });
+          stepNumber = awaitedCourseSteps?.last.stepNumber ?? 1,
+          subSteps = connectionService.getUserSubSteps(
+              awaitedCourseSteps?.last.stepNumber ?? 1, widget.user.uid)
+        });
 
     _initializePreferences().whenComplete(() {
-      setState(() {
-      });
+      setState(() {});
     });
   }
 
-  Future<Course?> getCourse(){
+  Future<Course?> getCourse() {
     return connectionService.getCourse();
+  }
+
+  String? getStepContent(List<CourseStep> courseSteps) {
+    return courseSteps.firstWhere(
+        (courseStep) => courseStep.stepNumber == stepNumber, orElse: () {
+      return courseSteps.first;
+    }).content;
   }
 
   @override
@@ -62,18 +67,22 @@ class _StepScreenState extends State<StepScreen> {
       future: courseSteps,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData && snapshot.data!.length==0) {
+            snapshot.hasData &&
+            snapshot.data!.length == 0) {
           return Scaffold(
-            
             backgroundColor: Colors.black,
-               drawer: Theme(
-                        data: Theme.of(context).copyWith(
-                        canvasColor: Colors.black,
-                      ),
-                      child: StepDrawer(0, widget.user)),
-             appBar: AppBar(
-               title: Text("Randka małżeńska", style: TextStyle(color: Colors.white),),
-                    backgroundColor: Colors.grey[900],),
+            drawer: Theme(
+                data: Theme.of(context).copyWith(
+                  canvasColor: Colors.black,
+                ),
+                child: StepDrawer(0, widget.user)),
+            appBar: AppBar(
+              title: Text(
+                "Randka małżeńska",
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.grey[900],
+            ),
             body: Center(
               child: Text(
                 "Brak danych dla dni kursu :(",
@@ -81,13 +90,10 @@ class _StepScreenState extends State<StepScreen> {
               ),
             ),
           );
-        }
-        else if (snapshot.connectionState == ConnectionState.done &&
+        } else if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
           List<CourseStep> courseSteps = snapshot.data!;
-          String? content = courseSteps.firstWhere(
-              (element) => element.stepNumber == stepNumber,
-              orElse:(){return courseSteps.first} ).content;
+          String? content = getStepContent(courseSteps);
           return !_introWatched && content != null
               ? Intro(content, _setIntroWatched, 'Zaczynamy')
               : Scaffold(
@@ -105,15 +111,15 @@ class _StepScreenState extends State<StepScreen> {
                         padding: const EdgeInsets.only(right: 5.0),
                         child: IconButton(
                           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return PhotoPresentationScreen(widget.user);
-                },
-              ),
-            );
-          },
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return PhotoPresentationScreen(widget.user);
+                                },
+                              ),
+                            );
+                          },
                           icon: Icon(
                             Icons.card_giftcard,
                             size: 35,
@@ -125,15 +131,15 @@ class _StepScreenState extends State<StepScreen> {
                         padding: const EdgeInsets.only(right: 6.0),
                         child: IconButton(
                           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return CourseDescriptionScreen();
-                },
-              ),
-            );
-          },
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return CourseDescriptionScreen();
+                                },
+                              ),
+                            );
+                          },
                           icon: Icon(
                             Icons.favorite_outline,
                             size: 35,
@@ -185,10 +191,10 @@ class _StepScreenState extends State<StepScreen> {
                   fontSize: 20,
                 ),
               );
-            } else  if (snapshot.data!.length == 1) {
+            } else if (snapshot.data!.length == 1) {
               return ContentScreen(
-              snapshot.data![0], firebaseId, true, _refresh, stepPosition);
-            }else {
+                  snapshot.data![0], firebaseId, true, _refresh, stepPosition);
+            } else {
               List<SubStep> awaitedSubSteps = snapshot.data!;
               List<int>? positions =
                   awaitedSubSteps.map((e) => e.position).toList();
@@ -266,8 +272,7 @@ class _StepScreenState extends State<StepScreen> {
 
   _refresh() async {
     setState(() {
-      subSteps = connectionService.getUserSubSteps(
-          stepNumber, widget.user.uid);
+      subSteps = connectionService.getUserSubSteps(stepNumber, widget.user.uid);
     });
   }
 
@@ -280,8 +285,9 @@ class _StepScreenState extends State<StepScreen> {
   _changeStep(int changedStepNumber) async {
     setState(() {
       _introWatched = false;
-      stepNumber=changedStepNumber;
-      subSteps = connectionService.getUserSubSteps(changedStepNumber, widget.user.uid);
+      stepNumber = changedStepNumber;
+      subSteps =
+          connectionService.getUserSubSteps(changedStepNumber, widget.user.uid);
     });
   }
 
@@ -302,57 +308,54 @@ class AppBarStepList extends StatefulWidget {
 }
 
 class _AppBarStepListState extends State<AppBarStepList> {
-   
   @override
   Widget build(BuildContext context) {
-    final String stepTitle= widget.steps
-    .firstWhere((element) => element.stepNumber == widget._stepNumber, 
-    orElse:(){
-      return CourseStep(stepNumber: 0, stepName: 'Dzień', subSteps: []);}
-      ).stepName;
+    final String stepTitle = widget.steps.firstWhere(
+        (element) => element.stepNumber == widget._stepNumber, orElse: () {
+      return CourseStep(stepNumber: 0, stepName: 'Dzień', subSteps: []);
+    }).stepName;
     return Container(
       width: 120,
       height: 52,
       child: Theme(
-        data: Theme.of(context).copyWith(
-          cardColor: Colors.black,
-        ),
-        child:  PopupMenuButton(
-                icon: Container(
-                  constraints: BoxConstraints.expand(),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                      ),
-                      // color: Colors.black,
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    constraints: BoxConstraints.expand(),
-                    child: ExpandStepButton(stepTitle),
+          data: Theme.of(context).copyWith(
+            cardColor: Colors.black,
+          ),
+          child: PopupMenuButton(
+            icon: Container(
+              constraints: BoxConstraints.expand(),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
                   ),
-                ),
-                itemBuilder: (context) => [
-                  ...widget.steps.map((step) {
-                    return PopupMenuItem(
-                      child: Text(
-                        step.stepName,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      value: step,
-                    );
-                  }).toList()
-                ],
-                onSelected: (value) {
-                  CourseStep step = value as CourseStep;
-                  if (widget._stepNumber != step.stepNumber) {
-                    widget._changeStep(step.stepNumber);
-                  }
-                },
-              )
-      ),
+                  // color: Colors.black,
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                constraints: BoxConstraints.expand(),
+                child: ExpandStepButton(stepTitle),
+              ),
+            ),
+            itemBuilder: (context) => [
+              ...widget.steps.map((step) {
+                return PopupMenuItem(
+                  child: Text(
+                    step.stepName,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  value: step,
+                );
+              }).toList()
+            ],
+            onSelected: (value) {
+              CourseStep step = value as CourseStep;
+              if (widget._stepNumber != step.stepNumber) {
+                widget._changeStep(step.stepNumber);
+              }
+            },
+          )),
     );
   }
 }
@@ -363,7 +366,6 @@ class ExpandStepButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
     return RichText(
       overflow: TextOverflow.ellipsis,
       text: TextSpan(

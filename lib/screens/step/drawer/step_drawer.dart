@@ -12,6 +12,7 @@ import 'package:randka_malzenska/screens/info/info_screen.dart';
 import 'package:randka_malzenska/screens/note/note_screen.dart';
 import 'package:randka_malzenska/screens/settings/settings_screen.dart';
 import 'package:randka_malzenska/screens/step/drawer/drawer_element.dart';
+import 'package:randka_malzenska/screens/step/step_course_screen.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -50,7 +51,7 @@ class _StepDrawerState extends State<StepDrawer> {
     super.initState();
     highlited[widget._index] = true;
     widgets = [
-      StepScreen(widget._user),
+      StepCourseScreen(widget._user),
       BlogScreen(widget._user),
       SettingsScreen(widget._user),
       InfoScreen(widget._user),
