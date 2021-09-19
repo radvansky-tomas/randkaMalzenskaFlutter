@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:randka_malzenska/models/course.dart';
+import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/models/step.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
 import 'package:randka_malzenska/screens/content/content_screen.dart';
@@ -94,6 +95,7 @@ class _StepScreenState extends State<StepScreen> {
             snapshot.hasData) {
           List<CourseStep> courseSteps = snapshot.data!;
           String? content = getStepContent(courseSteps);
+          int numberOfSteps = prefs.getInt(PreferencesKey.numberOfSteps) ?? 26;
           return !_introWatched && content != null
               ? Intro(content, _setIntroWatched, 'Zaczynamy')
               : Scaffold(
@@ -107,26 +109,29 @@ class _StepScreenState extends State<StepScreen> {
                     title: AppBarStepList(
                         courseSteps.reversed.toList(), _changeStep, stepNumber),
                     actions: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 5.0),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return PhotoPresentationScreen(widget.user);
+                      numberOfSteps != stepNumber
+                          ? Container()
+                          : Padding(
+                              padding: const EdgeInsets.only(right: 5.0),
+                              child: IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return PhotoPresentationScreen(
+                                            widget.user);
+                                      },
+                                    ),
+                                  );
                                 },
+                                icon: Icon(
+                                  Icons.card_giftcard,
+                                  size: 35,
+                                  color: Colors.white,
+                                ),
                               ),
-                            );
-                          },
-                          icon: Icon(
-                            Icons.card_giftcard,
-                            size: 35,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                            ),
                       Padding(
                         padding: const EdgeInsets.only(right: 6.0),
                         child: IconButton(

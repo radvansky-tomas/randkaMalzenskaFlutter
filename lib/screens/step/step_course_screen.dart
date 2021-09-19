@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/course.dart';
+import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/screens/step/drawer/step_drawer.dart';
 import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepCourseScreen extends StatefulWidget {
   final User user;
@@ -14,8 +16,21 @@ class StepCourseScreen extends StatefulWidget {
 
 class _StepCourseScreenState extends State<StepCourseScreen> {
   ConnectionService connectionService = new ConnectionService();
+  late SharedPreferences prefs;
   Future<Course?> getCourse() {
     return connectionService.getCourse();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializePreferences().whenComplete(() {
+      setState(() {});
+    });
+  }
+
+  _initializePreferences() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override
@@ -29,6 +44,7 @@ class _StepCourseScreenState extends State<StepCourseScreen> {
             if (course.ready == 1) {
               return StepScreen(widget.user);
             } else {
+              prefs.setInt(PreferencesKey.numberOfSteps, course.totalSteps);
               return textWithAppBar(context, widget.user,
                   "Trwają prace nad aplikacją, zapraszamy później: )");
             }

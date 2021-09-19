@@ -4,4 +4,5 @@ class PreferencesKey {
   static const String userRelationshipStatus = 'userRelationshipStatus';
   static const String userStepNumber = 'userStepNumber';
   static const String notificationDate = 'notificationDate';
+  static const String numberOfSteps = 'numberOfSteps';
 }
