@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:randka_malzenska/screens/video/video_button.dart';
 
 class ImageButtonWithText extends StatefulWidget {
@@ -74,7 +75,10 @@ class _ImageButtonWithTextState extends State<ImageButtonWithText>
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Text(
                                 widget._stepName,
-                                style: TextStyle(
+                                style:
+                                    // GoogleFonts.montserrat(
+                                    //   textStyle:
+                                    TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: widget._isAvailable
                                       ? Colors.white
@@ -83,6 +87,7 @@ class _ImageButtonWithTextState extends State<ImageButtonWithText>
                                 ),
                               ),
                             ),
+                            // ),
                             Checkbox(
                               value: widget._isDone,
                               onChanged: null,

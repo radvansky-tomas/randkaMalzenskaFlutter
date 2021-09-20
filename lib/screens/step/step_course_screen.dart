@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:randka_malzenska/models/course.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/screens/step/drawer/step_drawer.dart';
@@ -42,11 +43,25 @@ class _StepCourseScreenState extends State<StepCourseScreen> {
               snapshot.hasData) {
             Course course = snapshot.data!;
             if (course.ready == 1) {
-              return StepScreen(widget.user);
+              prefs.setInt(PreferencesKey.numberOfSteps, course.totalSteps);
+              return MaterialApp(
+                  theme: ThemeData(
+                    textTheme: GoogleFonts.montserratTextTheme(
+                      Theme.of(context).textTheme,
+                    ),
+                  ),
+                  home: StepScreen(widget.user));
             } else {
               prefs.setInt(PreferencesKey.numberOfSteps, course.totalSteps);
-              return textWithAppBar(context, widget.user,
-                  "Trwają prace nad aplikacją, zapraszamy później: )");
+              return MaterialApp(
+                theme: ThemeData(
+                  textTheme: GoogleFonts.montserratTextTheme(
+                    Theme.of(context).textTheme,
+                  ),
+                ),
+                home: textWithAppBar(context, widget.user,
+                    "Trwają prace nad aplikacją, zapraszamy później: )"),
+              );
             }
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

@@ -8,7 +8,6 @@ import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
 import 'package:randka_malzenska/screens/registration/registry_gender_screen.dart';
 import 'package:randka_malzenska/screens/step/step_course_screen.dart';
-import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:randka_malzenska/screens/video/video_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,64 +16,11 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
-  late SharedPreferences prefs;
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<User?> getUser() async {
-    var authBloc = Provider.of<Auth>(context, listen: false);
-    prefs = await SharedPreferences.getInstance();
-    await Future.delayed(const Duration(seconds: 5));
-    return authBloc.currentUser.first;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getUser(),
-      builder: (context, AsyncSnapshot snapshot) {
-        // Show splash screen while waiting for app resources to load:
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return MaterialApp(home: Splash());
-        } else {
-          // Loading is done, return the app:
-          bool introWatched =
-              prefs.getBool(PreferencesKey.introWatched) ?? false;
-          User? user = snapshot.data;
-          return MaterialApp(
-            theme: ThemeData(
-              textTheme: GoogleFonts.montserratTextTheme(
-                Theme.of(context).textTheme,
-              ),
-            ),
-            home: user != null
-                ? StepCourseScreen(user)
-                : introWatched
-                    ? AuthScreen()
-                    : VideoScreen(
-                        'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175',
-                        RegistryUserDataScreen(prefs),
-                        false,
-                      ),
-          );
-        }
-      },
-    );
-  }
-}
-
-class Splash extends StatefulWidget {
-  @override
-  _SplashState createState() => _SplashState();
-}
-
-class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late Animation<Offset> animation;
   late AnimationController animationController;
-
+  late SharedPreferences prefs;
   @override
   void initState() {
     super.initState();
@@ -101,21 +47,107 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  Future<User?> getUser() async {
+    var authBloc = Provider.of<Auth>(context, listen: false);
+    prefs = await SharedPreferences.getInstance();
+    await Future.delayed(const Duration(seconds: 5));
+    return authBloc.currentUser.first;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            Image.asset('assets/images/splashscreen2_bg.jpg'),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SlideTransition(
-                position: animation,
-                child: Image.asset('assets/images/splashscreen2.png'),
-              ),
-            )
-          ],
-        ));
+    return FutureBuilder(
+      future: getUser(),
+      builder: (context, AsyncSnapshot snapshot) {
+        // Show splash screen while waiting for app resources to load:
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return MaterialApp(
+            home: Scaffold(
+                backgroundColor: Colors.black,
+                body: Stack(
+                  children: [
+                    Image.asset('assets/images/splashscreen2_bg.jpg'),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SlideTransition(
+                        position: animation,
+                        child: Image.asset('assets/images/splashscreen2.png'),
+                      ),
+                    )
+                  ],
+                )),
+          );
+        } else {
+          // Loading is done, return the app:
+          bool introWatched =
+              prefs.getBool(PreferencesKey.introWatched) ?? false;
+          User? user = snapshot.data;
+          return MaterialApp(
+            home: user != null
+                ? StepCourseScreen(user)
+                : introWatched
+                    ? AuthScreen()
+                    : VideoScreen(
+                        'https://player.vimeo.com/external/490901113.hd.mp4?s=eb884fbcbeb5f5f751a2f1754d649a6b0b2f7628&profile_id=175',
+                        RegistryUserDataScreen(prefs),
+                        false,
+                      ),
+          );
+        }
+      },
+    );
   }
 }
+
+// class Splash extends StatefulWidget {
+//   @override
+//   _SplashState createState() => _SplashState();
+// }
+
+// class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
+  
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     animationController = AnimationController(
+//       vsync: this,
+//       duration: Duration(seconds: 2),
+//     );
+//     animation = Tween<Offset>(
+//       begin: Offset(-1.5, 0.0),
+//       end: Offset(0.0, 0.0),
+//     ).animate(CurvedAnimation(
+//       parent: animationController,
+//       curve: Curves.fastLinearToSlowEaseIn,
+//     ));
+
+//     Future<void>.delayed(Duration(milliseconds: 500), () {
+//       animationController.forward();
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     animationController.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//         backgroundColor: Colors.black,
+//         body: Stack(
+//           children: [
+//             Image.asset('assets/images/splashscreen2_bg.jpg'),
+//             Align(
+//               alignment: Alignment.bottomCenter,
+//               child: SlideTransition(
+//                 position: animation,
+//                 child: Image.asset('assets/images/splashscreen2.png'),
+//               ),
+//             )
+//           ],
+//         ));
+//   }
+// }

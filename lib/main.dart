@@ -16,7 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [ChangeNotifierProvider.value(value: Auth())],
-      child: Consumer<Auth>(builder: (context, auth, _) => SplashScreen()),
+      child: Consumer<Auth>(
+        builder: (context, auth, _) => SplashScreen(),
+      ),
     );
   }
 }
