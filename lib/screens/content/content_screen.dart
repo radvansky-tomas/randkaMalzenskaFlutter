@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/content.dart';
+import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/models/sub_step.dart';
 import 'package:randka_malzenska/screens/audio/audio_content.dart';
 import 'package:randka_malzenska/screens/camera_screen.dart';
@@ -13,6 +15,7 @@ import 'package:randka_malzenska/shared/button/slide_progress_button.dart';
 import 'package:randka_malzenska/shared/button/slide_quiz_button.dart';
 import 'package:randka_malzenska/shared/database_helpers.dart';
 import 'package:randka_malzenska/shared/html/white_html.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ContentScreen extends StatefulWidget {
   final SubStep _subStep;
@@ -20,9 +23,10 @@ class ContentScreen extends StatefulWidget {
   final bool _isLast;
   final VoidCallback _refreshStep;
   final int _stepPosition;
+  final User user;
 
   ContentScreen(this._subStep, this._firebaseId, this._isLast,
-      this._refreshStep, this._stepPosition);
+      this._refreshStep, this._stepPosition, this.user);
 
   @override
   _ContentScreenState createState() => _ContentScreenState();
@@ -33,6 +37,7 @@ class _ContentScreenState extends State<ContentScreen> {
   Future<List<Content>?>? contents;
   Future<List<Photo>?>? photos;
   bool _showContent = false;
+  late SharedPreferences prefs;
 
   @override
   void initState() {
@@ -40,6 +45,13 @@ class _ContentScreenState extends State<ContentScreen> {
     contents = connectionService.getUserStepContent(
         widget._subStep.id, widget._firebaseId);
     photos = _readPhotos();
+    _initializePreferences().whenComplete(() {
+      setState(() {});
+    });
+  }
+
+  _initializePreferences() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   htmlReady() {
@@ -84,7 +96,9 @@ class _ContentScreenState extends State<ContentScreen> {
                 widget._isLast,
                 widget._stepPosition,
                 widget._firebaseId,
-                widget._refreshStep);
+                widget._refreshStep,
+                prefs,
+                widget.user);
           } else if (snapshot.connectionState == ConnectionState.done &&
               !snapshot.hasData &&
               _showContent) {
@@ -117,10 +131,12 @@ Widget contentBody(
   Future<List<Photo>?>? photos,
   VoidCallback refreshContent,
   VoidCallback htmlReady,
-  bool isLast,
+  bool isLastSubStep,
   int stepPosition,
   String firebaseId,
   VoidCallback refreshStep,
+  SharedPreferences prefs,
+  User user,
 ) {
   Content buttonContent = new Content(
       subStep: 0,
@@ -191,10 +207,21 @@ Widget contentBody(
           } else if (content.type == 'TEST') {
             return SlideQuizButton(int.parse(content.value));
           } else if (content.type == 'PROGRESS_BUTTON') {
-            String text = isLast ? 'ZAKOŃCZ DZIEŃ' : 'DALEJ';
+            int numberOfSteps =
+                prefs.getInt(PreferencesKey.numberOfSteps) ?? 26;
+            bool isLastStep = numberOfSteps == stepPosition;
+            String text = getButtonText(isLastStep, isLastSubStep);
             //subStep.visibleContainer==0 means it is only substep in step
-            return SlideProgressButton(subStep.done!, isLast, text, refreshStep,
-                firebaseId, subStep.step, subStep.visibleContainer == 0);
+            return SlideProgressButton(
+                subStep.done!,
+                isLastSubStep,
+                isLastStep,
+                text,
+                refreshStep,
+                firebaseId,
+                subStep.step,
+                subStep.visibleContainer == 0,
+                user);
           } else {
             return Align(
               alignment: Alignment.bottomCenter,
@@ -211,6 +238,16 @@ Widget contentBody(
       ),
     ),
   );
+}
+
+String getButtonText(bool isLastStep, bool isLastSubStep) {
+  String text = '';
+  if (isLastStep) {
+    text = 'ODBIERZ NAGRODE';
+  } else {
+    text = isLastSubStep ? 'ZAKOŃCZ DZIEŃ' : 'DALEJ';
+  }
+  return text;
 }
 
 Widget photoPreview(Future<List<Photo>?>? photos, Content content,

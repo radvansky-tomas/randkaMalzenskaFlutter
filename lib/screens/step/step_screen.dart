@@ -197,8 +197,8 @@ class _StepScreenState extends State<StepScreen> {
                 ),
               );
             } else if (snapshot.data!.length == 1) {
-              return ContentScreen(
-                  snapshot.data![0], firebaseId, true, _refresh, stepPosition);
+              return ContentScreen(snapshot.data![0], firebaseId, true,
+                  _refresh, stepPosition, widget.user);
             } else {
               List<SubStep> awaitedSubSteps = snapshot.data!;
               List<int>? positions =
@@ -269,7 +269,7 @@ class _StepScreenState extends State<StepScreen> {
       MaterialPageRoute(
         builder: (context) {
           return ContentScreen(
-              subStep, firebaseId, isLast, _refresh, stepPosition);
+              subStep, firebaseId, isLast, _refresh, stepPosition, widget.user);
         },
       ),
     );

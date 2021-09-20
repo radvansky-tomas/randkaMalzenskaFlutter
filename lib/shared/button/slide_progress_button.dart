@@ -1,17 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:randka_malzenska/screens/photo/photo_presentation_screen.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 
 class SlideProgressButton extends StatefulWidget {
   final bool _isDone;
-  final bool _isLast;
+  final bool _isLastSubStep;
+  final bool _isLastStep;
   final bool _isOnlySubStep;
   final String _text;
   final int _stepId;
   final String _firebaseId;
   final VoidCallback _refreshStep;
-  SlideProgressButton(this._isDone, this._isLast, this._text, this._refreshStep,
-      this._firebaseId, this._stepId, this._isOnlySubStep);
+  final User _user;
+  SlideProgressButton(
+      this._isDone,
+      this._isLastSubStep,
+      this._isLastStep,
+      this._text,
+      this._refreshStep,
+      this._firebaseId,
+      this._stepId,
+      this._isOnlySubStep,
+      this._user);
   @override
   _SlideProgressButtonState createState() => _SlideProgressButtonState();
 }
@@ -62,7 +74,7 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
             if (widget._isDone) {
               Navigator.pop(context);
             } else {
-              if (!widget._isLast) {
+              if (!widget._isLastSubStep) {
                 service
                     .increaseSubStepProgress(widget._stepId, widget._firebaseId)
                     .whenComplete(() => {
@@ -70,10 +82,19 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
                           Navigator.pop(context),
                         });
               } else {
-                if (widget._isOnlySubStep) {
+                if (widget._isOnlySubStep && !widget._isLastStep) {
                   //if there is one substep content is directly loaded in step screen, pop context not needed
                   service.increaseStepProgress(
                       widget._stepId, widget._firebaseId);
+                } else if (widget._isLastStep) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return PhotoPresentationScreen(widget._user);
+                      },
+                    ),
+                  );
                 } else {
                   service
                       .increaseStepProgress(widget._stepId, widget._firebaseId)
