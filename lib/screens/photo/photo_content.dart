@@ -67,23 +67,27 @@ class _CameraContentState extends State<CameraContent>
                 : SizedBox(),
             Padding(
               padding: const EdgeInsets.only(bottom: 40, top: 20),
-              child: Container(
-                color: Color.fromARGB(255, 255, 0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextButton(
-                        onPressed: widget._callback,
-                        child: Text(
+              child: GestureDetector(
+                onTap: widget._callback,
+                child: Container(
+                  color: Color.fromARGB(255, 255, 0, 0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
                           "Zrób zdjęcie",
                           style: TextStyle(color: Colors.white, fontSize: 20),
-                        )),
-                    Icon(
-                      Icons.camera,
-                      color: Colors.white,
-                    )
-                  ],
+                        ),
+                        Icon(
+                          Icons.camera,
+                          color: Colors.white,
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             )

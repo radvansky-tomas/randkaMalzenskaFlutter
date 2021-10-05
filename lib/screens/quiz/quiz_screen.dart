@@ -77,18 +77,20 @@ class _QuizScreenState extends State<QuizScreen> {
               appBar: AppBar(
                   backgroundColor: Colors.grey[900],
                   title: Text(
-                    'Quiz',
+                    'Test',
                     style: TextStyle(color: Colors.white),
                   )),
               backgroundColor: Colors.black,
               body: !_introWatched
                   ? Intro(snapshot.data!.description, _setIntroWatched,
-                      'Rozpocznij quiz')
+                      'ROZPOCZNIJ TEST')
                   : _questionIndex < snapshot.data!.questions.length
-                      ? Quiz(
-                          quizTest: snapshot.data!,
-                          answerQuestion: _answerQuestion,
-                          questionIndex: _questionIndex)
+                      ? SingleChildScrollView(
+                          child: Quiz(
+                              quizTest: snapshot.data!,
+                              answerQuestion: _answerQuestion,
+                              questionIndex: _questionIndex),
+                        )
                       : Result(_answers, _resetQuiz, snapshot.data!.grades),
             );
           } else if (snapshot.connectionState == ConnectionState.done &&

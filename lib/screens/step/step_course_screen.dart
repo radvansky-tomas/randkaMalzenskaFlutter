@@ -65,7 +65,9 @@ class _StepCourseScreenState extends State<StepCourseScreen> {
             }
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
             );
           } else {
             //BŁĄD

@@ -205,7 +205,10 @@ Widget contentBody(
               refreshContent,
             );
           } else if (content.type == 'TEST') {
-            return SlideQuizButton(int.parse(content.value));
+            return Padding(
+              padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+              child: SlideQuizButton(int.parse(content.value)),
+            );
           } else if (content.type == 'PROGRESS_BUTTON') {
             int numberOfSteps =
                 prefs.getInt(PreferencesKey.numberOfSteps) ?? 26;

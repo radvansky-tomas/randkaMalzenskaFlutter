@@ -8,10 +8,6 @@ class Result extends StatelessWidget {
   final VoidCallback resetQuiz;
   Result(this.answers, this.resetQuiz, this.grades);
 
-  String get resultPhrase {
-    return 'Przeszedles kurs i najwiecej odpowiedzi to:' + mostPopularValue;
-  }
-
   String get gradeDescription {
     if (int.tryParse(mostPopularValue) != null) {
       return grades
@@ -68,12 +64,24 @@ class Result extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          WhiteHtml(gradeDescription),
-          TextButton(
-            child: Text('Zrestartuj'),
-            onPressed: resetQuiz,
-            style: TextButton.styleFrom(primary: Colors.orange),
-          )
+          Expanded(
+            flex: 15,
+            child: WhiteHtml(gradeDescription),
+          ),
+          Expanded(
+              flex: 1,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 21, 74, 118),
+                  minimumSize: Size(double.infinity,
+                      30), // double.infinity is the width and 30 is the height
+                ),
+                onPressed: resetQuiz,
+                child: Text(
+                  'JESZCZE RAZ',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )),
         ],
       ),
     );

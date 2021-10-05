@@ -43,7 +43,9 @@ class _PreviewScreenState extends State<PreviewScreen> {
             if (projectSnap.connectionState == ConnectionState.waiting) {
               return Container(
                 alignment: Alignment.center,
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
               );
               // return Container();
             }

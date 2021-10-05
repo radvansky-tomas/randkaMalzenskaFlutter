@@ -11,7 +11,9 @@ class Answer extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.blue),
+          backgroundColor: MaterialStateProperty.all(
+            Color.fromARGB(255, 21, 74, 118),
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),

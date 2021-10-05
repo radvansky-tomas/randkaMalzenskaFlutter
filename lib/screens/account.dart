@@ -71,7 +71,10 @@ class _AccountContentState extends State<AccountContent> {
       child: StreamBuilder<User?>(
         stream: authBloc.currentUser,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return CircularProgressIndicator();
+          if (!snapshot.hasData)
+            return CircularProgressIndicator(
+              color: Colors.white,
+            );
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

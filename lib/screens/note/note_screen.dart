@@ -39,7 +39,9 @@ class _NoteScreenState extends State<NoteScreen> {
           if (projectSnap.connectionState == ConnectionState.waiting) {
             return Container(
               alignment: Alignment.center,
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
             );
             // return Container();
           }

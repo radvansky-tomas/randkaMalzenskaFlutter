@@ -31,7 +31,9 @@ class BlogCard extends StatelessWidget {
             children: [
               CachedNetworkImage(
                 imageUrl: _blog.image,
-                placeholder: (context, url) => new CircularProgressIndicator(),
+                placeholder: (context, url) => new CircularProgressIndicator(
+                  color: Colors.white,
+                ),
                 errorWidget: (context, url, error) => new Icon(
                   Icons.error,
                   color: Colors.white,
