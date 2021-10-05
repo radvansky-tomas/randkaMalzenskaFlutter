@@ -30,7 +30,7 @@ class _SeekBarState extends State<SeekBar> {
     super.didChangeDependencies();
 
     _sliderThemeData = SliderTheme.of(context).copyWith(
-        trackHeight: 0.1,
+        trackHeight: 1.0,
         thumbShape: RoundSliderThumbShape(
           enabledThumbRadius: 6.4,
         ));
@@ -44,7 +44,7 @@ class _SeekBarState extends State<SeekBar> {
           data: _sliderThemeData.copyWith(
             thumbShape: HiddenThumbComponentShape(),
             activeTrackColor: Colors.blueGrey,
-            inactiveTrackColor: Colors.grey.shade300,
+            inactiveTrackColor: Colors.grey,
           ),
           child: ExcludeSemantics(
             child: Slider(
@@ -94,21 +94,21 @@ class _SeekBarState extends State<SeekBar> {
             },
           ),
         ),
-        Positioned(
-          right: 16.0,
-          bottom: 0.0,
-          child: Text(
-              RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
-                      .firstMatch("$_remaining")
-                      ?.group(1) ??
-                  '$_remaining',
-              style: Theme.of(context).textTheme.caption),
-        ),
+        // Positioned(
+        //   right: 16.0,
+        //   bottom: 0.0,
+        //   child: Text(
+        //       RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
+        //               .firstMatch("$_remaining")
+        //               ?.group(1) ??
+        //           '$_remaining',
+        //       style: Theme.of(context).textTheme.caption),
+        // ),
       ],
     );
   }
 
-  Duration get _remaining => widget.duration - widget.position;
+  // Duration get _remaining => widget.duration - widget.position;
 }
 
 class HiddenThumbComponentShape extends SliderComponentShape {
@@ -158,21 +158,12 @@ void showSliderDialog({
         stream: stream,
         builder: (context, snapshot) => Container(
           height: 100.0,
-          child: Column(
-            children: [
-              Text('${snapshot.data?.toStringAsFixed(1)}$valueSuffix',
-                  style: TextStyle(
-                      fontFamily: 'Fixed',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24.0)),
-              Slider(
-                divisions: divisions,
-                min: min,
-                max: max,
-                value: snapshot.data ?? 1.0,
-                onChanged: onChanged,
-              ),
-            ],
+          child: Slider(
+            divisions: divisions,
+            min: min,
+            max: max,
+            value: snapshot.data ?? 1.0,
+            onChanged: onChanged,
           ),
         ),
       ),

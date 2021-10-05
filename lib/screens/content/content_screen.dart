@@ -190,8 +190,8 @@ Widget contentBody(
               child: VideoContent(content.value, content.image),
             );
           } else if (content.type == 'AUDIO') {
-            return Container(
-              height: 200,
+            return Padding(
+              padding: const EdgeInsets.all(15.0),
               child: AudioContent(content.value),
             );
           } else if (content.type == 'CAMERA2') {

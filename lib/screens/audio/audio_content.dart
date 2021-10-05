@@ -84,13 +84,16 @@ class _AudioContentState extends State<AudioContent>
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     super.build(context);
     return SlideTransition(
         position: animation,
-        child: SafeArea(
-          child: Column(
+        child: Container(
+          color: Colors.white,
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               // Display play/pause button and volume/speed sliders.
               ControlButtons(_player),
@@ -100,38 +103,37 @@ class _AudioContentState extends State<AudioContent>
                 stream: _positionDataStream,
                 builder: (context, snapshot) {
                   final positionData = snapshot.data;
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Text(
-                                _printDuration(positionData?.position),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "/ " + _printDuration(positionData?.duration),
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ],
+                  return Expanded(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 50,
+                          child: Text(
+                            _printDuration(positionData?.position),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                      ),
-                      SeekBar(
-                        duration: positionData?.duration ?? Duration.zero,
-                        position: positionData?.position ?? Duration.zero,
-                        bufferedPosition:
-                            positionData?.bufferedPosition ?? Duration.zero,
-                        onChangeEnd: _player.seek,
-                      ),
-                    ],
+                        Text(
+                          "/ " + _printDuration(positionData?.duration),
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 0.5 * width,
+                          child: SeekBar(
+                            duration: positionData?.duration ?? Duration.zero,
+                            position: positionData?.position ?? Duration.zero,
+                            bufferedPosition:
+                                positionData?.bufferedPosition ?? Duration.zero,
+                            onChangeEnd: _player.seek,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),
@@ -176,37 +178,37 @@ class ControlButtons extends StatelessWidget {
                 processingState == ProcessingState.buffering) {
               return Container(
                 margin: EdgeInsets.all(8.0),
-                width: 34.0,
-                height: 34.0,
+                width: 24.0,
+                height: 24.0,
                 child: CircularProgressIndicator(
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               );
             } else if (playing != true) {
               return IconButton(
                 icon: Icon(
                   Icons.play_arrow,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
-                iconSize: 34.0,
+                iconSize: 24.0,
                 onPressed: player.play,
               );
             } else if (processingState != ProcessingState.completed) {
               return IconButton(
                 icon: Icon(
                   Icons.pause,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
-                iconSize: 34.0,
+                iconSize: 24.0,
                 onPressed: player.pause,
               );
             } else {
               return IconButton(
                 icon: Icon(
                   Icons.replay,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
-                iconSize: 34.0,
+                iconSize: 24.0,
                 onPressed: () => player.seek(Duration.zero),
               );
             }
