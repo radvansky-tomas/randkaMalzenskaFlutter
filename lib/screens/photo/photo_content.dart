@@ -24,7 +24,7 @@ class _CameraContentState extends State<CameraContent>
     super.initState();
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 1),
     );
     animation = Tween<Offset>(
       begin: Offset(-1.5, 0.0),

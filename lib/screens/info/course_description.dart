@@ -42,7 +42,7 @@ class _CourseDescriptionScreenState extends State<CourseDescriptionScreen> {
               body: SingleChildScrollView(
                 child: Column(
                   children: [
-                    WhiteHtml(snapshot.data!.intro),
+                    WhiteHtml(snapshot.data!.contentDescription),
                     Container(
                       height: 300,
                       child: VideoContent(snapshot.data!.videoCourse, null),

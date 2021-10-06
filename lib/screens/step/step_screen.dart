@@ -315,12 +315,13 @@ class AppBarStepList extends StatefulWidget {
 class _AppBarStepListState extends State<AppBarStepList> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     final String stepTitle = widget.steps.firstWhere(
         (element) => element.stepNumber == widget._stepNumber, orElse: () {
       return CourseStep(stepNumber: 0, stepName: 'Dzień', subSteps: []);
     }).stepName;
     return Container(
-      width: 120,
+      width: stepTitle.length < 12 ? 120 : 0.7 * width,
       height: 52,
       child: Theme(
           data: Theme.of(context).copyWith(

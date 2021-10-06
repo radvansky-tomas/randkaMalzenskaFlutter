@@ -28,7 +28,7 @@ class _VideoScreenState extends State<VideoContent>
     initializePlayer();
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 1),
     );
     animation = Tween<Offset>(
       begin: Offset(-1.5, 0.0),

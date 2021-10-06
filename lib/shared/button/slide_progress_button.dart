@@ -38,7 +38,7 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
     super.initState();
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 1),
     );
     animation = Tween<Offset>(
       begin: Offset(-1.5, 0.0),
@@ -71,8 +71,11 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
         child: GestureDetector(
           onTap: () {
             ConnectionService service = new ConnectionService();
-            if (widget._isDone) {
+            if (widget._isDone && !widget._isOnlySubStep) {
               Navigator.pop(context);
+            } else if (widget._isDone && widget._isOnlySubStep) {
+              _showDialog(
+                  'Hej!', 'Ukończyłeś dzień po raz kolejny :)', context);
             } else {
               if (!widget._isLastSubStep) {
                 service
@@ -101,7 +104,8 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
                       .whenComplete(() => {
                             widget._refreshStep(),
                             Navigator.pop(context),
-                            _showDialog('Ukończyłeś dzień', context)
+                            _showDialog('Zapraszamy jutro!', 'Ukończyłeś dzień',
+                                context)
                           });
                 }
               }
@@ -130,12 +134,12 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
         ));
   }
 
-  void _showDialog(String message, BuildContext context) {
+  void _showDialog(String title, String message, BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
           backgroundColor: Colors.grey[100],
-          title: Text('Zapraszamy jutro!',
+          title: Text(title,
               style: TextStyle(
                 color: Colors.black,
               )),
