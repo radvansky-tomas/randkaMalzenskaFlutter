@@ -103,37 +103,34 @@ class _AudioContentState extends State<AudioContent>
                 stream: _positionDataStream,
                 builder: (context, snapshot) {
                   final positionData = snapshot.data;
-                  return Expanded(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: 50,
-                          child: Text(
-                            _printDuration(positionData?.position),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Text(
-                          "/ " + _printDuration(positionData?.duration),
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        child: Text(
+                          _printDuration(positionData?.position),
                           style: TextStyle(
-                            color: Colors.black,
-                          ),
+                              color: Colors.black, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
-                          width: 0.5 * width,
-                          child: SeekBar(
-                            duration: positionData?.duration ?? Duration.zero,
-                            position: positionData?.position ?? Duration.zero,
-                            bufferedPosition:
-                                positionData?.bufferedPosition ?? Duration.zero,
-                            onChangeEnd: _player.seek,
-                          ),
+                      ),
+                      Text(
+                        "/ " + _printDuration(positionData?.duration),
+                        style: TextStyle(
+                          color: Colors.black,
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        width: 0.4 * width,
+                        child: SeekBar(
+                          duration: positionData?.duration ?? Duration.zero,
+                          position: positionData?.position ?? Duration.zero,
+                          bufferedPosition:
+                              positionData?.bufferedPosition ?? Duration.zero,
+                          onChangeEnd: _player.seek,
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
