@@ -66,12 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     value: _switchValue ?? false,
                     onChanged: (value) {
                       if (value == true) {
-                        int hour = int.parse(
-                            _dateTimeFormatted?.split(":")[0] ?? '10');
-                        int minutes =
-                            int.parse(_dateTimeFormatted?.split(":")[1] ?? '0');
-                        NotificationService()
-                            .scheduleDailyNotification(hour, minutes);
+                        _scheduleDailyNotification();
                       } else {
                         NotificationService().cancelAllNotifications();
                       }
@@ -101,8 +96,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         print('change $date in time zone ' +
                             date.timeZoneOffset.inHours.toString());
                       }, onConfirm: (date) {
-                        NotificationService()
-                            .scheduleDailyNotification(date.hour, date.minute);
+                        if (_switchValue ?? false) {
+                          NotificationService().cancelAllNotifications();
+                          NotificationService().scheduleDailyNotification(
+                              date.hour, date.minute);
+                        }
                         prefs.setString(PreferencesKey.notificationDate,
                             DateFormat('kk:mm').format(date));
                         setState(() {
@@ -128,6 +126,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         )
       ],
     );
+  }
+
+  void _scheduleDailyNotification() {
+    int hour = int.parse(_dateTimeFormatted?.split(":")[0] ?? '10');
+    int minutes = int.parse(_dateTimeFormatted?.split(":")[1] ?? '0');
+    NotificationService().scheduleDailyNotification(hour, minutes);
   }
 
   Future<void> _configureLocalTimeZone() async {
