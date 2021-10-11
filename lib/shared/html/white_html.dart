@@ -52,15 +52,42 @@ class _WhiteHtmlState extends State<WhiteHtml>
       child: Html(
         data: widget._data,
         style: {
-          'div': Style(color: Colors.white, fontFamily: 'MontserratNasze'),
-          'h1': Style(color: Colors.white, fontFamily: 'MontserratNasze'),
-          'h2': Style(color: Colors.white, fontFamily: 'MontserratNasze'),
-          'h3': Style(color: Colors.white, fontFamily: 'MontserratNasze'),
-          'h4': Style(color: Colors.white, fontFamily: 'MontserratNasze'),
-          'h5': Style(color: Colors.white, fontFamily: 'MontserratNasze'),
-          'p': Style(color: Colors.white, fontFamily: 'MontserratNasze'),
-          'ul': Style(color: Colors.white, fontFamily: 'MontserratNasze'),
-          'li': Style(color: Colors.white, fontFamily: 'MontserratNasze'),
+          'div': Style(
+              color: Colors.white,
+              fontFamily: 'MontserratNasze',
+              fontSize: FontSize.em(1)),
+          'h1': Style(
+              color: Colors.white,
+              fontFamily: 'MontserratNasze',
+              fontSize: FontSize.em(1.5)),
+          'h2': Style(
+              color: Colors.white,
+              fontFamily: 'MontserratNasze',
+              fontSize: FontSize.em(1.4)),
+          'h3': Style(
+              color: Colors.white,
+              fontFamily: 'MontserratNasze',
+              fontSize: FontSize.em(1.3)),
+          'h4': Style(
+              color: Colors.white,
+              fontFamily: 'MontserratNasze',
+              fontSize: FontSize.em(1.2)),
+          'h5': Style(
+              color: Colors.white,
+              fontFamily: 'MontserratNasze',
+              fontSize: FontSize.em(1.1)),
+          'p': Style(
+              color: Colors.white,
+              fontFamily: 'MontserratNasze',
+              fontSize: FontSize.em(1)),
+          'ul': Style(
+              color: Colors.white,
+              fontFamily: 'MontserratNasze',
+              fontSize: FontSize.em(1)),
+          'li': Style(
+              color: Colors.white,
+              fontFamily: 'MontserratNasze',
+              fontSize: FontSize.em(1)),
         },
       ),
     );
