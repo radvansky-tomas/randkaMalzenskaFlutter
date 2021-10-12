@@ -1,6 +1,10 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:subtitle_wrapper_package/data/models/style/subtitle_position.dart';
+import 'package:subtitle_wrapper_package/data/models/style/subtitle_style.dart';
+import 'package:subtitle_wrapper_package/subtitle_controller.dart';
+import 'package:subtitle_wrapper_package/subtitle_wrapper_package.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoContent extends StatefulWidget {
@@ -18,6 +22,10 @@ class _VideoScreenState extends State<VideoContent>
   late Chewie playerWidget;
   late Animation<Offset> animation;
   late AnimationController animationController;
+  final SubtitleController subtitleController = SubtitleController(
+    subtitleUrl: "https://rm2cms.x25.pl/assets/srt/MPiekara.pl_PL.srt",
+    subtitleType: SubtitleType.srt,
+  );
 
   @override
   bool get wantKeepAlive => true;
@@ -42,6 +50,8 @@ class _VideoScreenState extends State<VideoContent>
       animationController.forward();
     });
   }
+
+  // https://rm2cms.x25.pl/assets/srt/MPiekara.pl_PL.srt
 
   Future<void> initializePlayer() async {
     _controller = VideoPlayerController.network(widget._url);
@@ -79,6 +89,21 @@ class _VideoScreenState extends State<VideoContent>
     super.dispose();
   }
 
+  Widget subtitleWrapper() {
+    return SubTitleWrapper(
+      videoPlayerController: _controller,
+      subtitleController: subtitleController,
+      subtitleStyle: SubtitleStyle(
+        textColor: Colors.white,
+        hasBorder: true,
+        position: SubtitlePosition(top: 150),
+      ),
+      videoChild: Chewie(
+        controller: chewieController,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -86,9 +111,9 @@ class _VideoScreenState extends State<VideoContent>
         ? SlideTransition(
             position: animation,
             child: widget._image == null
-                ? Chewie(controller: chewieController)
+                ? subtitleWrapper()
                 : chewieController.isPlaying
-                    ? Chewie(controller: chewieController)
+                    ? subtitleWrapper()
                     : Stack(children: [
                         Align(
                           alignment: Alignment.center,
