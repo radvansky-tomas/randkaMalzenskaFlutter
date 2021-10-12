@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/screens/photo/photo_presentation_screen.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
+import 'package:randka_malzenska/shared/button/custom_icon_button.dart';
 
 class SlideProgressButton extends StatefulWidget {
   final bool _isDone;
@@ -68,8 +69,8 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
     super.build(context);
     return SlideTransition(
         position: animation,
-        child: GestureDetector(
-          onTap: () {
+        child: CustomIconButton(
+          callback: () {
             ConnectionService service = new ConnectionService();
             if (widget._isDone && !widget._isOnlySubStep) {
               Navigator.pop(context);
@@ -111,26 +112,9 @@ class _SlideProgressButtonState extends State<SlideProgressButton>
               }
             }
           },
-          child: Container(
-            color: Color.fromARGB(255, 21, 74, 118),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    widget._text,
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                  Icon(
-                    Icons.arrow_forward,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          color: Color.fromARGB(255, 21, 74, 118),
+          text: widget._text,
+          icon: Icons.arrow_forward,
         ));
   }
 

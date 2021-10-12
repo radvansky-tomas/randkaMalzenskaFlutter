@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:randka_malzenska/shared/button/custom_icon_button.dart';
 import 'dart:io';
 
 import 'package:randka_malzenska/shared/database_helpers.dart';
@@ -67,28 +68,11 @@ class _CameraContentState extends State<CameraContent>
                 : SizedBox(),
             Padding(
               padding: const EdgeInsets.only(bottom: 40, top: 20),
-              child: GestureDetector(
-                onTap: widget._callback,
-                child: Container(
-                  color: Color.fromARGB(255, 255, 0, 0),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Zrób zdjęcie",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        Icon(
-                          Icons.camera,
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+              child: CustomIconButton(
+                callback: widget._callback,
+                text: "ZRÓB ZDJĘCIE",
+                icon: Icons.camera,
+                color: Color.fromARGB(255, 21, 74, 118),
               ),
             )
           ],
