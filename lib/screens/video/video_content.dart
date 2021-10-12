@@ -67,7 +67,9 @@ class _VideoScreenState extends State<VideoContent>
       fullScreenByDefault: false,
       startAt: Duration(milliseconds: 50),
       autoInitialize: true,
+      showControls: true,
       showOptions: false,
+      customControls: customControls(),
       looping: false,
       autoPlay: false,
       errorBuilder: (context, errorMessage) {
@@ -89,18 +91,48 @@ class _VideoScreenState extends State<VideoContent>
     super.dispose();
   }
 
+  double leftSubtitlePosition = -1500;
+
   Widget subtitleWrapper() {
     return SubTitleWrapper(
       videoPlayerController: _controller,
       subtitleController: subtitleController,
       subtitleStyle: SubtitleStyle(
         textColor: Colors.white,
-        hasBorder: true,
-        position: SubtitlePosition(top: 150),
+        hasBorder: false,
+        position: SubtitlePosition(top: 120, left: leftSubtitlePosition),
       ),
       videoChild: Chewie(
         controller: chewieController,
       ),
+    );
+  }
+
+  Widget customControls() {
+    return Stack(
+      children: [
+        MaterialControls(),
+        Container(
+          alignment: Alignment.topRight,
+          padding: EdgeInsetsDirectional.only(top: 50, end: 15),
+          child: IconButton(
+            onPressed: () {
+              setState(() {
+                if (leftSubtitlePosition == 0) {
+                  leftSubtitlePosition = -1500;
+                } else {
+                  leftSubtitlePosition = 0;
+                }
+              });
+            },
+            icon: (Icon(
+              Icons.subtitles,
+              color: Colors.white,
+              size: 20,
+            )),
+          ),
+        )
+      ],
     );
   }
 
