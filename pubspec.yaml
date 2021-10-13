@@ -48,7 +48,7 @@ dependencies:
   cached_network_image: ^3.1.0
   flutter_native_splash: ^1.2.3
   google_fonts: ^2.1.0
-  subtitle_wrapper_package: ^2.0.1
+  better_player: ^0.0.76
   flutter:
     sdk: flutter
 

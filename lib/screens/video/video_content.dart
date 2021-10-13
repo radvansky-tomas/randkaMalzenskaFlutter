@@ -1,10 +1,7 @@
+import 'package:better_player/better_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:subtitle_wrapper_package/data/models/style/subtitle_position.dart';
-import 'package:subtitle_wrapper_package/data/models/style/subtitle_style.dart';
-import 'package:subtitle_wrapper_package/subtitle_controller.dart';
-import 'package:subtitle_wrapper_package/subtitle_wrapper_package.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoContent extends StatefulWidget {
@@ -22,16 +19,34 @@ class _VideoScreenState extends State<VideoContent>
   late Chewie playerWidget;
   late Animation<Offset> animation;
   late AnimationController animationController;
-  final SubtitleController subtitleController = SubtitleController(
-    subtitleUrl: "https://rm2cms.x25.pl/assets/srt/MPiekara.pl_PL.srt",
-    subtitleType: SubtitleType.srt,
-  );
+  late BetterPlayerController _betterPlayerController;
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
+    BetterPlayerConfiguration betterPlayerConfiguration =
+        BetterPlayerConfiguration(
+      aspectRatio: 16 / 9,
+      fit: BoxFit.contain,
+      subtitlesConfiguration: BetterPlayerSubtitlesConfiguration(
+        backgroundColor: Colors.green,
+        fontColor: Colors.white,
+        outlineColor: Colors.black,
+        fontSize: 20,
+      ),
+    );
+
+    _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
+    _betterPlayerController.addEventsListener((event) {
+      if (event.betterPlayerEventType == BetterPlayerEventType.progress) {
+        print("Current subtitle line: " +
+            _betterPlayerController.renderedSubtitle.toString());
+      }
+    });
+    _setupDataSource();
+
     super.initState();
     initializePlayer();
     animationController = AnimationController(
@@ -49,6 +64,20 @@ class _VideoScreenState extends State<VideoContent>
     Future<void>.delayed(Duration(seconds: 1), () {
       animationController.forward();
     });
+  }
+
+  void _setupDataSource() async {
+    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      widget._url,
+      subtitles: BetterPlayerSubtitlesSource.single(
+        type: BetterPlayerSubtitlesSourceType.network,
+        url: "https://rm2cms.x25.pl/assets/srt/MPiekara.pl_PL.srt",
+        name: "My subtitles",
+        selectedByDefault: true,
+      ),
+    );
+    _betterPlayerController.setupDataSource(dataSource);
   }
 
   // https://rm2cms.x25.pl/assets/srt/MPiekara.pl_PL.srt
@@ -93,21 +122,6 @@ class _VideoScreenState extends State<VideoContent>
 
   double leftSubtitlePosition = -1500;
 
-  Widget subtitleWrapper() {
-    return SubTitleWrapper(
-      videoPlayerController: _controller,
-      subtitleController: subtitleController,
-      subtitleStyle: SubtitleStyle(
-        textColor: Colors.white,
-        hasBorder: false,
-        position: SubtitlePosition(top: 120, left: leftSubtitlePosition),
-      ),
-      videoChild: Chewie(
-        controller: chewieController,
-      ),
-    );
-  }
-
   Widget customControls() {
     return Stack(
       children: [
@@ -143,9 +157,9 @@ class _VideoScreenState extends State<VideoContent>
         ? SlideTransition(
             position: animation,
             child: widget._image == null
-                ? subtitleWrapper()
+                ? BetterPlayer(controller: _betterPlayerController)
                 : chewieController.isPlaying
-                    ? subtitleWrapper()
+                    ? BetterPlayer(controller: _betterPlayerController)
                     : Stack(children: [
                         Align(
                           alignment: Alignment.center,
