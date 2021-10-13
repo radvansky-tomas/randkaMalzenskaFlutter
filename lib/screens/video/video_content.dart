@@ -1,8 +1,6 @@
 import 'package:better_player/better_player.dart';
-import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 class VideoContent extends StatefulWidget {
   final String _url;
@@ -14,9 +12,6 @@ class VideoContent extends StatefulWidget {
 
 class _VideoScreenState extends State<VideoContent>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
-  late VideoPlayerController _controller;
-  late ChewieController chewieController;
-  late Chewie playerWidget;
   late Animation<Offset> animation;
   late AnimationController animationController;
   late BetterPlayerController _betterPlayerController;
@@ -29,12 +24,16 @@ class _VideoScreenState extends State<VideoContent>
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
       aspectRatio: 16 / 9,
+      controlsConfiguration: BetterPlayerControlsConfiguration(
+          enablePlaybackSpeed: false,
+          enableQualities: false,
+          enableAudioTracks: false),
       fit: BoxFit.contain,
       subtitlesConfiguration: BetterPlayerSubtitlesConfiguration(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.black,
         fontColor: Colors.white,
         outlineColor: Colors.black,
-        fontSize: 20,
+        fontSize: 16,
       ),
     );
 
@@ -48,7 +47,6 @@ class _VideoScreenState extends State<VideoContent>
     _setupDataSource();
 
     super.initState();
-    initializePlayer();
     animationController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1),
@@ -73,8 +71,8 @@ class _VideoScreenState extends State<VideoContent>
       subtitles: BetterPlayerSubtitlesSource.single(
         type: BetterPlayerSubtitlesSourceType.network,
         url: "https://rm2cms.x25.pl/assets/srt/MPiekara.pl_PL.srt",
-        name: "My subtitles",
-        selectedByDefault: true,
+        name: "Polskie napisy",
+        selectedByDefault: false,
       ),
     );
     _betterPlayerController.setupDataSource(dataSource);
@@ -82,116 +80,52 @@ class _VideoScreenState extends State<VideoContent>
 
   // https://rm2cms.x25.pl/assets/srt/MPiekara.pl_PL.srt
 
-  Future<void> initializePlayer() async {
-    _controller = VideoPlayerController.network(widget._url);
-    await Future.wait([_controller.initialize()]);
-    _createChewieController();
-    setState(() {});
-  }
-
-  void _createChewieController() {
-    chewieController = ChewieController(
-      videoPlayerController: _controller,
-      allowFullScreen: true,
-      fullScreenByDefault: false,
-      startAt: Duration(milliseconds: 50),
-      autoInitialize: true,
-      showControls: true,
-      showOptions: false,
-      customControls: customControls(),
-      looping: false,
-      autoPlay: false,
-      errorBuilder: (context, errorMessage) {
-        return Center(
-          child: Text(
-            errorMessage,
-            style: TextStyle(color: Colors.white),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   void dispose() {
-    _controller.dispose();
     animationController.dispose();
-    chewieController.dispose();
     super.dispose();
-  }
-
-  double leftSubtitlePosition = -1500;
-
-  Widget customControls() {
-    return Stack(
-      children: [
-        MaterialControls(),
-        Container(
-          alignment: Alignment.topRight,
-          padding: EdgeInsetsDirectional.only(top: 50, end: 15),
-          child: IconButton(
-            onPressed: () {
-              setState(() {
-                if (leftSubtitlePosition == 0) {
-                  leftSubtitlePosition = -1500;
-                } else {
-                  leftSubtitlePosition = 0;
-                }
-              });
-            },
-            icon: (Icon(
-              Icons.subtitles,
-              color: Colors.white,
-              size: 20,
-            )),
-          ),
-        )
-      ],
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return _controller.value.isInitialized
-        ? SlideTransition(
-            position: animation,
-            child: widget._image == null
-                ? BetterPlayer(controller: _betterPlayerController)
-                : chewieController.isPlaying
-                    ? BetterPlayer(controller: _betterPlayerController)
-                    : Stack(children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: Image.network(widget._image!),
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: ClipOval(
-                            child: Material(
-                              color: Colors.black.withOpacity(0.65),
-                              child: InkWell(
-                                splashColor: Colors.white, // Splash color
-                                onTap: () {
-                                  chewieController.play();
-                                  setState(() {});
-                                },
-                                child: Container(
-                                  child: SizedBox(
-                                      width: 65,
-                                      height: 65,
-                                      child: Icon(
-                                        Icons.play_arrow,
-                                        size: 34.0,
-                                        color: Colors.white,
-                                      )),
-                                ),
-                              ),
-                            ),
+    return SlideTransition(
+      position: animation,
+      child: widget._image == null
+          ? BetterPlayer(controller: _betterPlayerController)
+          : _betterPlayerController.isPlaying() ?? false
+              ? BetterPlayer(controller: _betterPlayerController)
+              : Stack(children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.network(widget._image!),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: ClipOval(
+                      child: Material(
+                        color: Colors.black.withOpacity(0.65),
+                        child: InkWell(
+                          splashColor: Colors.white, // Splash color
+                          onTap: () {
+                            _betterPlayerController.play();
+                            setState(() {});
+                          },
+                          child: Container(
+                            child: SizedBox(
+                                width: 65,
+                                height: 65,
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  size: 34.0,
+                                  color: Colors.white,
+                                )),
                           ),
-                        )
-                      ]),
-          )
-        : Container();
+                        ),
+                      ),
+                    ),
+                  )
+                ]),
+    );
   }
 }
