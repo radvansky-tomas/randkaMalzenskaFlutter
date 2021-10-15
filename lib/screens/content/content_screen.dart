@@ -187,7 +187,8 @@ Widget contentBody(
           } else if (content.type == 'VIDEO') {
             return Container(
               height: 300,
-              child: VideoContent(content.value, content.image),
+              child: VideoContent(
+                  content.value, content.image, content.videoSubtitle),
             );
           } else if (content.type == 'AUDIO') {
             return Padding(

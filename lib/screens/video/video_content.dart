@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 class VideoContent extends StatefulWidget {
   final String _url;
   final String? _image;
-  VideoContent(this._url, this._image);
+  final String? _subtitleUrl;
+  VideoContent(this._url, this._image, this._subtitleUrl);
   @override
   _VideoScreenState createState() => _VideoScreenState();
 }
@@ -25,6 +26,7 @@ class _VideoScreenState extends State<VideoContent>
         BetterPlayerConfiguration(
       aspectRatio: 16 / 9,
       controlsConfiguration: BetterPlayerControlsConfiguration(
+          enableOverflowMenu: widget._subtitleUrl != null,
           enablePlaybackSpeed: false,
           enableQualities: false,
           enableAudioTracks: false),
@@ -65,17 +67,25 @@ class _VideoScreenState extends State<VideoContent>
   }
 
   void _setupDataSource() async {
-    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-      widget._url,
-      subtitles: BetterPlayerSubtitlesSource.single(
-        type: BetterPlayerSubtitlesSourceType.network,
-        url: "https://rm2cms.x25.pl/assets/srt/MPiekara.pl_PL.srt",
-        name: "Polskie napisy",
-        selectedByDefault: false,
-      ),
-    );
-    _betterPlayerController.setupDataSource(dataSource);
+    if (widget._subtitleUrl != null) {
+      BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.network,
+        widget._url,
+        subtitles: BetterPlayerSubtitlesSource.single(
+          type: BetterPlayerSubtitlesSourceType.network,
+          url: widget._subtitleUrl,
+          name: "Polskie napisy",
+          selectedByDefault: false,
+        ),
+      );
+      _betterPlayerController.setupDataSource(dataSource);
+    } else {
+      BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.network,
+        widget._url,
+      );
+      _betterPlayerController.setupDataSource(dataSource);
+    }
   }
 
   // https://rm2cms.x25.pl/assets/srt/MPiekara.pl_PL.srt
