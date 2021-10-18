@@ -2,16 +2,16 @@ import 'package:better_player/better_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class VideoContent extends StatefulWidget {
+class VideoContentWithConfig extends StatefulWidget {
   final String _url;
   final String? _image;
   final String? _subtitleUrl;
-  VideoContent(this._url, this._image, this._subtitleUrl);
+  VideoContentWithConfig(this._url, this._image, this._subtitleUrl);
   @override
   _VideoScreenState createState() => _VideoScreenState();
 }
 
-class _VideoScreenState extends State<VideoContent>
+class _VideoScreenState extends State<VideoContentWithConfig>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   late Animation<Offset> animation;
   late AnimationController animationController;
