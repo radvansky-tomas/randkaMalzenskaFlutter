@@ -18,7 +18,7 @@ class _VideoScreenState extends State<VideoContent>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   late Animation<Offset> animation;
   late AnimationController animationController;
-  late BetterPlayerController _betterPlayerController;
+  BetterPlayerController? _betterPlayerController;
 
   @override
   bool get wantKeepAlive => true;
@@ -56,12 +56,6 @@ class _VideoScreenState extends State<VideoContent>
     );
 
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
-    _betterPlayerController.addEventsListener((event) {
-      if (event.betterPlayerEventType == BetterPlayerEventType.progress) {
-        print("Current subtitle line: " +
-            _betterPlayerController.renderedSubtitle.toString());
-      }
-    });
     _setupDataSource();
 
     animationController = AnimationController(
@@ -94,13 +88,13 @@ class _VideoScreenState extends State<VideoContent>
           selectedByDefault: widget._enableSubtitlesByDefault,
         ),
       );
-      _betterPlayerController.setupDataSource(dataSource);
+      _betterPlayerController?.setupDataSource(dataSource);
     } else {
       BetterPlayerDataSource dataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.network,
         widget._url,
       );
-      _betterPlayerController.setupDataSource(dataSource);
+      _betterPlayerController?.setupDataSource(dataSource);
     }
   }
 
@@ -109,7 +103,7 @@ class _VideoScreenState extends State<VideoContent>
   @override
   void dispose() {
     animationController.dispose();
-    _betterPlayerController.dispose(forceDispose: true);
+    _betterPlayerController?.dispose(forceDispose: true);
     super.dispose();
   }
 
@@ -118,41 +112,43 @@ class _VideoScreenState extends State<VideoContent>
     super.build(context);
     return SlideTransition(
       position: animation,
-      child: widget._image == null
-          ? BetterPlayer(controller: _betterPlayerController)
-          : _betterPlayerController.isPlaying() ?? false
-              ? BetterPlayer(controller: _betterPlayerController)
-              : Stack(children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Image.network(widget._image!),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: ClipOval(
-                      child: Material(
-                        color: Colors.black.withOpacity(0.65),
-                        child: InkWell(
-                          splashColor: Colors.white, // Splash color
-                          onTap: () {
-                            _betterPlayerController.play();
-                            setState(() {});
-                          },
-                          child: Container(
-                            child: SizedBox(
-                                width: 65,
-                                height: 65,
-                                child: Icon(
-                                  Icons.play_arrow,
-                                  size: 34.0,
-                                  color: Colors.white,
-                                )),
+      child: _betterPlayerController == null
+          ? Container()
+          : widget._image == null
+              ? BetterPlayer(controller: _betterPlayerController!)
+              : _betterPlayerController?.isPlaying() ?? false
+                  ? BetterPlayer(controller: _betterPlayerController!)
+                  : Stack(children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Image.network(widget._image!),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ClipOval(
+                          child: Material(
+                            color: Colors.black.withOpacity(0.65),
+                            child: InkWell(
+                              splashColor: Colors.white, // Splash color
+                              onTap: () {
+                                _betterPlayerController?.play();
+                                setState(() {});
+                              },
+                              child: Container(
+                                child: SizedBox(
+                                    width: 65,
+                                    height: 65,
+                                    child: Icon(
+                                      Icons.play_arrow,
+                                      size: 34.0,
+                                      color: Colors.white,
+                                    )),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  )
-                ]),
+                      )
+                    ]),
     );
   }
 }
