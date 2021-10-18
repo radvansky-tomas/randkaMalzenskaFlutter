@@ -188,7 +188,10 @@ Widget contentBody(
             return Container(
               height: 300,
               child: VideoContent(
-                  content.value, content.image, content.videoSubtitle),
+                  content.value,
+                  content.image,
+                  content.videoSubtitle,
+                  prefs.getBool(PreferencesKey.subtitlesEnabled)),
             );
           } else if (content.type == 'AUDIO') {
             return Padding(

@@ -6,4 +6,5 @@ class PreferencesKey {
   static const String notificationDate = 'notificationDate';
   static const String numberOfSteps = 'numberOfSteps';
   static const String notificationEnabled = 'notificationEnabled';
+  static const String subtitlesEnabled = 'subtitlesEnabled';
 }

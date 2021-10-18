@@ -1,12 +1,15 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class VideoContent extends StatefulWidget {
   final String _url;
   final String? _image;
   final String? _subtitleUrl;
-  VideoContent(this._url, this._image, this._subtitleUrl);
+  final bool? _enableSubtitlesByDefault;
+  VideoContent(this._url, this._image, this._subtitleUrl,
+      this._enableSubtitlesByDefault);
   @override
   _VideoScreenState createState() => _VideoScreenState();
 }
@@ -23,10 +26,21 @@ class _VideoScreenState extends State<VideoContent>
   @override
   void initState() {
     super.initState();
+
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
       aspectRatio: 16 / 9,
       autoDispose: false,
+      deviceOrientationsOnFullScreen: [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight
+      ],
+      deviceOrientationsAfterFullScreen: [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight
+      ],
       controlsConfiguration: BetterPlayerControlsConfiguration(
           enableOverflowMenu: widget._subtitleUrl != null,
           enablePlaybackSpeed: false,
@@ -49,6 +63,7 @@ class _VideoScreenState extends State<VideoContent>
       }
     });
     _setupDataSource();
+
     animationController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1),
@@ -67,7 +82,8 @@ class _VideoScreenState extends State<VideoContent>
   }
 
   void _setupDataSource() async {
-    if (widget._subtitleUrl != null) {
+    if (widget._subtitleUrl != null &&
+        widget._enableSubtitlesByDefault != null) {
       BetterPlayerDataSource dataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.network,
         widget._url,
@@ -75,7 +91,7 @@ class _VideoScreenState extends State<VideoContent>
           type: BetterPlayerSubtitlesSourceType.network,
           url: widget._subtitleUrl,
           name: "Polskie napisy",
-          selectedByDefault: false,
+          selectedByDefault: widget._enableSubtitlesByDefault,
         ),
       );
       _betterPlayerController.setupDataSource(dataSource);

@@ -53,8 +53,8 @@ class _InfoScreenState extends State<InfoScreen> {
                     WhiteHtml(snapshot.data!.intro),
                     Container(
                       height: 300,
-                      child:
-                          VideoContent(snapshot.data!.videoIntro, null, null),
+                      child: VideoContent(
+                          snapshot.data!.videoIntro, null, null, null),
                     )
                   ],
                 ),

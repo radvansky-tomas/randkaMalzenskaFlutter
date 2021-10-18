@@ -45,8 +45,8 @@ class _CourseDescriptionScreenState extends State<CourseDescriptionScreen> {
                     WhiteHtml(snapshot.data!.contentDescription),
                     Container(
                       height: 300,
-                      child:
-                          VideoContent(snapshot.data!.videoCourse, null, null),
+                      child: VideoContent(
+                          snapshot.data!.videoCourse, null, null, null),
                     )
                   ],
                 ),

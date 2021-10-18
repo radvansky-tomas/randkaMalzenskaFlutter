@@ -22,12 +22,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late SharedPreferences prefs;
   String? _dateTimeFormatted;
   bool? _switchValue;
+  bool? _subtitlesSwitchValue;
   String defaultHour = '10:00';
 
   _initializePreferences() async {
     prefs = await SharedPreferences.getInstance();
     _dateTimeFormatted = prefs.getString(PreferencesKey.notificationDate);
     _switchValue = prefs.getBool(PreferencesKey.notificationEnabled);
+    _subtitlesSwitchValue = prefs.getBool(PreferencesKey.subtitlesEnabled);
   }
 
   @override
@@ -116,7 +118,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                 ],
-              )
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Napisy w filmach',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  CupertinoSwitch(
+                    value: _subtitlesSwitchValue ?? false,
+                    onChanged: (value) {
+                      setState(() {
+                        _subtitlesSwitchValue = value;
+                        prefs.setBool(PreferencesKey.subtitlesEnabled, value);
+                      });
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
         ),
