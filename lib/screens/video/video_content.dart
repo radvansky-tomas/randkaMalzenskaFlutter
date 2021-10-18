@@ -22,9 +22,11 @@ class _VideoScreenState extends State<VideoContent>
 
   @override
   void initState() {
+    super.initState();
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
       aspectRatio: 16 / 9,
+      autoDispose: false,
       controlsConfiguration: BetterPlayerControlsConfiguration(
           enableOverflowMenu: widget._subtitleUrl != null,
           enablePlaybackSpeed: false,
@@ -47,8 +49,6 @@ class _VideoScreenState extends State<VideoContent>
       }
     });
     _setupDataSource();
-
-    super.initState();
     animationController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1),
