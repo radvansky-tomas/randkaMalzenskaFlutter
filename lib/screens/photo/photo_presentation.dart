@@ -13,25 +13,29 @@ class PhotoPresentation extends StatefulWidget {
   _PhotoPresentationState createState() => _PhotoPresentationState();
 }
 
-class _PhotoPresentationState extends State<PhotoPresentation> {
+class _PhotoPresentationState extends State<PhotoPresentation>
+    with TickerProviderStateMixin {
   int _pos = 0;
   Timer? _timer;
   List<Image> images = [];
-
   AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     _timer = Timer.periodic(new Duration(seconds: 4), (timer) {
       setState(() {
-        _pos = (_pos + 1) % widget.photos.length;
+        _pos = (_pos + 1) % 4;
+        // _myAnimatedWidget = _myAnimatedWidget2;
+        // widget.photos.length;
       });
     });
     widget.photos.forEach((element) {
       if (element.value != null) {
-        images.add(Image.network(element.value!));
+        // images.add(Image.network(element.value!));
       } else {
-        images.add(Image.file(File(element.localPath!)));
+        images.add(Image.file(
+          File(element.localPath!),
+        ));
       }
     });
     super.initState();
@@ -47,11 +51,14 @@ class _PhotoPresentationState extends State<PhotoPresentation> {
 
   @override
   Widget build(BuildContext context) {
-    if(audioPlayer.state!=PlayerState.PLAYING){
-      audioPlayer
-        .play('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+    if (audioPlayer.state != PlayerState.PLAYING) {
+      audioPlayer.play(
+          'https://rm2cms.x25.pl/assets/audio/podklad_do_pokazu_zdjec.mp3');
     }
-    return images[_pos];
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 1000),
+      child: Image(key: ValueKey<int>(_pos), image: images[_pos].image),
+    );
   }
 
   @override

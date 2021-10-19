@@ -5,6 +5,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
+import 'package:randka_malzenska/screens/photo/photo_presentation_screen.dart';
 import 'package:randka_malzenska/screens/step/drawer/step_drawer.dart';
 import 'package:randka_malzenska/services/notification/notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -140,6 +141,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return PhotoPresentationScreen(widget._user);
+                        },
+                      ),
+                    );
+                  },
+                  child: Text("ODBIERZ NAGRODE",
+                      style: TextStyle(
+                        color: Colors.white,
+                      )))
             ],
           ),
         ),
