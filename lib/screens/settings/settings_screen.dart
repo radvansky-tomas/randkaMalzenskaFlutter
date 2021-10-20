@@ -140,22 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                 ],
-              ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return PhotoPresentationScreen(widget._user);
-                        },
-                      ),
-                    );
-                  },
-                  child: Text("ODBIERZ NAGRODE",
-                      style: TextStyle(
-                        color: Colors.white,
-                      )))
+              )
             ],
           ),
         ),

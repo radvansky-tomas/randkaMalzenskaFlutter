@@ -24,14 +24,12 @@ class _PhotoPresentationState extends State<PhotoPresentation>
   void initState() {
     _timer = Timer.periodic(new Duration(seconds: 4), (timer) {
       setState(() {
-        _pos = (_pos + 1) % 4;
-        // _myAnimatedWidget = _myAnimatedWidget2;
-        // widget.photos.length;
+        _pos = (_pos + 1) % widget.photos.length;
       });
     });
     widget.photos.forEach((element) {
       if (element.value != null) {
-        // images.add(Image.network(element.value!));
+        images.add(Image.network(element.value!));
       } else {
         images.add(Image.file(
           File(element.localPath!),
