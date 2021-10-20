@@ -9,6 +9,8 @@ import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/blog/blog_screen.dart';
 import 'package:randka_malzenska/screens/info/info_screen.dart';
+import 'package:randka_malzenska/screens/news/NewsFeedScreen.dart';
+import 'package:randka_malzenska/screens/news/NewsHomeScreen.dart';
 import 'package:randka_malzenska/screens/note/note_screen.dart';
 import 'package:randka_malzenska/screens/settings/settings_screen.dart';
 import 'package:randka_malzenska/screens/step/drawer/drawer_element.dart';
@@ -52,7 +54,7 @@ class _StepDrawerState extends State<StepDrawer> {
     highlited[widget._index] = true;
     widgets = [
       StepCourseScreen(widget._user),
-      BlogScreen(widget._user),
+      NewsHomeScreen(widget._user),
       SettingsScreen(widget._user),
       InfoScreen(widget._user),
       NoteScreen(widget._user)
