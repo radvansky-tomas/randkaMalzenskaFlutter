@@ -5,7 +5,7 @@ class Blog {
   final String? author;
   final String image;
   final bool? active;
-  final String? createdDate;
+  final String createdDate;
 
   Blog({
     required this.title,
@@ -14,7 +14,7 @@ class Blog {
     this.author,
     required this.image,
     this.active,
-    this.createdDate,
+    required this.createdDate,
   });
 
   factory Blog.fromJson(Map<String, dynamic> json) {

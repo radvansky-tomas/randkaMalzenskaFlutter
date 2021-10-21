@@ -42,8 +42,8 @@ class _ImageButtonWithTextState extends State<ImageButtonWithText>
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   @override

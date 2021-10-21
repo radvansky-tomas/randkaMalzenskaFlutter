@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +68,8 @@ class _NewsHomeScreenState extends State<NewsHomeScreen> {
                   )),
             );
           } else if (snapshot.hasError) {
+            log('WYSTAPIL BLAD PRZY RENDEROWANIU BLOGA: ' +
+                snapshot.error.toString());
             return Scaffold(
               backgroundColor: Colors.black,
               drawer: Theme(
@@ -183,7 +187,7 @@ class _NewsHomeScreenState extends State<NewsHomeScreen> {
                         ),
                         Expanded(child: Container()),
                         Text(
-                          blog.createdDate ?? "01.10.2021",
+                          blog.createdDate.substring(0, 10),
                           style: TextStyle(
                             color: themeData.colorScheme.onBackground,
                             fontWeight: FontWeight.w600,
@@ -254,8 +258,7 @@ class _NewsHomeScreenState extends State<NewsHomeScreen> {
                           width: MySize.size8,
                         ),
                         Text(
-                          "10.01.2021",
-                          // blog.createdDate ?? "10.01.2021",
+                          blog.createdDate.substring(0, 10),
                           style: TextStyle(
                             color: themeData.colorScheme.onBackground,
                             letterSpacing: 0,
