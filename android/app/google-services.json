@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "888881379595-igg5e2sk3olsi4mjjpj8ebcbtil108b8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dk.randka_malzenska2",
+            "certificate_hash": "a1acf1b0fb2f0dbf4895dfdefd1f18b0e2276bf8"
+          }
+        },
+        {
           "client_id": "888881379595-l0qqqpd5rjhsg5h9oe9g4s8gb68j8v0l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
