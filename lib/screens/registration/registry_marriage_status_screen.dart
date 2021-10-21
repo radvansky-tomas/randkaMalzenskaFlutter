@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/models/user_attributes.dart';
 import 'package:randka_malzenska/screens/step/step_course_screen.dart';
-import 'package:randka_malzenska/screens/step/step_screen.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,30 +24,31 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
   @override
   void initState() {
     super.initState();
-    service
-        .getUserSteps(widget.user.uid)
-        .then((value) => {
-              if (value != null && value.length > 0)
-                {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return StepCourseScreen(widget.user);
-                      },
-                    ),
-                  )
-                }
-              else
-                {
-                  setState(() {
-                    _showContent = true;
-                  })
-                }
-            })
-        .onError((error, stackTrace) => {
-              // moze powrot do ekranu logowania z informacja
-            });
+    try {
+      service.getUserSteps(widget.user.uid).then((value) => {
+            if (value != null && value.length > 0)
+              {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return StepCourseScreen(widget.user);
+                    },
+                  ),
+                )
+              }
+            else
+              {
+                setState(() {
+                  _showContent = true;
+                })
+              }
+          });
+    } catch (error) {
+      log("Błąd przy pobieraniu krokow uzytkownika:" + error.toString());
+      _showError();
+    }
+
     _initializePreferences().whenComplete(() {
       setState(() {});
     });
@@ -123,32 +125,39 @@ class _RegistryStatusScreenState extends State<RegistryStatusScreen> {
     attributes.add(text);
     String userSex = prefs.getString(PreferencesKey.userSex) ?? '';
     attributes.add(userSex);
-    service
-        .registerUser(user.email!, user.uid, attributes)
-        .then((isSuccess) => {
-              if (isSuccess)
-                {
-                  prefs.setString(
-                      user.uid + PreferencesKey.userRelationshipStatus, text),
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        //always start on first day after registration
-                        return StepCourseScreen(user);
-                      },
-                    ),
-                  )
-                }
-              else
-                {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                    'Coś poszło nie tak : (',
-                    style: TextStyle(color: Colors.white),
-                  )))
-                }
-            });
+    try {
+      service
+          .registerUser(user.email!, user.uid, attributes)
+          .then((isSuccess) => {
+                if (isSuccess)
+                  {
+                    prefs.setString(
+                        user.uid + PreferencesKey.userRelationshipStatus, text),
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          //always start on first day after registration
+                          return StepCourseScreen(user);
+                        },
+                      ),
+                    )
+                  }
+                else
+                  {_showError()}
+              });
+    } catch (error) {
+      log("Błąd przy rejestracji uzytkownika:" + error.toString());
+      _showError();
+    }
+  }
+
+  void _showError() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+      'Coś poszło nie tak : (',
+      style: TextStyle(color: Colors.white),
+    )));
   }
 }
 
