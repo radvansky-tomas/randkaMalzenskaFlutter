@@ -147,7 +147,7 @@ class ConnectionService {
 
   Future<List<Blog>?> getBlogs() async {
     final response = await http.get(
-      Uri.parse('$baseAddress/blogs'),
+      Uri.parse('$baseAddress/blogs/blogi'),
       headers: requestHeaders,
     );
     if (response.statusCode == 200) {

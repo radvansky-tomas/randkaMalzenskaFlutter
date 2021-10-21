@@ -25,7 +25,7 @@ class Blog {
       author: json['author'],
       image: json['image'],
       active: json['active'],
-      createdDate: json['created_at'],
+      createdDate: json['created'],
     );
   }
 }

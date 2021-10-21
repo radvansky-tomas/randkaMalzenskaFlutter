@@ -137,8 +137,7 @@ class _SingleNewsScreenState extends State<SingleNewsScreen> {
                                           ),
                                           Expanded(child: Container()),
                                           Text(
-                                            widget._blog.createdDate
-                                                .substring(0, 10),
+                                            widget._blog.createdDate,
                                             style: TextStyle(
                                               color: themeData
                                                   .colorScheme.onBackground,

@@ -187,7 +187,7 @@ class _NewsHomeScreenState extends State<NewsHomeScreen> {
                         ),
                         Expanded(child: Container()),
                         Text(
-                          blog.createdDate.substring(0, 10),
+                          blog.createdDate,
                           style: TextStyle(
                             color: themeData.colorScheme.onBackground,
                             fontWeight: FontWeight.w600,
@@ -258,7 +258,7 @@ class _NewsHomeScreenState extends State<NewsHomeScreen> {
                           width: MySize.size8,
                         ),
                         Text(
-                          blog.createdDate.substring(0, 10),
+                          blog.createdDate,
                           style: TextStyle(
                             color: themeData.colorScheme.onBackground,
                             letterSpacing: 0,
