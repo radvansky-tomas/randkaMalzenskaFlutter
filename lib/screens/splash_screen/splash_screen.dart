@@ -37,9 +37,17 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.fastLinearToSlowEaseIn,
     ));
 
+    _initializePreferences().whenComplete(() {
+      setState(() {});
+    });
+
     Future<void>.delayed(Duration(milliseconds: 500), () {
       animationController.forward();
     });
+  }
+
+  _initializePreferences() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override
@@ -50,8 +58,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<User?> getUser() async {
     var authBloc = Provider.of<Auth>(context, listen: false);
-    prefs = await SharedPreferences.getInstance();
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 2));
     return authBloc.currentUser.first;
   }
 
@@ -83,8 +90,11 @@ class _SplashScreenState extends State<SplashScreen>
           bool introWatched =
               prefs.getBool(PreferencesKey.introWatched) ?? false;
           User? user = snapshot.data;
+          String relationShipStatus = prefs.getString(
+                  user?.uid ?? '123' + PreferencesKey.userRelationshipStatus) ??
+              '';
           return MaterialApp(
-            home: user != null
+            home: user != null && relationShipStatus != ''
                 ? StepCourseScreen(user)
                 : introWatched
                     ? AuthScreen()

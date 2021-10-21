@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:randka_malzenska/models/preferences_key.dart';
 import 'package:randka_malzenska/models/user_attributes.dart';
+import 'package:randka_malzenska/screens/splash_screen/splash_screen.dart';
 import 'package:randka_malzenska/screens/step/step_course_screen.dart';
 import 'package:randka_malzenska/services/rest/connection_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:randka_malzenska/providers/auth.dart';
 import 'package:randka_malzenska/screens/auth_screen.dart';
+import 'package:randka_malzenska/screens/splash_screen/splash_screen.dart';
 import 'package:randka_malzenska/services/notification/notification_service.dart';
 
 void main() async {
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
                 Theme.of(context).textTheme,
               ),
             ),
-            home: AuthScreen()),
+            home: SplashScreen()),
       ),
     );
   }
