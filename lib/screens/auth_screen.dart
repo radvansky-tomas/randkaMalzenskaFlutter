@@ -43,19 +43,19 @@ class _AuthCardState extends State<AuthCard> {
   void initState() {
     super.initState();
     var authBloc = Provider.of<Auth>(context, listen: false);
-    _initializePreferences().whenComplete(() {
-      setState(() {});
-    });
+
     loginStateSubscription = authBloc.currentUser.listen((user) {
       if (user != null) {
-        String userRelationshipStatus =
-            prefs.getString(user.uid + PreferencesKey.userRelationshipStatus) ??
-                '';
+        _initializePreferences().whenComplete(() {
+          String userRelationshipStatus = prefs.getString(
+                  user.uid + PreferencesKey.userRelationshipStatus) ??
+              '';
 
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => userRelationshipStatus == ''
-                ? RegistryStatusScreen(user)
-                : StepCourseScreen(user)));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => userRelationshipStatus == ''
+                  ? RegistryStatusScreen(user)
+                  : StepCourseScreen(user)));
+        });
       }
     });
   }

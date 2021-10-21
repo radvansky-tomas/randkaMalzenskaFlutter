@@ -44,24 +44,11 @@ class _StepCourseScreenState extends State<StepCourseScreen> {
             Course course = snapshot.data!;
             if (course.ready == 1) {
               prefs.setInt(PreferencesKey.numberOfSteps, course.totalSteps);
-              return MaterialApp(
-                  theme: ThemeData(
-                    textTheme: GoogleFonts.montserratTextTheme(
-                      Theme.of(context).textTheme,
-                    ),
-                  ),
-                  home: StepScreen(widget.user));
+              return StepScreen(widget.user);
             } else {
               prefs.setInt(PreferencesKey.numberOfSteps, course.totalSteps);
-              return MaterialApp(
-                theme: ThemeData(
-                  textTheme: GoogleFonts.montserratTextTheme(
-                    Theme.of(context).textTheme,
-                  ),
-                ),
-                home: textWithAppBar(context, widget.user,
-                    "Trwają prace nad aplikacją, zapraszamy później: )"),
-              );
+              return textWithAppBar(context, widget.user,
+                  "Trwają prace nad aplikacją, zapraszamy później: )");
             }
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
