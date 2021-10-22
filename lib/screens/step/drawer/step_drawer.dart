@@ -154,14 +154,14 @@ class _StepDrawerState extends State<StepDrawer> {
           highlited[i] = false;
         }
       });
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return widgets[index];
-          },
-        ),
-      );
     }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return widgets[index];
+        },
+      ),
+    );
   }
 }
