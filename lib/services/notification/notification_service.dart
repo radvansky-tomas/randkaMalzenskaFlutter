@@ -20,9 +20,9 @@ class NotificationService {
 
     final IOSInitializationSettings initializationSettingsIOS =
         IOSInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
     );
 
     final InitializationSettings initializationSettings =
@@ -41,8 +41,8 @@ class NotificationService {
       body,
       tz.TZDateTime.now(tz.local).add(Duration(seconds: seconds)),
       const NotificationDetails(
-        android: AndroidNotificationDetails(
-            'main_channel', 'Main Channel', 'Main channel notifications',
+        android: AndroidNotificationDetails('main_channel', 'Main Channel',
+            channelDescription: 'Main channel notifications',
             importance: Importance.max,
             priority: Priority.max,
             icon: '@drawable/splash'),
@@ -81,8 +81,8 @@ class NotificationService {
         'Zerknij na nowe ficzery!',
         _nextInstanceOfDate(hour, minute),
         const NotificationDetails(
-          android: AndroidNotificationDetails(
-              'main_channel', 'Main Channel', 'Main channel notifications',
+          android: AndroidNotificationDetails('main_channel', 'Main Channel',
+              channelDescription: 'Main channel notifications',
               icon: '@drawable/splash'),
           iOS: IOSNotificationDetails(
             sound: 'default.wav',

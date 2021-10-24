@@ -86,10 +86,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
         'zerknij na nowe ficzery, notyfikacji poki co nie da sie wylaczyc jak sie ustawi raz',
         _nextInstanceOfDate(hour, minute),
         const NotificationDetails(
-          android: AndroidNotificationDetails(
-              'daily notification channel id',
+          android: AndroidNotificationDetails('daily notification channel id',
               'daily notification channel name',
-              'daily notification description'),
+              channelDescription: 'daily notification description'),
         ),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
