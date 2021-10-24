@@ -25,8 +25,6 @@ class _VideoScreenState extends State<VideoContent>
 
   @override
   void initState() {
-    super.initState();
-
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
       aspectRatio: 16 / 9,
@@ -38,9 +36,32 @@ class _VideoScreenState extends State<VideoContent>
       ],
       deviceOrientationsAfterFullScreen: [
         DeviceOrientation.portraitUp,
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight
       ],
+      routePageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondAnimation, provider) {
+        return AnimatedBuilder(
+          animation: animation,
+          builder: (BuildContext context, Widget? child) {
+            return Scaffold(
+              backgroundColor: Colors.black,
+              appBar: AppBar(
+                leading: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(Icons.chevron_left)),
+              ),
+              body: Stack(children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: provider,
+                ),
+              ]),
+            );
+          },
+        );
+      },
+      useRootNavigator: true,
       controlsConfiguration: BetterPlayerControlsConfiguration(
           enableOverflowMenu: widget._subtitleUrl != null,
           enablePlaybackSpeed: false,
@@ -58,6 +79,8 @@ class _VideoScreenState extends State<VideoContent>
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _setupDataSource();
 
+    super.initState();
+
     animationController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1),
@@ -71,7 +94,9 @@ class _VideoScreenState extends State<VideoContent>
     ));
 
     Future<void>.delayed(Duration(seconds: 1), () {
-      animationController.forward();
+      if (mounted) {
+        animationController.forward();
+      }
     });
   }
 
@@ -103,7 +128,7 @@ class _VideoScreenState extends State<VideoContent>
   @override
   void dispose() {
     animationController.dispose();
-    _betterPlayerController?.dispose(forceDispose: true);
+    _betterPlayerController?.dispose(forceDispose: false);
     super.dispose();
   }
 
