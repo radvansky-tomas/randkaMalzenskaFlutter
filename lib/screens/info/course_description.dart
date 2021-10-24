@@ -44,10 +44,12 @@ class _CourseDescriptionScreenState extends State<CourseDescriptionScreen> {
                   children: [
                     WhiteHtml(snapshot.data!.contentDescription),
                     Container(
-                      height: 300,
-                      child: VideoContent(
-                          snapshot.data!.videoCourse, null, null, null),
-                    )
+                        height: 300,
+                        child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: VideoContent(
+                              snapshot.data!.videoCourse, null, null, null),
+                        ))
                   ],
                 ),
               ),
